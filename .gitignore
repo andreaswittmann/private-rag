@@ -1,0 +1,62 @@
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*#*
+.#*
+
+# LaTeX files
+*.aux
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+*.toc
+*.lof
+*.lot
+*.idx
+*.ind
+*.ilg
+*.nlo
+*.nls
+*.bcf
+*.run.xml
+*.pdf
+*.html
+*.tex
+
+# Terraform files
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/terraform.tfvars
+terraform/tfplan
+terraform/tfplan.json
+terraform/tfplan.pretty.json
+terraform-backups/
+
+# Org-mode files
+*.org~
+*.org.~undo-tree~
+
+# LibreChat deployment
+librechat-aws-deployment.org
