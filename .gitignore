@@ -39,8 +39,6 @@ Thumbs.db
 *.nls
 *.bcf
 *.run.xml
-*.pdf
-*.html
 *.tex
 
 # Terraform files

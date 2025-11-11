@@ -1,0 +1,3024 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2025-11-11 Tue 13:57 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Private RAG Deployment - Live-Scripting Workflow</title>
+<meta name="author" content="Andreas Wittmann" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="aw-org-html-themes/styles/readtheorg/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="aw-org-html-themes/styles/readtheorg/css/readtheorg.css"/>
+<script type="text/javascript" src="aw-org-html-themes/styles/lib/js/jquery.min.js"></script>
+<script type="text/javascript" src="aw-org-html-themes/styles/lib/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="aw-org-html-themes/styles/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="aw-org-html-themes/styles/readtheorg/js/readtheorg.js"></script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Private RAG Deployment - Live-Scripting Workflow</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orge6e0d35">1. Summary</a></li>
+<li><a href="#orgceb14a2">2. Building Privacy-Focused RAG Platform</a>
+<ul>
+<li><a href="#org0f3d9f1">2.1. Project Overview</a></li>
+<li><a href="#org44bfdfb">2.2. Live-Scripting Methodology</a>
+<ul>
+<li><a href="#org1c521a7">2.2.1. Implementation Options</a>
+<ul>
+<li><a href="#orgbd7de75">2.2.1.1. Emacs Users</a></li>
+<li><a href="#org02ac0a9">2.2.1.2. Non-Emacs Users</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org91d0c1e">2.3. Project Components</a></li>
+<li><a href="#org89f33a5">2.4. Expected Deployment Outcome</a></li>
+</ul>
+</li>
+<li><a href="#orgf9b919a">3. Foundation &amp; Prerequisites</a>
+<ul>
+<li><a href="#orgc27e44f">3.1. Environment Setup</a>
+<ul>
+<li><a href="#orgaffaccf">3.1.1. Setting the Project Foundation</a></li>
+<li><a href="#org8050a94">3.1.2. Validating AWS Prerequisites</a></li>
+</ul>
+</li>
+<li><a href="#org1852791">3.2. Summary</a></li>
+</ul>
+</li>
+<li><a href="#orga05995f">4. Infrastructure as Code</a>
+<ul>
+<li><a href="#orgaefc1a2">4.1. SSH Key Generation for Secure Access</a></li>
+<li><a href="#org1114042">4.2. Terraform Configuration and Planning</a></li>
+<li><a href="#org0da648a">4.3. Infrastructure Deployment Planning</a></li>
+<li><a href="#org52cceaa">4.4. Infrastructure Deployment Execution</a></li>
+<li><a href="#org7fecef9">4.5. SSH Configuration for Easy Access</a></li>
+<li><a href="#orgdbe5c55">4.6. EC2 Instance Selection and Upgrading</a>
+<ul>
+<li><a href="#orge1005e3">4.6.1. Recommended EC2 Instance Types for RAG Workloads</a>
+<ul>
+<li><a href="#orgb21d133">4.6.1.1. Recommendations</a></li>
+</ul>
+</li>
+<li><a href="#orgebfea32">4.6.2. Upgrading to a Larger Instance Type with Terraform</a>
+<ul>
+<li><a href="#orgc03a751">4.6.2.1. Steps to Upgrade</a></li>
+<li><a href="#org21aeb7c">4.6.2.2. Why This Method Is Best/Fastest</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org8ba76ce">4.7. Infrastructure Live-Cycle Operations</a></li>
+<li><a href="#orgd859ce2">4.8. Summary</a></li>
+</ul>
+</li>
+<li><a href="#orgdc02fc1">5. Development Environment Setup</a>
+<ul>
+<li><a href="#orgd19346d">5.1. Complete Docker Engine and Tools Installation</a>
+<ul>
+<li><a href="#org078b233">5.1.1. Docker Engine Installation</a></li>
+<li><a href="#org69df9cd">5.1.2. Docker Service Configuration</a></li>
+<li><a href="#orga3649fe">5.1.3. Lazydocker Installation</a></li>
+<li><a href="#org19c55df">5.1.4. GitHub CLI Installation</a></li>
+<li><a href="#org5de96c3">5.1.5. Docker and Docker Compose Verification</a></li>
+<li><a href="#org6761e0e">5.1.6. Python Development Tools Installation</a></li>
+<li><a href="#orgd58ca3b">5.1.7. Development Environment Summary</a></li>
+</ul>
+</li>
+<li><a href="#orgc3d4c14">5.2. Summary</a></li>
+</ul>
+</li>
+<li><a href="#org8535345">6. Core RagFlow Deployment</a>
+<ul>
+<li><a href="#org9d393f7">6.1. Basic Ragflow Setup</a></li>
+<li><a href="#org4d996ae">6.2. HTTPS Setup with Self-Signed Certificate</a>
+<ul>
+<li><a href="#orgcb904c9">6.2.1. Step 1: Generate Self-Signed SSL Certificate**</a></li>
+<li><a href="#org957538a">6.2.2. Step 2: Modify Nginx Configuration**</a></li>
+<li><a href="#org6e7e8d1">6.2.3. Step 3: Update Docker Compose Configuration**</a></li>
+<li><a href="#orgc351e10">6.2.4. Step 4: Restart RAGFlow Services**</a></li>
+<li><a href="#orgd3050d1">6.2.5. Step 5: Test HTTPS Access**</a></li>
+</ul>
+</li>
+<li><a href="#orgcbb7fbc">6.3. Use Case: Access RagFlow via SSH-Tunnel</a></li>
+<li><a href="#orga26fc06">6.4. Summary</a></li>
+</ul>
+</li>
+<li><a href="#org3df7412">7. Advanced Features - Document Processing</a>
+<ul>
+<li><a href="#orga282bbf">7.1. Document Ingestion and Processing</a>
+<ul>
+<li><a href="#org1c985a7">7.1.1. Upload Documents</a></li>
+<li><a href="#orgf104eca">7.1.2. Configure Knowledge Base</a></li>
+<li><a href="#orgf24707d">7.1.3. Test RAG Queries</a></li>
+</ul>
+</li>
+<li><a href="#org4c6d1b9">7.2. Summary</a></li>
+</ul>
+</li>
+<li><a href="#org9a3ea6b">8. Infrastructure Cleanup</a>
+<ul>
+<li><a href="#org3f36e56">8.1. Cleanup Philosophy</a></li>
+<li><a href="#org54be5da">8.2. Stop RagFlow Services</a></li>
+<li><a href="#org05e5ce9">8.3. Terminate EC2 Instance with Terraform</a></li>
+<li><a href="#org548362d">8.4. Clean Up Local SSH Configuration</a></li>
+<li><a href="#org00a450f">8.5. Clean Up Terraform State Files</a></li>
+<li><a href="#orgeef980b">8.6. Verify Complete Cleanup</a></li>
+<li><a href="#org7921f5e">8.7. Cost Optimization Notes</a></li>
+<li><a href="#orge8b1cb8">8.8. Summary</a></li>
+</ul>
+</li>
+<li><a href="#org3c984b4">9. Appendix: GitHub Self-Hosted Runner Setup</a>
+<ul>
+<li><a href="#org75c8e7d">9.1. GitHub Runner for CI/CD Testing on AWS</a>
+<ul>
+<li><a href="#orgf590d3d">9.1.1. Prerequisites and Security Group Configuration</a></li>
+<li><a href="#org5588762">9.1.2. GitHub Runner Installation and Configuration</a></li>
+<li><a href="#org02ad098">9.1.3. Runner Registration with GitHub</a></li>
+<li><a href="#org94387af">9.1.4. Running the Runner as a Service</a></li>
+<li><a href="#orgd158e4d">9.1.5. Verifying Runner Status</a></li>
+<li><a href="#org0acadf8">9.1.6. Testing the Runner with a Sample Workflow</a></li>
+<li><a href="#orge9dd634">9.1.7. Monitoring and Troubleshooting</a></li>
+<li><a href="#org69488bc">9.1.8. Removing the Runner (if needed)</a></li>
+</ul>
+</li>
+<li><a href="#orgebab0c4">9.2. Summary</a></li>
+</ul>
+</li>
+<li><a href="#orgbc2b48b">10. Appendix: Remote Desktop Access with RustDesk</a>
+<ul>
+<li><a href="#org1e86144">10.1. RustDesk Installation and Configuration</a>
+<ul>
+<li><a href="#orge75624c">10.1.1. Prerequisites and Security Group Updates</a></li>
+<li><a href="#org50f89cf">10.1.2. RustDesk Installation on EC2 Instance</a></li>
+<li><a href="#org94b6082">10.1.3. RustDesk Client Setup on Local Machine</a></li>
+<li><a href="#orgd49f14c">10.1.4. Establishing Remote Desktop Connection</a></li>
+</ul>
+</li>
+<li><a href="#orga1a95d2">10.2. Summary</a></li>
+</ul>
+</li>
+<li><a href="#orgab9301a">11. Appendix: Remote Desktop Access with NoMachine</a>
+<ul>
+<li><a href="#orgabe14f8">11.1. NoMachine Installation and Configuration</a>
+<ul>
+<li><a href="#orgda5db4a">11.1.1. Prerequisites and Security Group Updates</a></li>
+<li><a href="#org71ec885">11.1.2. Desktop Environment Installation</a></li>
+<li><a href="#orge066391">11.1.3. NoMachine Server Installation</a></li>
+<li><a href="#org50f2fff">11.1.4. Firewall Configuration on Server</a></li>
+<li><a href="#orgaba5de3">11.1.5. Testing NoMachine Connection</a></li>
+<li><a href="#org1ea5a0c">11.1.6. Troubleshooting Common Issues</a></li>
+<li><a href="#org6cecebd">11.1.7. High Resolution Configuration with XDummy Driver</a></li>
+<li><a href="#orgf7482ee">11.1.8. German Keyboard Configuration Fix</a>
+<ul>
+<li><a href="#org657b2d8">11.1.8.1. Problem Diagnosis</a></li>
+<li><a href="#org6bf358f">11.1.8.2. Solution: Update XFCE Keyboard Configuration</a></li>
+<li><a href="#orgee48124">11.1.8.3. Solution: Add Session Startup Script</a></li>
+<li><a href="#org1550bd6">11.1.8.4. Applying the Fix</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org7c727ca">11.2. Summary</a></li>
+</ul>
+</li>
+<li><a href="#org06373a5">12. End</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orge6e0d35" class="outline-2">
+<h2 id="orge6e0d35"><span class="section-number-2">1.</span> Summary</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<i>This document outlines a live-scripting methodology for deploying RagFlow, an open-source RAG platform, on AWS using Terraform, through executable code blocks that ensure reproducible infrastructure setup. It covers HTTPS configuration, Docker containerization, SSH access, and appendices for GitHub Actions runners and remote desktop tools, bridging manual workflows with automated deployments.</i>
+</p>
+<ul class="org-ul">
+<li><b>HTML Version:</b> <a href="private-rag.html">private-rag.html</a></li>
+<li><b>PDF Version:</b> <a href="private-rag.pdf">private-rag.pdf</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgceb14a2" class="outline-2">
+<h2 id="orgceb14a2"><span class="section-number-2">2.</span> Building Privacy-Focused RAG Platform</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org0f3d9f1" class="outline-3">
+<h3 id="org0f3d9f1"><span class="section-number-3">2.1.</span> Project Overview</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+This project uses the live-scripting methodology to create an example configuration of the open-source project RagFlow. Live-scripting represents an intermediate approach between manual command-line work and fully automated CI/CD pipelines, enabling the development of documented, shareable, and reproducible solutions.
+</p>
+
+<p>
+Using Infrastructure as Code methods with Terraform, an AWS environment is established as a platform for RagFlow installation. The example demonstrates all necessary configuration and software tool installations required for the project. Appendices cover additional topics such as GitHub Runner setup and graphical user interface configuration.
+</p>
+</div>
+</div>
+<div id="outline-container-org44bfdfb" class="outline-3">
+<h3 id="org44bfdfb"><span class="section-number-3">2.2.</span> Live-Scripting Methodology</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+The deployment uses live-scripting methodology to transform static documentation into executable workflows. Code blocks execute directly in Emacs (F4 key) or copy to any terminal, creating a bridge between documentation and execution.
+</p>
+
+<p>
+Based on the [live-scripting methodology](<a href="https://github.com/andreaswittmann/live-scripting">https://github.com/andreaswittmann/live-scripting</a>), this approach provides:
+</p>
+
+<ul class="org-ul">
+<li>Executable documentation with current and functional code blocks</li>
+<li>Multi-format publishing from single source to Org, HTML, and PDF</li>
+<li>Reproducible deployments with consistent infrastructure setup</li>
+<li>Version control integration through plain-text format</li>
+</ul>
+</div>
+<div id="outline-container-org1c521a7" class="outline-4">
+<h4 id="org1c521a7"><span class="section-number-4">2.2.1.</span> Implementation Options</h4>
+<div class="outline-text-4" id="text-2-2-1">
+</div>
+<div id="outline-container-orgbd7de75" class="outline-5">
+<h5 id="orgbd7de75"><span class="section-number-5">2.2.1.1.</span> Emacs Users</h5>
+<div class="outline-text-5" id="text-2-2-1-1">
+<p>
+Configure live-scripting with this Emacs Lisp function:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #0000FF; font-weight: bold;">defun</span> <span style="color: #006699;">send-line-to-vterm</span> ()
+  <span style="color: #036A07;">"Send region if active, or current line to vterm buffer."</span>
+  (<span style="color: #0000FF; font-weight: bold;">interactive</span>)
+  (<span style="color: #0000FF; font-weight: bold;">if</span> (region-active-p)
+      (send-region <span style="color: #008000;">"*vterm*"</span> (region-beginning) (region-end))
+    (my-select-current-line)
+    (send-region <span style="color: #008000;">"*vterm*"</span> (region-beginning) (region-end)))
+  (deactivate-mark))
+
+(global-set-key [f4] 'send-line-to-vterm)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org02ac0a9" class="outline-5">
+<h5 id="org02ac0a9"><span class="section-number-5">2.2.1.2.</span> Non-Emacs Users</h5>
+<div class="outline-text-5" id="text-2-2-1-2">
+<p>
+Copy code blocks to any terminal - the methodology maintains precision across tools.
+</p>
+
+<p>
+The deployment follows phases from environment setup through advanced features, with each step documented using executable code blocks for reproducibility.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org91d0c1e" class="outline-3">
+<h3 id="org91d0c1e"><span class="section-number-3">2.3.</span> Project Components</h3>
+<div class="outline-text-3" id="text-2-3">
+<ul class="org-ul">
+<li>Self-hosted RagFlow with local document processing for privacy control</li>
+<li>Production-ready foundation with SSL/HTTPS, Docker containerization, and infrastructure automation</li>
+<li>Advanced RAG capabilities including document ingestion, vector search, and knowledge base management</li>
+<li>Reproducible methodology using live-scripting workflow for consistent deployment</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org89f33a5" class="outline-3">
+<h3 id="org89f33a5"><span class="section-number-3">2.4.</span> Expected Deployment Outcome</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+The workflow produces a functioning HTTPS-enabled RagFlow instance on AWS, capable of document processing and RAG-based AI responses with full user control.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf9b919a" class="outline-2">
+<h2 id="orgf9b919a"><span class="section-number-2">3.</span> Foundation &amp; Prerequisites</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orgc27e44f" class="outline-3">
+<h3 id="orgc27e44f"><span class="section-number-3">3.1.</span> Environment Setup</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+These steps establish the development environment and validate prerequisites.
+</p>
+</div>
+<div id="outline-container-orgaffaccf" class="outline-4">
+<h4 id="orgaffaccf"><span class="section-number-4">3.1.1.</span> Setting the Project Foundation</h4>
+<div class="outline-text-4" id="text-3-1-1">
+<p>
+This establishes the base project directory and validates AWS network prerequisites.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Project environment setup</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Establishing the base directory for the RAG project</span>
+bash
+<span style="color: #BA36A5;">PROJECT_DIR</span>=<span style="color: #008000;">"/Users/$(whoami)/LocalProjects/RagFlow/private-rag"</span>
+<span style="color: #006FE0;">cd</span> <span style="color: #008000;">"$PROJECT_DIR"</span>
+<span style="color: #006FE0;">pwd</span>
+ls -la
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify we're in the right location</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"Working in: $PROJECT_DIR"</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Set AWS profile for this session</span>
+<span style="color: #006FE0;">export</span> <span style="color: #BA36A5;">AWS_PROFILE</span>=default  <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Adjust as needed</span>
+<span style="color: #006FE0;">echo</span> $<span style="color: #BA36A5;">AWS_PROFILE</span>
+
+<span style="color: #8D8D84;">## </span><span style="color: #8D8D84; font-style: italic;">create default VPC if it does not exist</span>
+aws ec2 create-default-vpc
+<span style="color: #8D8D84;">## </span><span style="color: #8D8D84; font-style: italic;">check if the default vpc is created</span>
+aws ec2 describe-vpcs --filters <span style="color: #008000;">"Name=isDefault,Values=true"</span> --query <span style="color: #008000;">"Vpcs[0].VpcId"</span> --output text
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Project environment is configured and AWS default VPC is available for deployment.
+</p>
+</div>
+</div>
+<div id="outline-container-org8050a94" class="outline-4">
+<h4 id="org8050a94"><span class="section-number-4">3.1.2.</span> Validating AWS Prerequisites</h4>
+<div class="outline-text-4" id="text-3-1-2">
+<p>
+This confirms AWS environment configuration for deployment requirements.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: AWS environment validation</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Ensuring AWS access and basic services availability</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Test basic AWS connectivity</span>
+aws s3 ls
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify AWS identity and permissions</span>
+aws sts get-caller-identity
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify SSH key is available for EC2 access</span>
+ls -la ~/.ssh/
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Validate required tools are installed</span>
+terraform --version
+git --version
+docker --version
+</pre>
+</div>
+
+<p>
+<b>Result:</b> AWS credentials and required tools are validated for infrastructure deployment.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org1852791" class="outline-3">
+<h3 id="org1852791"><span class="section-number-3">3.2.</span> Summary</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+The foundation phase establishes the development environment and validates prerequisites. Project directory structure is configured, AWS credentials verified, and required tools confirmed operational. This groundwork enables reproducible infrastructure deployment through live-scripting methodology.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orga05995f" class="outline-2">
+<h2 id="orga05995f"><span class="section-number-2">4.</span> Infrastructure as Code</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-orgaefc1a2" class="outline-3">
+<h3 id="orgaefc1a2"><span class="section-number-3">4.1.</span> SSH Key Generation for Secure Access</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+This creates dedicated SSH keypairs for EC2 instance access and stores the public key for Terraform.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: SSH key generation for EC2 access</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Creating dedicated SSH keys for secure instance access</span>
+
+<span style="color: #006FE0;">cd</span> <span style="color: #008000;">"$PROJECT_DIR"</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Generate a new SSH key pair specifically for RagFlow</span>
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/ragflow_key -N <span style="color: #008000;">""</span>
+y
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Display the public key for use in Terraform variables</span>
+cat ~/.ssh/ragflow_key.pub
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Store public key in environment variable</span>
+<span style="color: #006FE0;">export</span> <span style="color: #BA36A5;">TF_VAR_SSH_PUBLIC_KEY</span>=<span style="color: #008000;">"$(cat ~/.ssh/ragflow_key.pub)"</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"SSH public key configured: $TF_VAR_SSH_PUBLIC_KEY"</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> SSH keypair is generated and public key is exported for infrastructure provisioning.
+</p>
+</div>
+</div>
+<div id="outline-container-org1114042" class="outline-3">
+<h3 id="org1114042"><span class="section-number-3">4.2.</span> Terraform Configuration and Planning</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+This prepares the Terraform configuration files and validates the infrastructure setup.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Terraform environment preparation</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Setting up infrastructure configuration</span>
+
+<span style="color: #006FE0;">cd</span> <span style="color: #008000;">"$PROJECT_DIR/terraform"</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Create terraform variables file with our configuration</span>
+cat &gt; terraform.tfvars &lt;&lt; EOF
+<span style="color: #0000ff; background-color: #EEF5FE;"># Generated tfvars file - $(date)</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">aws_region       = "eu-central-1"</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">instance_type    = "t3.medium"</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">root_volume_size = 50</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">root_volume_type = "gp3"</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">allowed_ip       = "0.0.0.0/0"</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">ssh_public_key   = "${TF_VAR_SSH_PUBLIC_KEY}"</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">ec2_name         = "EC2-RagFlow"</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">environment      = "development"</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">project          = "ragflow"</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">ssh_cidr_blocks  = ["0.0.0.0/0"]</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">EOF</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Review our configuration</span>
+cat terraform.tfvars
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Initialize Terraform</span>
+terraform init
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Format and validate our configuration</span>
+terraform fmt
+terraform validate
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Terraform configuration is initialized and validated for deployment.
+</p>
+</div>
+</div>
+<div id="outline-container-org0da648a" class="outline-3">
+<h3 id="org0da648a"><span class="section-number-3">4.3.</span> Infrastructure Deployment Planning</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+This creates the deployment plan and reviews resource changes before applying them.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Terraform deployment planning</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Creating and reviewing the deployment plan</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Generate deployment plan</span>
+terraform plan -out=tfplan -var-file=terraform.tfvars
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Create human-readable plan</span>
+terraform show -json tfplan &gt; tfplan.json
+cat tfplan.json | jq &gt; tfplan.pretty.json
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Review what resources will be created</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"Resources to be created:"</span>
+cat tfplan.json | jq <span style="color: #008000;">'.resource_changes[] | {address: .address, action: .change.actions[0]}'</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Summary of planned changes</span>
+cat tfplan.json | jq <span style="color: #008000;">'.resource_changes | group_by(.change.actions[0]) | map({action: .[0].change.actions[0], count: length})'</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Deployment plan is generated and resource changes are reviewed for approval.
+</p>
+</div>
+</div>
+<div id="outline-container-org52cceaa" class="outline-3">
+<h3 id="org52cceaa"><span class="section-number-3">4.4.</span> Infrastructure Deployment Execution</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+This executes the Terraform plan to create the AWS infrastructure resources.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: AWS infrastructure deployment</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Creating the infrastructure resources</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Execute the deployment plan</span>
+terraform apply tfplan
+terraform apply
+yes
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Capture and display outputs</span>
+terraform output
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">List our EC2 instances</span>
+aws ec2 describe-instances <span style="color: #008000;">\</span>
+  --query <span style="color: #008000;">'Reservations[*].Instances[*].[InstanceId, InstanceType, Tags[?Key==`Name`]|[0].Value, State.Name]'</span> <span style="color: #008000;">\</span>
+  --output text
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Get our instance details - get only the first/latest instance ID</span>
+<span style="color: #BA36A5;">instance_id</span>=$(aws ec2 describe-instances <span style="color: #008000;">\</span>
+  --filters <span style="color: #008000;">"Name=tag:Name,Values=EC2-RagFlow"</span> <span style="color: #008000;">"Name=instance-state-name,Values=running,pending,stopping,stopped"</span> <span style="color: #008000;">\</span>
+  --query <span style="color: #008000;">'Reservations[*].Instances[*].[InstanceId]'</span> <span style="color: #008000;">\</span>
+  --output text | head -n1)
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"Instance ID: $instance_id"</span>
+
+
+<span style="color: #BA36A5;">public_ip</span>=$(aws ec2 describe-instances <span style="color: #008000;">\</span>
+  --instance-ids <span style="color: #008000;">"$instance_id"</span> <span style="color: #008000;">\</span>
+  --query <span style="color: #008000;">'Reservations[*].Instances[*].[PublicIpAddress]'</span> <span style="color: #008000;">\</span>
+  --output text)
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"Public IP: $public_ip"</span>
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> AWS infrastructure is deployed and EC2 instance details are captured for subsequent configuration.
+</p>
+</div>
+</div>
+<div id="outline-container-org7fecef9" class="outline-3">
+<h3 id="org7fecef9"><span class="section-number-3">4.5.</span> SSH Configuration for Easy Access</h3>
+<div class="outline-text-3" id="text-4-5">
+<p>
+This establishes convenient SSH access configuration and tests connectivity to the deployed instance.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: SSH configuration setup</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Establishing convenient SSH access</span>
+<span style="color: #006FE0;">pwd</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Test initial SSH connection</span>
+ssh -i ~/.ssh/ragflow_key ubuntu@<span style="color: #008000;">"$public_ip"</span> <span style="color: #008000;">'whoami &amp;&amp; pwd'</span>
+yes
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Create SSH config entry for easy access</span>
+open ~/.ssh/config <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">we may delete an old entry first, manually</span>
+cat &gt;&gt; ~/.ssh/config &lt;&lt; EOF
+<span style="color: #0000ff; background-color: #EEF5FE;"># SSH over EC2 - RagFlow Privacy RAG Project</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">Host EC2-RagFlow</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    HostName $public_ip</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    User ubuntu</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    IdentityFile ~/.ssh/ragflow_key</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">EOF</span>
+<span style="color: #8D8D84;">## </span><span style="color: #8D8D84; font-style: italic;">use a perl one-liner to grep these lines from the ssh-config file.</span>
+perl -nE <span style="color: #008000;">'print if /Host EC2-RagFlow/ .. /yesEOF/'</span> ~/.ssh/config
+<span style="color: #8D8D84;">#</span><span style="color: #8D8D84; font-style: italic;">bbedit ~/.ssh/config</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Test SSH with hostname</span>
+ssh EC2-RagFlow <span style="color: #008000;">'whoami &amp;&amp; date'</span>
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> SSH configuration is established and remote access to the EC2 instance is verified.
+</p>
+</div>
+</div>
+<div id="outline-container-orgdbe5c55" class="outline-3">
+<h3 id="orgdbe5c55"><span class="section-number-3">4.6.</span> EC2 Instance Selection and Upgrading</h3>
+<div class="outline-text-3" id="text-4-6">
+</div>
+<div id="outline-container-orge1005e3" class="outline-4">
+<h4 id="orge1005e3"><span class="section-number-4">4.6.1.</span> Recommended EC2 Instance Types for RAG Workloads</h4>
+<div class="outline-text-4" id="text-4-6-1">
+<p>
+Here is a list of recommended EC2 instance types suitable for RAG (Retrieval-Augmented Generation) workloads like RagFlow, which typically require significant memory for model inference, vector embeddings, and data processing. I've focused on instances with at least 20 GB RAM, prioritizing memory-optimized types (R series) for better performance. All recommendations are for the <code>eu-central-1</code> region, with approximate on-demand pricing (as of late 2024; prices may vary—check AWS Pricing Calculator for current rates). Network speed refers to the maximum bandwidth.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Instance Type</th>
+<th scope="col" class="org-right">RAM (GB)</th>
+<th scope="col" class="org-right">CPU (vCPUs)</th>
+<th scope="col" class="org-left">Network Speed</th>
+<th scope="col" class="org-left">Approx. Price/Hour (USD)</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">r5.xlarge</td>
+<td class="org-right">32</td>
+<td class="org-right">4</td>
+<td class="org-left">Up to 10 Gbps</td>
+<td class="org-left">$0.25</td>
+<td class="org-left">Balanced memory-optimized instance; good for moderate RAG workloads with cost efficiency.</td>
+</tr>
+
+<tr>
+<td class="org-left">r6g.xlarge</td>
+<td class="org-right">32</td>
+<td class="org-right">4</td>
+<td class="org-left">Up to 10 Gbps</td>
+<td class="org-left">$0.21</td>
+<td class="org-left">Graviton-based (ARM); cheaper than r5 for similar specs; ideal if you prefer lower costs.</td>
+</tr>
+
+<tr>
+<td class="org-left">r7g.xlarge</td>
+<td class="org-right">32</td>
+<td class="org-right">4</td>
+<td class="org-left">Up to 15 Gbps</td>
+<td class="org-left">$0.20</td>
+<td class="org-left">Latest Graviton generation; higher network speed for faster data transfers; excellent for RAG with I/O demands.</td>
+</tr>
+
+<tr>
+<td class="org-left">r5.2xlarge</td>
+<td class="org-right">64</td>
+<td class="org-right">8</td>
+<td class="org-left">Up to 10 Gbps</td>
+<td class="org-left">$0.50</td>
+<td class="org-left">Doubles RAM and CPU; suitable for larger RAG models or concurrent users.</td>
+</tr>
+
+<tr>
+<td class="org-left">m5.2xlarge</td>
+<td class="org-right">32</td>
+<td class="org-right">8</td>
+<td class="org-left">Up to 10 Gbps</td>
+<td class="org-left">$0.38</td>
+<td class="org-left">General-purpose alternative; more CPU cores if your workload is compute-heavy alongside memory needs.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="outline-container-orgb21d133" class="outline-5">
+<h5 id="orgb21d133"><span class="section-number-5">4.6.1.1.</span> Recommendations</h5>
+<div class="outline-text-5" id="text-4-6-1-1">
+<ul class="org-ul">
+<li><b>For most RAG setups</b>: Start with <code>r5.xlarge</code> or <code>r6g.xlarge</code> for a balance of memory, performance, and cost.</li>
+<li><b>For high-performance needs</b>: Opt for <code>r7g.xlarge</code> if network speed is critical (e.g., for real-time inference).</li>
+<li><b>Scaling up</b>: If 32 GB isn't enough, <code>r5.2xlarge</code> provides 64 GB without overkill.</li>
+<li><b>Considerations</b>: R series are optimized for memory-intensive tasks. Use Spot instances for cost savings (~50-70% off on-demand). Monitor with CloudWatch for actual usage. If your workload involves GPUs (e.g., for advanced ML), consider P or G series, but they exceed basic RAG needs and are pricier.</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-orgebfea32" class="outline-4">
+<h4 id="orgebfea32"><span class="section-number-4">4.6.2.</span> Upgrading to a Larger Instance Type with Terraform</h4>
+<div class="outline-text-4" id="text-4-6-2">
+<p>
+The best and fastest way to upgrade your EC2 instance to one with more memory is to update your Terraform configuration and apply the changes. This approach is automated, ensures consistency, and avoids manual errors.
+</p>
+</div>
+<div id="outline-container-orgc03a751" class="outline-5">
+<h5 id="orgc03a751"><span class="section-number-5">4.6.2.1.</span> Steps to Upgrade</h5>
+<div class="outline-text-5" id="text-4-6-2-1">
+<ol class="org-ol">
+<li><b>Update the Terraform Variables</b>:
+<ul class="org-ul">
+<li>Edit <code>terraform/terraform.tfvars</code> and change <code>instance_type = "t3.medium"</code> to your desired instance type (e.g., <code>instance_type = "r5.xlarge"</code>).</li>
+<li>Alternatively, update the default in <code>terraform/variables.tf</code> if you prefer not to modify <code>tfvars</code>.</li>
+</ul></li>
+
+<li><b>Apply the Changes</b>:
+<ul class="org-ul">
+<li>Navigate to the <code>terraform/</code> directory in your terminal.</li>
+<li>Run <code>terraform plan</code> to preview the changes (it will show the instance type update).</li>
+<li>Run <code>terraform apply</code> to execute the upgrade. Terraform will:
+<ul class="org-ul">
+<li>Stop the existing instance.</li>
+<li>Change the instance type.</li>
+<li>Restart the instance with the new configuration.</li>
+</ul></li>
+<li>This process typically takes 5-10 minutes, depending on AWS availability.</li>
+</ul></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org21aeb7c" class="outline-5">
+<h5 id="org21aeb7c"><span class="section-number-5">4.6.2.2.</span> Why This Method Is Best/Fastest</h5>
+<div class="outline-text-5" id="text-4-6-2-2">
+<ul class="org-ul">
+<li><b>Automation</b>: Terraform handles the entire process, ensuring consistency and avoiding manual errors.</li>
+<li><b>Minimal Downtime</b>: The stop/change/start cycle is efficient for instance type changes.</li>
+<li><b>No Data Loss</b>: Your EBS root volume (50 GB) and Elastic IP remain attached.</li>
+<li><b>Cost</b>: Monitor via AWS Cost Explorer. R series instances are reasonably priced.</li>
+<li><b>Alternatives Considered</b>:
+<ul class="org-ul">
+<li>Manual AWS Console change: Faster for one-off updates but not recommended for Terraform-managed infrastructure, as it can cause drift.</li>
+<li>Creating a new instance: Slower and requires data migration.</li>
+</ul></li>
+</ul>
+
+<p>
+If you encounter issues (e.g., instance family incompatibility), Terraform will prompt you. Ensure your AWS credentials are configured and the instance is not in use during the upgrade.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Upgrading EC2 instance type with Terraform</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Updating instance configuration and applying changes</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Navigate to the Terraform directory</span>
+<span style="color: #006FE0;">cd</span> <span style="color: #008000;">"$PROJECT_DIR/terraform"</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Update the instance type in terraform.tfvars (replace 'r5.xlarge' with your desired type)</span>
+sed -i <span style="color: #008000;">'s/instance_type    = "t3.medium"/instance_type    = "r5.xlarge"/g'</span> terraform.tfvars
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Review the updated configuration</span>
+cat terraform.tfvars
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Generate and review the deployment plan</span>
+terraform plan -out=tfplan -var-file=terraform.tfvars
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Apply the changes to upgrade the instance</span>
+terraform apply tfplan
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify the instance has been upgraded</span>
+aws ec2 describe-instances <span style="color: #008000;">\</span>
+  --filters <span style="color: #008000;">"Name=tag:Name,Values=EC2-RagFlow"</span> <span style="color: #008000;">\</span>
+  --query <span style="color: #008000;">'Reservations[*].Instances[*].[InstanceType, State.Name]'</span> <span style="color: #008000;">\</span>
+  --output text
+</pre>
+</div>
+
+<p>
+<b>Result:</b> EC2 instance type has been successfully upgraded to the new configuration with increased memory capacity.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org8ba76ce" class="outline-3">
+<h3 id="org8ba76ce"><span class="section-number-3">4.7.</span> Infrastructure Live-Cycle Operations</h3>
+<div class="outline-text-3" id="text-4-7">
+<p>
+This section provides procedures for managing the EC2 instance lifecycle - starting and stopping the instance when returning to work sessions after periods of inactivity.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #0000FF; font-weight: bold;">exit</span>
+<span style="color: #006FE0;">pwd</span>
+
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Initialize project environment</span>
+<span style="color: #BA36A5;">PROJECT_DIR</span>=<span style="color: #008000;">"/Users/$(whoami)/LocalProjects/RagFlow/private-rag"</span>
+<span style="color: #006FE0;">cd</span> <span style="color: #008000;">"$PROJECT_DIR"</span>
+<span style="color: #006FE0;">export</span> <span style="color: #BA36A5;">AWS_PROFILE</span>=default
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Get instance ID</span>
+<span style="color: #BA36A5;">instance_id</span>=$(aws ec2 describe-instances --filters <span style="color: #008000;">"Name=tag:Name,Values=EC2-RagFlow"</span> --query <span style="color: #008000;">'Reservations[*].Instances[*].[InstanceId]'</span> --output text | head -n1)
+<span style="color: #006FE0;">echo</span> $<span style="color: #BA36A5;">instance_id</span>
+
+<span style="color: #8D8D84;">### </span><span style="color: #8D8D84; font-style: italic;">STATUS: Get current instance state</span>
+aws ec2 describe-instances --instance-ids <span style="color: #008000;">"$instance_id"</span> --query <span style="color: #008000;">'Reservations[*].Instances[*].[State.Name]'</span> --output text
+
+<span style="color: #8D8D84;">### </span><span style="color: #8D8D84; font-style: italic;">START:  Start and wait for running state</span>
+aws ec2 start-instances --instance-ids <span style="color: #008000;">"$instance_id"</span>
+<span style="color: #0000FF; font-weight: bold;">while</span> [ <span style="color: #008000;">"$(aws ec2 describe-instances --instance-ids "$instance_id" --query "Reservations[0].Instances[0].State.Name" --output text)"</span> != <span style="color: #008000;">"running"</span> ]; <span style="color: #0000FF; font-weight: bold;">do </span><span style="color: #006FE0;">echo</span> -n <span style="color: #008000;">"."</span>; sleep 1; <span style="color: #0000FF; font-weight: bold;">done</span>; <span style="color: #006FE0;">echo</span> <span style="color: #008000;">" &#9989; running"</span>
+
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Get public IP</span>
+<span style="color: #BA36A5;">public_ip</span>=$(aws ec2 describe-instances --instance-ids <span style="color: #008000;">"$instance_id"</span> --query <span style="color: #008000;">'Reservations[*].Instances[*].[PublicIpAddress]'</span> --output text)
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"Instance running at: $public_ip"</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Test SSH connection</span>
+ssh EC2-RagFlow <span style="color: #008000;">'whoami &amp;&amp; date &amp;&amp; uptime'</span>
+
+
+<span style="color: #8D8D84;">### </span><span style="color: #8D8D84; font-style: italic;">STOP: stop  the instance and wait for stopped state</span>
+aws ec2 stop-instances --instance-ids <span style="color: #008000;">"$instance_id"</span>
+<span style="color: #0000FF; font-weight: bold;">while</span> [ <span style="color: #008000;">"$(aws ec2 describe-instances --instance-ids "$instance_id" --query "Reservations[0].Instances[0].State.Name" --output text)"</span> != <span style="color: #008000;">"stopped"</span> ]; <span style="color: #0000FF; font-weight: bold;">do </span><span style="color: #006FE0;">echo</span> -n <span style="color: #008000;">"."</span>; sleep 1; <span style="color: #0000FF; font-weight: bold;">done</span>; <span style="color: #006FE0;">echo</span> <span style="color: #008000;">" &#9989; stopped"</span>
+
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> EC2 instance is started and ready for use. Stop commands are provided as well.
+</p>
+</div>
+</div>
+<div id="outline-container-orgd859ce2" class="outline-3">
+<h3 id="orgd859ce2"><span class="section-number-3">4.8.</span> Summary</h3>
+<div class="outline-text-3" id="text-4-8">
+<p>
+Infrastructure automation through Terraform provisions the AWS environment. The EC2 instance operates with proper network security configuration. SSH access is established through dedicated keypairs. The infrastructure exists as version-controlled code, enabling consistent reproduction across deployments.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgdc02fc1" class="outline-2">
+<h2 id="orgdc02fc1"><span class="section-number-2">5.</span> Development Environment Setup</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-orgd19346d" class="outline-3">
+<h3 id="orgd19346d"><span class="section-number-3">5.1.</span> Complete Docker Engine and Tools Installation</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+This section establishes the complete development environment on the AWS EC2 instance, including Docker Engine, container management tools, GitHub CLI, and Python development utilities. These tools form the foundation for both RagFlow deployment and CI/CD testing.
+</p>
+</div>
+<div id="outline-container-org078b233" class="outline-4">
+<h4 id="org078b233"><span class="section-number-4">5.1.1.</span> Docker Engine Installation</h4>
+<div class="outline-text-4" id="text-5-1-1">
+<p>
+Install Docker Engine with proper repository configuration and user permissions.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Docker Engine installation on EC2</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Setting up containerization platform for applications</span>
+
+ssh EC2-RagFlow
+bash
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Remove any old Docker versions that may exist</span>
+sudo apt remove docker docker-engine docker.io containerd runc 2&gt;/dev/null || <span style="color: #006FE0;">true</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Update system packages</span>
+sudo apt update
+sudo apt install -y ca-certificates curl gnupg lsb-release
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Add Docker's official GPG key</span>
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify GPG key installation</span>
+cat /etc/apt/keyrings/docker.gpg | gpg --show-keys
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Add Docker repository</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">\</span>
+  <span style="color: #008000;">"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \</span>
+<span style="color: #008000;">  $(lsb_release -cs) stable"</span> | sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Install Docker packages</span>
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Configure Docker to run without sudo (important for CI/CD)</span>
+sudo usermod -aG docker $<span style="color: #BA36A5;">USER</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Apply group changes without logout</span>
+<span style="color: #006FE0;">newgrp</span> docker
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Test Docker installation</span>
+docker run hello-world
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify Docker Compose</span>
+docker compose version
+
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Docker Engine is installed with proper GPG key verification and user permissions configured for passwordless operation.
+</p>
+</div>
+</div>
+<div id="outline-container-org69df9cd" class="outline-4">
+<h4 id="org69df9cd"><span class="section-number-4">5.1.2.</span> Docker Service Configuration</h4>
+<div class="outline-text-4" id="text-5-1-2">
+<p>
+Enable Docker as a system service for automatic startup and management.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Docker service setup</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Configuring Docker for automatic startup and monitoring</span>
+
+ssh EC2-RagFlow
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Enable Docker service to start on boot</span>
+sudo systemctl enable docker
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Start Docker service</span>
+sudo systemctl start docker
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify service status</span>
+sudo systemctl status docker  --no-pager
+
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Docker service is configured to start automatically on EC2 instance boot.
+</p>
+</div>
+</div>
+<div id="outline-container-orga3649fe" class="outline-4">
+<h4 id="orga3649fe"><span class="section-number-4">5.1.3.</span> Lazydocker Installation</h4>
+<div class="outline-text-4" id="text-5-1-3">
+<p>
+Install Lazydocker for convenient terminal-based Docker container management.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Lazydocker installation</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Installing terminal UI for Docker management</span>
+
+ssh EC2-RagFlow
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Download and install Lazydocker</span>
+curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Add Lazydocker to PATH</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">'export PATH="$HOME/.local/bin:$PATH"'</span> &gt;&gt; ~/.bashrc
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Reload bashrc to apply PATH changes</span>
+<span style="color: #006FE0;">source</span> ~/.bashrc
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify installation</span>
+lazydocker --version
+
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Lazydocker is installed and available in the PATH for terminal-based Docker management.
+</p>
+</div>
+</div>
+<div id="outline-container-org19c55df" class="outline-4">
+<h4 id="org19c55df"><span class="section-number-4">5.1.4.</span> GitHub CLI Installation</h4>
+<div class="outline-text-4" id="text-5-1-4">
+<p>
+Install the GitHub CLI tool for repository and runner management.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: GitHub CLI installation</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Installing gh command-line tool for GitHub integration</span>
+
+ssh EC2-RagFlow
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Update package list</span>
+sudo apt update
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Install dependencies</span>
+sudo apt install -y curl unzip
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Add GitHub CLI GPG key</span>
+curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd <span style="color: #BA36A5;">of</span>=/usr/share/keyrings/githubcli-archive-keyring.gpg
+sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Add GitHub CLI repository</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main"</span> | sudo tee /etc/apt/sources.list.d/github-cli.list &gt; /dev/null
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Install GitHub CLI</span>
+sudo apt update
+sudo apt install -y gh
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify installation</span>
+gh --version
+
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> GitHub CLI is installed and ready for repository and runner management operations.
+</p>
+</div>
+</div>
+<div id="outline-container-org5de96c3" class="outline-4">
+<h4 id="org5de96c3"><span class="section-number-4">5.1.5.</span> Docker and Docker Compose Verification</h4>
+<div class="outline-text-4" id="text-5-1-5">
+<p>
+Verify all Docker components are properly installed and functional.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Docker installation verification</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Confirming all Docker components are operational</span>
+
+ssh EC2-RagFlow
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Check Docker version</span>
+docker --version
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Check Docker Compose version (new recommended format)</span>
+docker compose version
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify Docker daemon is running</span>
+docker ps
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">List available Docker images</span>
+docker images
+
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Docker Engine and Docker Compose are verified as fully operational.
+</p>
+</div>
+</div>
+<div id="outline-container-org6761e0e" class="outline-4">
+<h4 id="org6761e0e"><span class="section-number-4">5.1.6.</span> Python Development Tools Installation</h4>
+<div class="outline-text-4" id="text-5-1-6">
+<p>
+Install uv (fast Python package installer) and development libraries required for Python projects.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Python development tools installation</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Installing uv and development dependencies</span>
+
+ssh EC2-RagFlow
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Install uv (fast Python package installer and runner)</span>
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify uv installation</span>
+uv --version
+uvx --version
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Install ICU development libraries and build tools</span>
+sudo apt-get update
+sudo apt-get install -y <span style="color: #008000;">\</span>
+    libicu-dev <span style="color: #008000;">\</span>
+    pkg-config <span style="color: #008000;">\</span>
+    build-essential
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify build tools</span>
+gcc --version
+pkg-config --version
+
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Python development tools including uv, ICU libraries, and build essentials are installed and verified.
+</p>
+</div>
+</div>
+<div id="outline-container-orgd58ca3b" class="outline-4">
+<h4 id="orgd58ca3b"><span class="section-number-4">5.1.7.</span> Development Environment Summary</h4>
+<div class="outline-text-4" id="text-5-1-7">
+<p>
+Verify the complete development environment is ready for deployment.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Development environment verification</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Confirming all tools are installed and operational</span>
+
+ssh EC2-RagFlow
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Display installed versions</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"=== Development Environment Status ==="</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"Docker:"</span>
+docker --version
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">""</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"Docker Compose:"</span>
+docker compose version
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">""</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"GitHub CLI:"</span>
+gh --version
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">""</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"Python Tools:"</span>
+uv --version
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">""</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"Build Tools:"</span>
+gcc --version | head -1
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">""</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"System Information:"</span>
+uname -a
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">""</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"Available Disk Space:"</span>
+df -h /
+
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Complete development environment is verified and ready for RagFlow deployment and CI/CD operations.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc3d4c14" class="outline-3">
+<h3 id="orgc3d4c14"><span class="section-number-3">5.2.</span> Summary</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+The development environment setup establishes necessary tools for containerized application deployment and CI/CD workflows. Docker Engine provides the containerization platform, Lazydocker offers terminal management, GitHub CLI enables repository integration, and Python development tools support application requirements. This foundation enables RagFlow deployment and GitHub Actions runner functionality on the EC2 instance.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org8535345" class="outline-2">
+<h2 id="org8535345"><span class="section-number-2">6.</span> Core RagFlow Deployment</h2>
+<div class="outline-text-2" id="text-6">
+</div>
+<div id="outline-container-org9d393f7" class="outline-3">
+<h3 id="org9d393f7"><span class="section-number-3">6.1.</span> Basic Ragflow Setup</h3>
+<div class="outline-text-3" id="text-6-1">
+<p>
+This section deploys RagFlow on the EC2 instance using Docker Compose following the QuickStart guide.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: RagFlow deployment on EC2</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Installing and starting RagFlow RAG platform</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">SSH into the EC2 instance</span>
+ssh EC2-RagFlow
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Clone the RagFlow repository</span>
+<span style="color: #006FE0;">cd</span> ~; <span style="color: #006FE0;">pwd</span>
+git clone https://github.com/infiniflow/ragflow.git
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Navigate to the RagFlow directory</span>
+<span style="color: #006FE0;">cd</span> ~/ragflow/docker
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Start RagFlow using Docker Compose</span>
+docker compose up -d
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify the deployment</span>
+docker ps
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Getting SERVICE_IP</span>
+<span style="color: #BA36A5;">public_ip</span>=$(curl -s http://checkip.amazonaws.com)
+<span style="color: #006FE0;">echo</span> $<span style="color: #BA36A5;">public_ip</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">RagFlow URL</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"RagFlow is accessible at: http://$public_ip:80"</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Shutting down RagFlow (optional)</span>
+docker compose stop
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Clean up RagFlow (optional)</span>
+docker compose down -v <span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">removes volumes as well</span>
+<span style="color: #006FE0;">cd</span> ~; rm -rf ragflow
+
+
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> RagFlow is successfully deployed and running on the EC2 instance.
+</p>
+
+<p>
+Url <a href="http://18.184.181.110">http://18.184.181.110</a>
+URL <a href="https://18.184.181.110">https://18.184.181.110</a>
+</p>
+</div>
+</div>
+<div id="outline-container-org4d996ae" class="outline-3">
+<h3 id="org4d996ae"><span class="section-number-3">6.2.</span> HTTPS Setup with Self-Signed Certificate</h3>
+<div class="outline-text-3" id="text-6-2">
+<p>
+This section provides step-by-step instructions for setting up HTTPS access to RAGFlow using a self-signed SSL certificate. The setup allows the domain to be reachable via IP address over HTTPS, reusing the existing Nginx configuration files with minimal modifications.
+</p>
+
+<p>
+<b><b>Prerequisites</b></b>
+</p>
+
+<ul class="org-ul">
+<li>Docker and Docker Compose installed on your server</li>
+<li>Ports 80 and 443 open on your server</li>
+<li>Server's public IP address (replace &lt;SERVER<sub>IP</sub>&gt; with your actual IP throughout these instructions)</li>
+<li>Basic knowledge of command-line operations</li>
+</ul>
+</div>
+<div id="outline-container-orgcb904c9" class="outline-4">
+<h4 id="orgcb904c9"><span class="section-number-4">6.2.1.</span> Step 1: Generate Self-Signed SSL Certificate**</h4>
+<div class="outline-text-4" id="text-6-2-1">
+<p>
+Generate a self-signed certificate for your server's IP address. This certificate will be used by Nginx for HTTPS connections.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">bash
+<span style="color: #006FE0;">pwd</span>
+ssh EC2-RagFlow
+<span style="color: #006FE0;">cd</span>
+<span style="color: #006FE0;">cd</span> ~/ragflow/docker/nginx
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Retrieve the SERVER_IP</span>
+curl -s http://checkip.amazonaws.com
+<span style="color: #006FE0;">export</span> <span style="color: #BA36A5;">SERVER_IP</span>=$(curl -s http://checkip.amazonaws.com)
+<span style="color: #006FE0;">echo</span> $<span style="color: #BA36A5;">SERVER_IP</span>
+
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Create a directory for SSL certificates</span>
+mkdir -p ssl
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Generate a private key</span>
+openssl genrsa -out ssl/privkey.pem 2048
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Generate a certificate signing request (CSR) for your IP</span>
+openssl req -new -key ssl/privkey.pem -out ssl/cert.csr -subj <span style="color: #008000;">"/C=US/ST=State/L=City/O=Organization/CN=localhost"</span>
+openssl req -new -key ssl/privkey.pem -out ssl/cert.csr -subj <span style="color: #008000;">"/C=US/ST=State/L=City/O=Organization/CN=&lt;$SERVER_IP&gt;"</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Generate the self-signed certificate valid for 365 days</span>
+openssl x509 -req -days 365 -in ssl/cert.csr -signkey ssl/privkey.pem -out ssl/fullchain.pem
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Set appropriate permissions</span>
+chmod 600 ssl/privkey.pem
+chmod 644 ssl/fullchain.pem
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify the certificate was created</span>
+ls -la ssl/
+cat ssl/fullchain.pem
+cat ssl/privkey.pem
+cat ssl/cert.csr
+
+
+</pre>
+</div>
+
+<p>
+After running these commands, you should see the certificate files in the ssl directory. The fullchain.pem contains the certificate, and privkey.pem contains the private key.
+</p>
+</div>
+</div>
+<div id="outline-container-org957538a" class="outline-4">
+<h4 id="org957538a"><span class="section-number-4">6.2.2.</span> Step 2: Modify Nginx Configuration**</h4>
+<div class="outline-text-4" id="text-6-2-2">
+<p>
+Update the existing ragflow.https.conf file to use your IP address instead of a domain name.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Go to the ragflow project directory</span>
+<span style="color: #006FE0;">cd</span> ~/ragflow
+<span style="color: #006FE0;">pwd</span>
+
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Copy the existing HTTPS config as a backup</span>
+cp docker/nginx/ragflow.https.conf docker/nginx/ragflow.https.ip.conf
+
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Edit the configuration file to replace domain with IP and proxy path</span>
+sed -i <span style="color: #008000;">"s/your-ragflow-domain.com/localhost/g"</span> docker/nginx/ragflow.https.ip.conf
+sed -i <span style="color: #008000;">'s|http://ragflow:|http://ragflow-cpu:|'</span> docker/nginx/ragflow.https.ip.conf
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Only if using GPU version, uncomment the following line</span>
+<span style="color: #8D8D84;">#</span><span style="color: #8D8D84; font-style: italic;">sed -i 's|http://ragflow:|http://ragflow-gpu:|' docker/nginx/ragflow.https.ip.conf</span>
+
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify the changes</span>
+cat docker/nginx/ragflow.https.ip.conf
+</pre>
+</div>
+
+<p>
+The modified configuration now listens on your IP address for both HTTP (redirecting to HTTPS) and HTTPS connections.
+</p>
+</div>
+</div>
+<div id="outline-container-org6e7e8d1" class="outline-4">
+<h4 id="org6e7e8d1"><span class="section-number-4">6.2.3.</span> Step 3: Update Docker Compose Configuration**</h4>
+<div class="outline-text-4" id="text-6-2-3">
+<p>
+Modify the docker-compose.yml file to mount the self-signed certificates and use the updated Nginx configuration.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #006FE0;">pwd</span>
+<span style="color: #006FE0;">cd</span> ~/ragflow/docker
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Add certificate volumes to the ragflow service in docker-compose.yml</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Insert these lines under the existing volumes section for ragflow-cpu and ragflow-gpu services</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">For ragflow-cpu service (around line 37-44):</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Add after: - ./entrypoint.sh:/ragflow/entrypoint.sh</span>
+      - ./nginx/ssl/fullchain.pem:/etc/nginx/ssl/fullchain.pem:ro
+      - ./nginx/ssl/privkey.pem:/etc/nginx/ssl/privkey.pem:ro
+      - ./nginx/ragflow.https.ip.conf:/etc/nginx/conf.d/ragflow.confls
+
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">For ragflow-gpu service (around line 86-93):</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Add after: - ./entrypoint.sh:/ragflow/entrypoint.sh</span>
+      - ./nginx/ssl/fullchain.pem:/etc/nginx/ssl/fullchain.pem:ro
+      - ./nginx/ssl/privkey.pem:/etc/nginx/ssl/privkey.pem:ro
+      - ./nginx/ragflow.https.ip.conf:/etc/nginx/conf.d/ragflow.conf
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify the docker-compose.yml file syntax</span>
+docker compose config
+</pre>
+</div>
+
+<p>
+The docker-compose.yml now mounts your self-signed certificates and the modified Nginx configuration into the container.
+</p>
+</div>
+</div>
+<div id="outline-container-orgc351e10" class="outline-4">
+<h4 id="orgc351e10"><span class="section-number-4">6.2.4.</span> Step 4: Restart RAGFlow Services**</h4>
+<div class="outline-text-4" id="text-6-2-4">
+<p>
+Stop the existing services and restart them with the new HTTPS configuration.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">
+<span style="color: #006FE0;">cd</span> ~/ragflow/docker
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Stop all running services</span>
+docker compose down
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Start the services (use --profile cpu or gpu as needed)</span>
+docker compose --profile cpu up -d
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Wait for services to start</span>
+sleep 30
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Check that services are running</span>
+docker compose ps
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify Nginx is listening on ports 80 and 443</span>
+docker compose exec ragflow-cpu netstat -tlnp | grep :80
+docker compose exec ragflow-cpu netstat -tlnp | grep :443
+</pre>
+</div>
+
+<p>
+After restarting, RAGFlow should be accessible via HTTPS at <a href="https://&lt;server_ip&gt;">https://&lt;server_ip&gt;</a>. Note that browsers will show a security warning due to the self-signed certificate.
+</p>
+</div>
+</div>
+<div id="outline-container-orgd3050d1" class="outline-4">
+<h4 id="orgd3050d1"><span class="section-number-4">6.2.5.</span> Step 5: Test HTTPS Access**</h4>
+<div class="outline-text-4" id="text-6-2-5">
+<p>
+Verify that the HTTPS setup is working correctly.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">
+
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Test HTTP to HTTPS redirect</span>
+curl -I http://$<span style="color: #BA36A5;">SERVER_IP</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Test HTTPS connection (ignore certificate warnings)</span>
+curl -k -I https://$<span style="color: #BA36A5;">SERVER_IP</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Check certificate details</span>
+openssl s_client -connect $<span style="color: #BA36A5;">SERVER_IP</span>:443 -servername $<span style="color: #BA36A5;">SERVER_IP</span> &lt; /dev/null 2&gt;/dev/null | openssl x509 -noout -dates -subject
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify RAGFlow API is accessible over HTTPS</span>
+curl -k https://$<span style="color: #BA36A5;">SERVER_IP</span>/v1/system/healthz
+
+</pre>
+</div>
+
+<p>
+The HTTP request should redirect to HTTPS, and the HTTPS connection should succeed despite certificate warnings. The API status endpoint should return a valid response.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgcbb7fbc" class="outline-3">
+<h3 id="orgcbb7fbc"><span class="section-number-3">6.3.</span> Use Case: Access RagFlow via SSH-Tunnel</h3>
+<div class="outline-text-3" id="text-6-3">
+<p>
+This creates an SSH tunnel to access RagFlow securely from a local browser.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Testing RagFlow via SSH tunnel</span>
+
+ssh -L 9380:localhost:80 EC2-RagFlow
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Open RagFlow in your browser at http://localhost:9380</span>
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+
+</pre>
+</div>
+
+<p>
+When the SSH tunnel is established, RagFlow can be accessed via local browser at:
+<a href="http://localhost:9380">http://localhost:9380</a>
+</p>
+
+<p>
+<b>Result:</b> RagFlow is accessible via SSH tunnel and ready for document processing and RAG operations.
+</p>
+</div>
+</div>
+<div id="outline-container-orga26fc06" class="outline-3">
+<h3 id="orga26fc06"><span class="section-number-3">6.4.</span> Summary</h3>
+<div class="outline-text-3" id="text-6-4">
+<p>
+RagFlow deployment establishes the core RAG platform. The application configures with Docker containerization, HTTPS setup with self-signed certificates, and SSH tunnel access for secure local browser connectivity. The system integrates document processing and knowledge base management.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org3df7412" class="outline-2">
+<h2 id="org3df7412"><span class="section-number-2">7.</span> Advanced Features - Document Processing</h2>
+<div class="outline-text-2" id="text-7">
+</div>
+<div id="outline-container-orga282bbf" class="outline-3">
+<h3 id="orga282bbf"><span class="section-number-3">7.1.</span> Document Ingestion and Processing</h3>
+<div class="outline-text-3" id="text-7-1">
+<p>
+This demonstrates uploading and processing documents for RAG functionality.
+</p>
+</div>
+<div id="outline-container-org1c985a7" class="outline-4">
+<h4 id="org1c985a7"><span class="section-number-4">7.1.1.</span> Upload Documents</h4>
+<div class="outline-text-4" id="text-7-1-1">
+<p>
+Access RagFlow via browser and upload sample documents for processing.
+</p>
+</div>
+</div>
+<div id="outline-container-orgf104eca" class="outline-4">
+<h4 id="orgf104eca"><span class="section-number-4">7.1.2.</span> Configure Knowledge Base</h4>
+<div class="outline-text-4" id="text-7-1-2">
+<p>
+Create a knowledge base and configure document parsing settings.
+</p>
+</div>
+</div>
+<div id="outline-container-orgf24707d" class="outline-4">
+<h4 id="orgf24707d"><span class="section-number-4">7.1.3.</span> Test RAG Queries</h4>
+<div class="outline-text-4" id="text-7-1-3">
+<p>
+Test retrieval-augmented generation with uploaded documents.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org4c6d1b9" class="outline-3">
+<h3 id="org4c6d1b9"><span class="section-number-3">7.2.</span> Summary</h3>
+<div class="outline-text-3" id="text-7-2">
+<p>
+Document processing enables advanced knowledge management while preserving privacy. Local processing handles sensitive documents without transmitting data to external services.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org9a3ea6b" class="outline-2">
+<h2 id="org9a3ea6b"><span class="section-number-2">8.</span> Infrastructure Cleanup</h2>
+<div class="outline-text-2" id="text-8">
+</div>
+<div id="outline-container-org3f36e56" class="outline-3">
+<h3 id="org3f36e56"><span class="section-number-3">8.1.</span> Cleanup Philosophy</h3>
+<div class="outline-text-3" id="text-8-1">
+<p>
+Infrastructure as Code enables rapid deployment, but equally important is the ability to cleanly tear down resources to avoid unnecessary costs. This section provides procedures for complete cleanup of all deployed resources.
+</p>
+</div>
+</div>
+<div id="outline-container-org54be5da" class="outline-3">
+<h3 id="org54be5da"><span class="section-number-3">8.2.</span> Stop RagFlow Services</h3>
+<div class="outline-text-3" id="text-8-2">
+<p>
+Before destroying infrastructure, gracefully stop all running services.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Stopping RagFlow services</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Gracefully shutting down all containers</span>
+
+ssh EC2-RagFlow
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Stop RagFlow Docker containers</span>
+<span style="color: #006FE0;">cd</span> ~/ragflow
+docker-compose down
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify containers are stopped</span>
+docker ps -a
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Optional: Remove Docker images to free disk space</span>
+docker system prune -a -f
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Exit SSH session</span>
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> RagFlow services are stopped and Docker containers are removed from the EC2 instance.
+</p>
+</div>
+</div>
+<div id="outline-container-org05e5ce9" class="outline-3">
+<h3 id="org05e5ce9"><span class="section-number-3">8.3.</span> Terminate EC2 Instance with Terraform</h3>
+<div class="outline-text-3" id="text-8-3">
+<p>
+Use Terraform to cleanly destroy all AWS infrastructure resources.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Destroying AWS infrastructure</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Removing all Terraform-managed resources</span>
+
+<span style="color: #006FE0;">cd</span> <span style="color: #008000;">"$PROJECT_DIR/terraform"</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Review what will be destroyed</span>
+terraform plan -destroy -var-file=terraform.tfvars
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Destroy all infrastructure</span>
+terraform destroy -var-file=terraform.tfvars
+yes
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify destruction</span>
+terraform show
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">List remaining EC2 instances (should show none with EC2-RagFlow tag)</span>
+aws ec2 describe-instances <span style="color: #008000;">\</span>
+  --filters <span style="color: #008000;">"Name=tag:Name,Values=EC2-RagFlow"</span> <span style="color: #008000;">\</span>
+  --query <span style="color: #008000;">'Reservations[*].Instances[*].[InstanceId, State.Name]'</span> <span style="color: #008000;">\</span>
+  --output text
+</pre>
+</div>
+
+<p>
+<b>Result:</b> All AWS infrastructure resources are destroyed, including EC2 instance, security groups, and key pairs.
+</p>
+</div>
+</div>
+<div id="outline-container-org548362d" class="outline-3">
+<h3 id="org548362d"><span class="section-number-3">8.4.</span> Clean Up Local SSH Configuration</h3>
+<div class="outline-text-3" id="text-8-4">
+<p>
+Remove SSH configurations and keys associated with the destroyed instance.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Removing local SSH configuration</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Cleaning up SSH keys and config entries</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Remove SSH config entry for EC2-RagFlow</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Manual edit recommended to preserve other configurations</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"Removing SSH config entry for EC2-RagFlow..."</span>
+perl -i.bak -ne <span style="color: #008000;">'print unless /^Host EC2-RagFlow$/..(/^Host / &amp;&amp; !/^Host EC2-RagFlow$/)'</span> ~/.ssh/config
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify removal</span>
+grep -A 5 <span style="color: #008000;">"EC2-RagFlow"</span> ~/.ssh/config || <span style="color: #006FE0;">echo</span> <span style="color: #008000;">"SSH config entry removed successfully"</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Optional: Remove SSH keys (only if no longer needed)</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Uncomment the following lines if you want to delete the keys:</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">rm -f ~/.ssh/ragflow_key</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">rm -f ~/.ssh/ragflow_key.pub</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">List remaining SSH keys</span>
+ls -la ~/.ssh/ragflow_key* 2&gt;/dev/null || <span style="color: #006FE0;">echo</span> <span style="color: #008000;">"SSH keys still present (not removed)"</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> SSH configuration entries are removed. SSH keys remain available for potential future deployments (remove manually if no longer needed).
+</p>
+</div>
+</div>
+<div id="outline-container-org00a450f" class="outline-3">
+<h3 id="org00a450f"><span class="section-number-3">8.5.</span> Clean Up Terraform State Files</h3>
+<div class="outline-text-3" id="text-8-5">
+<p>
+Clean up Terraform state and temporary files.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Cleaning up Terraform files</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Removing state and temporary files</span>
+
+<span style="color: #006FE0;">cd</span> <span style="color: #008000;">"$PROJECT_DIR/terraform"</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">List Terraform state files</span>
+ls -la terraform.tfstate*
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Optional: Back up state files before removal</span>
+mkdir -p ../terraform-backups
+cp terraform.tfstate* ../terraform-backups/ 2&gt;/dev/null || <span style="color: #006FE0;">echo</span> <span style="color: #008000;">"No state files to backup"</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Remove Terraform state files (only after infrastructure is destroyed)</span>
+rm -f terraform.tfstate
+rm -f terraform.tfstate.backup
+rm -f tfplan*
+rm -f terraform.tfvars
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Clean up Terraform cache</span>
+rm -rf .terraform
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify cleanup</span>
+ls -la
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Terraform state files and temporary files are removed to complete the cleanup process.
+</p>
+</div>
+</div>
+<div id="outline-container-orgeef980b" class="outline-3">
+<h3 id="orgeef980b"><span class="section-number-3">8.6.</span> Verify Complete Cleanup</h3>
+<div class="outline-text-3" id="text-8-6">
+<p>
+Perform final verification that all resources have been removed.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Final cleanup verification</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Confirming all resources are removed</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Check for any remaining EC2 instances</span>
+aws ec2 describe-instances <span style="color: #008000;">\</span>
+  --filters <span style="color: #008000;">"Name=tag:project,Values=ragflow"</span> <span style="color: #008000;">\</span>
+  --query <span style="color: #008000;">'Reservations[*].Instances[*].[InstanceId, State.Name, Tags[?Key==`Name`]|[0].Value]'</span> <span style="color: #008000;">\</span>
+  --output table
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Check for remaining security groups</span>
+aws ec2 describe-security-groups <span style="color: #008000;">\</span>
+  --filters <span style="color: #008000;">"Name=group-name,Values=RagFlowSecurityGroup"</span> <span style="color: #008000;">\</span>
+  --query <span style="color: #008000;">'SecurityGroups[*].[GroupId, GroupName]'</span> <span style="color: #008000;">\</span>
+  --output table
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Check for remaining key pairs</span>
+aws ec2 describe-key-pairs <span style="color: #008000;">\</span>
+  --filters <span style="color: #008000;">"Name=key-name,Values=ragflow-key"</span> <span style="color: #008000;">\</span>
+  --query <span style="color: #008000;">'KeyPairs[*].[KeyName, KeyFingerprint]'</span> <span style="color: #008000;">\</span>
+  --output table
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Summary</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"============================================"</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"Cleanup Verification Complete"</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"============================================"</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"If any resources are still listed above,"</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"they may need manual cleanup via AWS Console"</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"============================================"</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Final verification confirms all AWS resources have been properly cleaned up and removed.
+</p>
+</div>
+</div>
+<div id="outline-container-org7921f5e" class="outline-3">
+<h3 id="org7921f5e"><span class="section-number-3">8.7.</span> Cost Optimization Notes</h3>
+<div class="outline-text-3" id="text-8-7">
+<p>
+Some important considerations for cost management:
+</p>
+
+<ul class="org-ul">
+<li><b><b>EC2 Instance</b></b>: Charges accrue while the instance is running. Use `terraform destroy` when not actively using the system.</li>
+<li><b><b>EBS Volumes</b></b>: Storage costs continue even when instances are stopped. Destroy volumes when not needed.</li>
+<li><b><b>Elastic IPs</b></b>: Unused Elastic IPs incur charges. Ensure they're released during infrastructure destruction.</li>
+<li><b><b>Data Transfer</b></b>: Outbound data transfer from AWS to the internet incurs costs.</li>
+</ul>
+
+<p>
+For occasional use, consider stopping the instance rather than destroying it:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Stop instance without destroying (preserves data but stops compute charges)</span>
+aws ec2 stop-instances --instance-ids <span style="color: #008000;">"$instance_id"</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Start instance when needed again</span>
+aws ec2 start-instances --instance-ids <span style="color: #008000;">"$instance_id"</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orge8b1cb8" class="outline-3">
+<h3 id="orge8b1cb8"><span class="section-number-3">8.8.</span> Summary</h3>
+<div class="outline-text-3" id="text-8-8">
+<p>
+Infrastructure cleanup procedures remove all deployed resources. Terraform destroy commands remove AWS infrastructure, SSH configurations clean from local systems, and verification steps confirm proper resource removal. This prevents unexpected costs after project completion.
+</p>
+
+<p>
+This project demonstrates that privacy-focused RAG systems are both technically feasible and practically deployable. Self-hosted solutions provide alternatives to cloud-only AI services.
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+<b>This completes the RagFlow EC2 deployment using live-scripting methodology. Each code block is executable with F4 in Emacs using `send-line-to-vterm`, or can be copied and pasted into any terminal for the same results.</b>
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org3c984b4" class="outline-2">
+<h2 id="org3c984b4"><span class="section-number-2">9.</span> Appendix: GitHub Self-Hosted Runner Setup</h2>
+<div class="outline-text-2" id="text-9">
+</div>
+<div id="outline-container-org75c8e7d" class="outline-3">
+<h3 id="org75c8e7d"><span class="section-number-3">9.1.</span> GitHub Runner for CI/CD Testing on AWS</h3>
+<div class="outline-text-3" id="text-9-1">
+<p>
+This section establishes a GitHub Self-Hosted Runner on the AWS EC2 instance to enable continuous integration and testing workflows. The runner executes GitHub Actions directly on your infrastructure, providing complete control over the CI/CD environment.
+</p>
+</div>
+<div id="outline-container-orgf590d3d" class="outline-4">
+<h4 id="orgf590d3d"><span class="section-number-4">9.1.1.</span> Prerequisites and Security Group Configuration</h4>
+<div class="outline-text-4" id="text-9-1-1">
+<p>
+Before installing the GitHub Runner, ensure the necessary ports and dependencies are available on the EC2 instance.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Update AWS security group for GitHub Runner</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Adding required ports for GitHub Actions communication</span>
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+<span style="color: #006FE0;">pwd</span>
+<span style="color: #006FE0;">cd</span> <span style="color: #008000;">"$PROJECT_DIR/terraform"</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">GitHub Runner requires outbound HTTPS (443) and SSH (22) access</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">These are typically already open, but verify in your security group</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">For immediate access, update via AWS CLI if needed:</span>
+aws ec2 authorize-security-group-ingress <span style="color: #008000;">\</span>
+  --group-name RagFlowSecurityGroup <span style="color: #008000;">\</span>
+  --protocol tcp <span style="color: #008000;">\</span>
+  --port 443 <span style="color: #008000;">\</span>
+  --cidr 0.0.0.0/0
+
+  --description <span style="color: #008000;">"GitHub Actions HTTPS"</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify security group rules</span>
+aws ec2 describe-security-groups <span style="color: #008000;">\</span>
+  --filters <span style="color: #008000;">"Name=group-name,Values=RagFlowSecurityGroup"</span> <span style="color: #008000;">\</span>
+  --query <span style="color: #008000;">'SecurityGroups[*].IpPermissions[*].[FromPort,ToPort,IpProtocol]'</span> <span style="color: #008000;">\</span>
+  --output table
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Security group is configured to allow GitHub Runner communication with GitHub servers.
+</p>
+</div>
+</div>
+<div id="outline-container-org5588762" class="outline-4">
+<h4 id="org5588762"><span class="section-number-4">9.1.2.</span> GitHub Runner Installation and Configuration</h4>
+<div class="outline-text-4" id="text-9-1-2">
+<p>
+Download and configure the GitHub Self-Hosted Runner on the EC2 instance.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: GitHub Runner installation and setup</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Installing and configuring self-hosted runner for CI/CD</span>
+
+ssh EC2-RagFlow
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Create runner directory</span>
+mkdir -p ~/actions-runner
+<span style="color: #006FE0;">cd</span> ~/actions-runner
+<span style="color: #006FE0;">pwd</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Download the latest runner package</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Check https://github.com/actions/runner/releases for the latest version</span>
+curl -o actions-runner-linux-x64-2.329.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.329.0/actions-runner-linux-x64-2.329.0.tar.gz
+ls -ltr
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify the package integrity (optional but recommended)</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"194f1e1e4bd02f80b7e9633fc546084d8d4e19f3928a324d512ea53430102e1d  actions-runner-linux-x64-2.329.0.tar.gz"</span> | shasum -a 256 -c
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Extract the runner</span>
+tar xzf ./actions-runner-linux-x64-2.329.0.tar.gz
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">List extracted files</span>
+ls -la
+
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> GitHub Runner package is downloaded and extracted on the EC2 instance.
+</p>
+</div>
+</div>
+<div id="outline-container-org02ad098" class="outline-4">
+<h4 id="org02ad098"><span class="section-number-4">9.1.3.</span> Runner Registration with GitHub</h4>
+<div class="outline-text-4" id="text-9-1-3">
+<p>
+Register the runner with your GitHub repository to enable CI/CD workflows.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: GitHub Runner registration</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Configuring runner to connect with GitHub repository</span>
+
+ssh EC2-RagFlow
+
+<span style="color: #006FE0;">cd</span> ~/actions-runner
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Generate a registration token from GitHub</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Visit: https://github.com/YOUR_USERNAME/YOUR_REPO/settings/actions/runners/new</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Copy the registration token and use it below</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Configure the runner with your repository details</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Replace the token, URL, and labels with your actual values</span>
+./config.sh <span style="color: #008000;">\</span>
+    --url https://github.com/andreaswittmann/ragflow <span style="color: #008000;">\</span>
+    --token AFO65PTWT2JONPGSBNUANR3JBOEXO <span style="color: #008000;">\</span>
+    --name ec2-ragflow-runner <span style="color: #008000;">\</span>
+    --labels ragflow-test,self-hosted <span style="color: #008000;">\</span>
+    --runnergroup Default <span style="color: #008000;">\</span>
+    --work _workcd ~/actions-runner
+
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify configuration</span>
+./config.sh list
+
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> GitHub Runner is configured and registered with your GitHub repository.
+</p>
+</div>
+</div>
+<div id="outline-container-org94387af" class="outline-4">
+<h4 id="org94387af"><span class="section-number-4">9.1.4.</span> Running the Runner as a Service</h4>
+<div class="outline-text-4" id="text-9-1-4">
+<p>
+Install and start the GitHub Runner as a systemd service for automatic startup and management.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Installing GitHub Runner as systemd service</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Setting up automatic runner startup and management</span>
+
+ssh EC2-RagFlow
+
+<span style="color: #006FE0;">cd</span> ~/actions-runner
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Install the runner as a service</span>
+sudo ./svc.sh install
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Start the runner service</span>
+sudo ./svc.sh start
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Check service status</span>
+sudo systemctl --no-pager status actions.runner*
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">View runner logs</span>
+sudo journalctl -u actions.runner* -f
+
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> GitHub Runner is installed as a systemd service and automatically starts on EC2 instance boot.
+</p>
+</div>
+</div>
+<div id="outline-container-orgd158e4d" class="outline-4">
+<h4 id="orgd158e4d"><span class="section-number-4">9.1.5.</span> Verifying Runner Status</h4>
+<div class="outline-text-4" id="text-9-1-5">
+<p>
+Confirm the runner is connected and ready to execute workflows.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Verifying GitHub Runner status</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Confirming runner connectivity and readiness</span>
+
+ssh EC2-RagFlow
+
+<span style="color: #006FE0;">cd</span> ~/actions-runner
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Check runner status</span>
+./config.sh list
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">View service status</span>
+sudo systemctl status actions.runner*
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Check if runner is listening for jobs</span>
+ps aux | grep -i <span style="color: #008000;">"actions-runner"</span> | grep -v grep
+
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify in GitHub web interface:</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">1. Navigate to: https://github.com/YOUR_USERNAME/YOUR_REPO/settings/actions/runners</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">2. Your runner should appear with status "Idle" (ready for jobs)</span>
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> GitHub Runner is verified as connected and ready to execute CI/CD workflows.
+</p>
+</div>
+</div>
+<div id="outline-container-org0acadf8" class="outline-4">
+<h4 id="org0acadf8"><span class="section-number-4">9.1.6.</span> Testing the Runner with a Sample Workflow</h4>
+<div class="outline-text-4" id="text-9-1-6">
+<p>
+Create a simple GitHub Actions workflow to test the runner functionality.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Creating test workflow for GitHub Runner</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Setting up a sample CI/CD workflow</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">On your local machine, in your repository:</span>
+mkdir -p .github/workflows
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Create a simple test workflow</span>
+cat &gt; .github/workflows/test-runner.yml &lt;&lt; <span style="color: #008000;">'EOF'</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">name: Test Self-Hosted Runner</span>
+
+<span style="color: #0000ff; background-color: #EEF5FE;">on:</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">  push:</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    branches: [ main, develop ]</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">  pull_request:</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    branches: [ main ]</span>
+
+<span style="color: #0000ff; background-color: #EEF5FE;">jobs:</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">  test:</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    runs-on: [self-hosted, ec2, ragflow-ci]</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    steps:</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">      - uses: actions/checkout@v3</span>
+
+<span style="color: #0000ff; background-color: #EEF5FE;">      - name: Display system information</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">        run: |</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">          echo "Runner: ${{ runner.name }}"</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">          echo "OS: $(uname -s)"</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">          uname -a</span>
+
+<span style="color: #0000ff; background-color: #EEF5FE;">      - name: Check Docker</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">        run: |</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">          docker --version</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">          docker ps</span>
+
+<span style="color: #0000ff; background-color: #EEF5FE;">      - name: Run basic tests</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">        run: |</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">          echo "Running tests on self-hosted runner"</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">          echo "Current directory: $(pwd)"</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">          ls -la</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">EOF</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Commit and push the workflow</span>
+git add .github/workflows/test-runner.yml
+git commit -m <span style="color: #008000;">"Add test workflow for self-hosted runner"</span>
+git push origin main
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Sample workflow is created and pushed to trigger runner execution.
+</p>
+</div>
+</div>
+<div id="outline-container-orge9dd634" class="outline-4">
+<h4 id="orge9dd634"><span class="section-number-4">9.1.7.</span> Monitoring and Troubleshooting</h4>
+<div class="outline-text-4" id="text-9-1-7">
+<p>
+Monitor runner activity and resolve common issues.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Monitoring and troubleshooting GitHub Runner</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Checking logs and resolving common problems</span>
+
+ssh EC2-RagFlow
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">View runner service logs</span>
+sudo journalctl -u actions.runner* -n 50 --no-pager
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Check runner process</span>
+ps aux | grep -i <span style="color: #008000;">"actions-runner"</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">View runner configuration</span>
+cat ~/actions-runner/.runner
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Check disk space (runners need adequate space for job artifacts)</span>
+df -h
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Check memory usage</span>
+free -h
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">If runner is stuck, restart the service</span>
+sudo systemctl restart actions.runner*
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">View real-time logs</span>
+sudo journalctl -u actions.runner* -f
+q
+
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Runner logs are monitored and common issues are diagnosed.
+</p>
+</div>
+</div>
+<div id="outline-container-org69488bc" class="outline-4">
+<h4 id="org69488bc"><span class="section-number-4">9.1.8.</span> Removing the Runner (if needed)</h4>
+<div class="outline-text-4" id="text-9-1-8">
+<p>
+Deregister and remove the runner from your GitHub repository.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Removing GitHub Runner</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Deregistering runner from GitHub and cleaning up</span>
+
+ssh EC2-RagFlow
+
+<span style="color: #006FE0;">cd</span> ~/actions-runner
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Stop the runner service</span>
+sudo ./svc.sh stop
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Uninstall the service</span>
+sudo ./svc.sh uninstall
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Remove the runner from GitHub (requires token)</span>
+./config.sh remove --token YOUR_REMOVAL_TOKEN_HERE
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Clean up the runner directory</span>
+<span style="color: #006FE0;">cd</span> ~
+rm -rf ~/actions-runner
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify removal</span>
+ls ~/actions-runner 2&gt;/dev/null || <span style="color: #006FE0;">echo</span> <span style="color: #008000;">"Runner directory successfully removed"</span>
+
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> GitHub Runner is cleanly removed from the EC2 instance and deregistered from GitHub.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgebab0c4" class="outline-3">
+<h3 id="orgebab0c4"><span class="section-number-3">9.2.</span> Summary</h3>
+<div class="outline-text-3" id="text-9-2">
+<p>
+GitHub Self-Hosted Runner installation enables continuous integration and testing on AWS infrastructure. Docker Engine provides containerization for workflow jobs, and the runner executes GitHub Actions with full control over the environment. This integration supports automated testing, building, and deployment of RagFlow without GitHub-hosted runners.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgbc2b48b" class="outline-2">
+<h2 id="orgbc2b48b"><span class="section-number-2">10.</span> Appendix: Remote Desktop Access with RustDesk</h2>
+<div class="outline-text-2" id="text-10">
+</div>
+<div id="outline-container-org1e86144" class="outline-3">
+<h3 id="org1e86144"><span class="section-number-3">10.1.</span> RustDesk Installation and Configuration</h3>
+<div class="outline-text-3" id="text-10-1">
+<p>
+RustDesk provides secure remote desktop access to the EC2 instance without requiring complex port forwarding or VPN setup. This section installs and configures RustDesk for remote management and monitoring.
+</p>
+</div>
+<div id="outline-container-orge75624c" class="outline-4">
+<h4 id="orge75624c"><span class="section-number-4">10.1.1.</span> Prerequisites and Security Group Updates</h4>
+<div class="outline-text-4" id="text-10-1-1">
+<p>
+Before installing RustDesk, ensure the necessary ports are open in the AWS security group. RustDesk requires TCP ports 21116 (control) and 21117 (data transfer).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Update AWS security group for RustDesk</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Adding required ports for remote desktop access</span>
+
+<span style="color: #006FE0;">cd</span> <span style="color: #008000;">"$PROJECT_DIR/terraform"</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Add RustDesk ports to security group (requires Terraform update)</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Note: This would need to be added to main.tf security group rules:</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">ingress {</span>
+<span style="color: #8D8D84;">#   </span><span style="color: #8D8D84; font-style: italic;">from_port   = 21116</span>
+<span style="color: #8D8D84;">#   </span><span style="color: #8D8D84; font-style: italic;">to_port     = 21116</span>
+<span style="color: #8D8D84;">#   </span><span style="color: #8D8D84; font-style: italic;">protocol    = "tcp"</span>
+<span style="color: #8D8D84;">#   </span><span style="color: #8D8D84; font-style: italic;">cidr_blocks = [var.allowed_ip]</span>
+<span style="color: #8D8D84;">#   </span><span style="color: #8D8D84; font-style: italic;">description = "RustDesk control port"</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">}</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">ingress {</span>
+<span style="color: #8D8D84;">#   </span><span style="color: #8D8D84; font-style: italic;">from_port   = 21117</span>
+<span style="color: #8D8D84;">#   </span><span style="color: #8D8D84; font-style: italic;">to_port     = 21117</span>
+<span style="color: #8D8D84;">#   </span><span style="color: #8D8D84; font-style: italic;">protocol    = "tcp"</span>
+<span style="color: #8D8D84;">#   </span><span style="color: #8D8D84; font-style: italic;">cidr_blocks = [var.allowed_ip]</span>
+<span style="color: #8D8D84;">#   </span><span style="color: #8D8D84; font-style: italic;">description = "RustDesk data transfer port"</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">}</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">ingress {</span>
+<span style="color: #8D8D84;">#   </span><span style="color: #8D8D84; font-style: italic;">from_port   = 21117</span>
+<span style="color: #8D8D84;">#   </span><span style="color: #8D8D84; font-style: italic;">to_port     = 21117</span>
+<span style="color: #8D8D84;">#   </span><span style="color: #8D8D84; font-style: italic;">protocol    = "udp"</span>
+<span style="color: #8D8D84;">#   </span><span style="color: #8D8D84; font-style: italic;">cidr_blocks = [var.allowed_ip]</span>
+<span style="color: #8D8D84;">#   </span><span style="color: #8D8D84; font-style: italic;">description = "RustDesk data transfer port (UDP)"</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">}</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">For immediate access, update via AWS CLI:</span>
+aws ec2 authorize-security-group-ingress <span style="color: #008000;">\</span>
+  --group-name RagFlowSecurityGroup <span style="color: #008000;">\</span>
+  --protocol tcp <span style="color: #008000;">\</span>
+  --port 21116 <span style="color: #008000;">\</span>
+  --cidr 0.0.0.0/0 <span style="color: #008000;">\</span>
+  --description <span style="color: #008000;">"RustDesk control"</span>
+
+aws ec2 authorize-security-group-ingress <span style="color: #008000;">\</span>
+  --group-name RagFlowSecurityGroup <span style="color: #008000;">\</span>
+  --protocol tcp <span style="color: #008000;">\</span>
+  --port 21117 <span style="color: #008000;">\</span>
+  --cidr 0.0.0.0/0 <span style="color: #008000;">\</span>
+  --description <span style="color: #008000;">"RustDesk data transfer TCP"</span>
+
+aws ec2 authorize-security-group-ingress <span style="color: #008000;">\</span>
+  --group-name RagFlowSecurityGroup <span style="color: #008000;">\</span>
+  --protocol udp <span style="color: #008000;">\</span>
+  --port 21117 <span style="color: #008000;">\</span>
+  --cidr 0.0.0.0/0 <span style="color: #008000;">\</span>
+  --description <span style="color: #008000;">"RustDesk data transfer UDP"</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Security group is updated to allow RustDesk remote desktop connections.
+</p>
+</div>
+</div>
+<div id="outline-container-org50f89cf" class="outline-4">
+<h4 id="org50f89cf"><span class="section-number-4">10.1.2.</span> RustDesk Installation on EC2 Instance</h4>
+<div class="outline-text-4" id="text-10-1-2">
+<p>
+This installs RustDesk server components and configures the service for remote access.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: RustDesk installation on EC2</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Installing remote desktop server for management access</span>
+
+ssh EC2-RagFlow
+
+<span style="color: #8D8D84;">#</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"ubuntu:ham2burg"</span> | sudo chpasswd
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Update package list and install dependencies</span>
+sudo apt update
+sudo apt install -y curl wget apt-transport-https
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Download and install RustDesk (latest stable version)</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Check latest version at: https://github.com/rustdesk/rustdesk/releases</span>
+wget https://github.com/rustdesk/rustdesk/releases/download/1.2.3/rustdesk-1.2.3-x86_64.deb
+sudo dpkg -i rustdesk-1.2.3-x86_64.deb
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Fix any missing dependencies</span>
+sudo apt install -f
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Enable and start the RustDesk service</span>
+sudo systemctl enable rustdesk
+sudo systemctl start rustdesk
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify service is running</span>
+sudo systemctl status rustdesk
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Check RustDesk configuration</span>
+cat ~/.config/rustdesk/RustDesk.toml
+
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> RustDesk is installed and running on the EC2 instance, ready for remote connections.
+</p>
+</div>
+</div>
+<div id="outline-container-org94b6082" class="outline-4">
+<h4 id="org94b6082"><span class="section-number-4">10.1.3.</span> RustDesk Client Setup on Local Machine</h4>
+<div class="outline-text-4" id="text-10-1-3">
+<p>
+Configure RustDesk on your MacBook Pro for connecting to the remote instance.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Local RustDesk client setup</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Preparing local machine for remote desktop connection</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Download and install RustDesk from https://rustdesk.com/</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">For macOS:</span>
+curl -L https://github.com/rustdesk/rustdesk/releases/download/1.2.3/rustdesk-1.2.3.dmg -o rustdesk.dmg
+hdiutil attach rustdesk.dmg
+cp -r /Volumes/RustDesk/RustDesk.app /Applications/
+hdiutil detach /Volumes/RustDesk
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Launch RustDesk</span>
+open /Applications/RustDesk.app
+</pre>
+</div>
+
+<p>
+<b>Result:</b> RustDesk client is installed and ready for connection to the remote EC2 instance.
+</p>
+</div>
+</div>
+<div id="outline-container-orgd49f14c" class="outline-4">
+<h4 id="orgd49f14c"><span class="section-number-4">10.1.4.</span> Establishing Remote Desktop Connection</h4>
+<div class="outline-text-4" id="text-10-1-4">
+<p>
+Connect to the EC2 instance using RustDesk for graphical remote access.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Connecting to EC2 via RustDesk</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Establishing remote desktop session</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">On the EC2 instance, get the RustDesk ID:</span>
+ssh EC2-RagFlow <span style="color: #008000;">'sudo rustdesk --get-id'</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Set a password for security (optional but recommended):</span>
+ssh EC2-RagFlow <span style="color: #008000;">'sudo rustdesk --password'</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">In RustDesk client on Mac:</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">1. Enter the ID shown above (e.g., 55689929)</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">2. Enter the password (if set)</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">3. Enter the public IP: 63.180.133.202</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">4. Click Connect</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">For direct connection (bypass relay servers):</span>
+ssh EC2-RagFlow <span style="color: #008000;">'echo "[options]\ndirect-server = \"true\"" &gt;&gt; ~/.config/rustdesk/RustDesk.toml'</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Note: If you get "Unsupported display server type" error:</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">1. Install a desktop environment: sudo apt install -y xfce4 xfce4-goodies</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">2. Start the display manager: sudo systemctl start lightdm</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">3. Add user to nopasswdlogin group: sudo usermod -aG nopasswdlogin ubuntu</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">4. Set default target to graphical: sudo systemctl set-default graphical.target</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">5. Restart lightdm: sudo systemctl restart lightdm</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">6. Set user password if needed: echo "ubuntu:yourpassword" | sudo chpasswd</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">7. Configure XFCE session: sudo mkdir -p /etc/lightdm/lightdm.conf.d &amp;&amp; sudo bash -c "echo -e \"[Seat:*]\nuser-session=xfce\n\" &gt; /etc/lightdm/lightdm.conf.d/50-xfce-session.conf"</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">8. Configure German keyboard: sudo dpkg-reconfigure keyboard-configuration (select German) or sudo sed -i "s/XKBLAYOUT=.*/XKBLAYOUT=\"de\"/g" /etc/default/keyboard</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">9. Increase resolution: Create /etc/X11/xorg.conf.d/10-monitor.conf with 1920x1080 configuration and restart lightdm</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">10. Alternative VNC access: Install x11vnc for higher performance VNC connections on port 5900</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Remote desktop connection is established, providing full graphical access to the EC2 instance.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orga1a95d2" class="outline-3">
+<h3 id="orga1a95d2"><span class="section-number-3">10.2.</span> Summary</h3>
+<div class="outline-text-3" id="text-10-2">
+<p>
+RustDesk installation enables secure remote desktop access to the EC2 instance. The configuration provides graphical management capabilities with security through password protection and direct connection options. This complements SSH access with visual interface capabilities for system administration and monitoring.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgab9301a" class="outline-2">
+<h2 id="orgab9301a"><span class="section-number-2">11.</span> Appendix: Remote Desktop Access with NoMachine</h2>
+<div class="outline-text-2" id="text-11">
+</div>
+<div id="outline-container-orgabe14f8" class="outline-3">
+<h3 id="orgabe14f8"><span class="section-number-3">11.1.</span> NoMachine Installation and Configuration</h3>
+<div class="outline-text-3" id="text-11-1">
+<p>
+NoMachine provides high-performance remote desktop access to the EC2 instance with low latency and excellent user experience. This section installs and configures NoMachine server for secure graphical remote management.
+</p>
+</div>
+<div id="outline-container-orgda5db4a" class="outline-4">
+<h4 id="orgda5db4a"><span class="section-number-4">11.1.1.</span> Prerequisites and Security Group Updates</h4>
+<div class="outline-text-4" id="text-11-1-1">
+<p>
+Before installing NoMachine, ensure the necessary ports are open in the AWS security group. NoMachine requires TCP port 4000 for the main connection and UDP ports 4011-4999 for NX technology data transfer.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Update AWS security group for NoMachine</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Adding required ports for remote desktop access</span>
+
+<span style="color: #006FE0;">cd</span> <span style="color: #008000;">"$PROJECT_DIR/terraform"</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Add NoMachine ports to security group (requires Terraform update)</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Note: This would need to be added to main.tf security group rules:</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">ingress {</span>
+<span style="color: #8D8D84;">#   </span><span style="color: #8D8D84; font-style: italic;">from_port   = 4000</span>
+<span style="color: #8D8D84;">#   </span><span style="color: #8D8D84; font-style: italic;">to_port     = 4000</span>
+<span style="color: #8D8D84;">#   </span><span style="color: #8D8D84; font-style: italic;">protocol    = "tcp"</span>
+<span style="color: #8D8D84;">#   </span><span style="color: #8D8D84; font-style: italic;">cidr_blocks = [var.allowed_ip]</span>
+<span style="color: #8D8D84;">#   </span><span style="color: #8D8D84; font-style: italic;">description = "NoMachine main connection port"</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">}</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">ingress {</span>
+<span style="color: #8D8D84;">#   </span><span style="color: #8D8D84; font-style: italic;">from_port   = 4011</span>
+<span style="color: #8D8D84;">#   </span><span style="color: #8D8D84; font-style: italic;">to_port     = 4999</span>
+<span style="color: #8D8D84;">#   </span><span style="color: #8D8D84; font-style: italic;">protocol    = "udp"</span>
+<span style="color: #8D8D84;">#   </span><span style="color: #8D8D84; font-style: italic;">cidr_blocks = [var.allowed_ip]</span>
+<span style="color: #8D8D84;">#   </span><span style="color: #8D8D84; font-style: italic;">description = "NoMachine NX data transfer ports"</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">}</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">For immediate access, update via AWS CLI:</span>
+aws ec2 authorize-security-group-ingress <span style="color: #008000;">\</span>
+  --group-name RagFlowSecurityGroup <span style="color: #008000;">\</span>
+  --protocol tcp <span style="color: #008000;">\</span>
+  --port 4000 <span style="color: #008000;">\</span>
+  --cidr 0.0.0.0/0 <span style="color: #008000;">\</span>
+  --description <span style="color: #008000;">"NoMachine main connection"</span>
+
+aws ec2 authorize-security-group-ingress <span style="color: #008000;">\</span>
+  --group-name RagFlowSecurityGroup <span style="color: #008000;">\</span>
+  --protocol udp <span style="color: #008000;">\</span>
+  --port 4011-4999 <span style="color: #008000;">\</span>
+  --cidr 0.0.0.0/0 <span style="color: #008000;">\</span>
+  --description <span style="color: #008000;">"NoMachine NX data transfer"</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Security group is updated to allow NoMachine remote desktop connections.
+</p>
+</div>
+</div>
+<div id="outline-container-org71ec885" class="outline-4">
+<h4 id="org71ec885"><span class="section-number-4">11.1.2.</span> Desktop Environment Installation</h4>
+<div class="outline-text-4" id="text-11-1-2">
+<p>
+Install a lightweight desktop environment if the instance is headless (no graphical interface).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Desktop environment installation for NoMachine</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Installing XFCE desktop environment for graphical access</span>
+
+ssh EC2-RagFlow
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Update package list</span>
+sudo apt update &amp;&amp; sudo apt upgrade -y
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Install XFCE desktop environment</span>
+sudo apt install -y xfce4 xfce4-goodies
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Exit SSH session</span>
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> XFCE desktop environment is installed, providing a graphical interface for NoMachine connections.
+</p>
+</div>
+</div>
+<div id="outline-container-orge066391" class="outline-4">
+<h4 id="orge066391"><span class="section-number-4">11.1.3.</span> NoMachine Server Installation</h4>
+<div class="outline-text-4" id="text-11-1-3">
+<p>
+Download and install the NoMachine server package on the EC2 instance.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: NoMachine server installation</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Installing NoMachine server for remote desktop access</span>
+
+ssh EC2-RagFlow
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Download NoMachine server package</span>
+wget https://download.nomachine.com/download/8.14/Linux/nomachine_8.14.2_1_amd64.deb
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Install the package</span>
+sudo apt install -y ./nomachine_8.14.2_1_amd64.deb
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">The service starts automatically after installation</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify service status</span>
+sudo systemctl status nxserver
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Exit SSH session</span>
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> NoMachine server is installed and running, ready to accept remote desktop connections.
+</p>
+</div>
+</div>
+<div id="outline-container-org50f2fff" class="outline-4">
+<h4 id="org50f2fff"><span class="section-number-4">11.1.4.</span> Firewall Configuration on Server</h4>
+<div class="outline-text-4" id="text-11-1-4">
+<p>
+Configure UFW firewall to allow NoMachine connections if UFW is active.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Firewall configuration for NoMachine</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Allowing NoMachine ports through UFW firewall</span>
+
+ssh EC2-RagFlow
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Allow NoMachine main connection port</span>
+sudo ufw allow from 0.0.0.0/0 to any port 4000 proto tcp
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Allow NoMachine NX data transfer ports</span>
+sudo ufw allow from 0.0.0.0/0 to any port 4011:4999 proto udp
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Reload firewall rules</span>
+sudo ufw reload
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify firewall status</span>
+sudo ufw status
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Exit SSH session</span>
+
+<span style="color: #8D8D84;">### </span><span style="color: #8D8D84; font-style: italic;">if system does not work correctly</span>
+ssh EC2-RagFlow <span style="color: #008000;">'sudo /etc/NX/nxserver --restart'</span>
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Firewall is configured to allow NoMachine connections on the required ports.
+</p>
+</div>
+</div>
+<div id="outline-container-orgaba5de3" class="outline-4">
+<h4 id="orgaba5de3"><span class="section-number-4">11.1.5.</span> Testing NoMachine Connection</h4>
+<div class="outline-text-4" id="text-11-1-5">
+<p>
+Connect to the EC2 instance using NoMachine client from your local machine.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Testing NoMachine connection</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Establishing remote desktop connection</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">In NoMachine client:</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">1. Create new connection</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">2. Host: &lt;EC2_PUBLIC_IP&gt;</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">3. Port: 4000</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">4. Protocol: NX</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">5. Authentication: Password (use ubuntu username and instance password)</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">6. Connect</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Display connection details</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"Connect to NoMachine at: $public_ip:4000"</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"Username: ubuntu"</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"Use the SSH key or instance password for authentication"</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> NoMachine connection is established, providing full graphical remote desktop access to the EC2 instance.
+</p>
+</div>
+</div>
+<div id="outline-container-org1ea5a0c" class="outline-4">
+<h4 id="org1ea5a0c"><span class="section-number-4">11.1.6.</span> Troubleshooting Common Issues</h4>
+<div class="outline-text-4" id="text-11-1-6">
+<p>
+Address common NoMachine connection problems.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Troubleshooting NoMachine issues</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Resolving common connection problems</span>
+
+ssh EC2-RagFlow
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">If connection times out:</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Restart NoMachine service</span>
+sudo /etc/NX/nxserver --restart
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">If black screen appears:</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Switch from Wayland to X11</span>
+sudo nano /etc/gdm3/custom.conf
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Add or uncomment: WaylandEnable=false</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Save and exit, then reboot</span>
+sudo reboot
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">If connection hangs:</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">In client, press Ctrl+Alt+0 to disable hardware decoding</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Exit SSH session</span>
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Common NoMachine issues are resolved, ensuring stable remote desktop connections.
+</p>
+</div>
+</div>
+<div id="outline-container-org6cecebd" class="outline-4">
+<h4 id="org6cecebd"><span class="section-number-4">11.1.7.</span> High Resolution Configuration with XDummy Driver</h4>
+<div class="outline-text-4" id="text-11-1-7">
+<p>
+For optimal NoMachine performance with higher resolutions, configure the XDummy driver to support resolutions up to 1920x1080 and beyond. This creates a virtual display that NoMachine can connect to with full resolution control.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: XDummy driver installation for high resolution</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Installing virtual display driver for NoMachine resolution support</span>
+
+ssh EC2-RagFlow
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Install the XDummy driver</span>
+sudo apt install -y xserver-xorg-video-dummy
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Exit SSH session</span>
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> XDummy driver is installed, providing virtual display capabilities for higher resolutions.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Xorg configuration for high resolution display</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Creating Xorg configuration with multiple resolution support</span>
+
+ssh EC2-RagFlow
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Remove any existing monitor configuration</span>
+sudo rm -f /etc/X11/xorg.conf.d/10-monitor.conf
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Create comprehensive Xorg configuration</span>
+sudo tee /etc/X11/xorg.conf &gt; /dev/null &lt;&lt; <span style="color: #008000;">'EOF'</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">Section "Device"</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    Identifier "DummyDevice"</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    Driver "dummy"</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    Option "UseEDID" "false"</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    VideoRam 512000</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">EndSection</span>
+
+<span style="color: #0000ff; background-color: #EEF5FE;">Section "Monitor"</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    Identifier "DummyMonitor"</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    HorizSync 5.0 - 1000.0</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    VertRefresh 5.0 - 200.0</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    Option "ReducedBlanking"</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    ModeLine "1920x1080" 148.5 1920 2008 2052 2200 1080 1084 1089 1125 +hsync +vsync</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    ModeLine "1680x1050" 119.0 1680 1728 1760 1840 1050 1053 1059 1080 +hsync -vsync</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    ModeLine "1600x900" 97.5 1600 1648 1680 1760 900 903 908 926 +hsync -vsync</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    ModeLine "1440x900" 88.8 1440 1488 1520 1600 900 903 909 926 +hsync -vsync</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    ModeLine "1366x768" 72.3 1366 1414 1446 1494 768 771 777 803 +hsync +vsync</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    ModeLine "1280x1024" 109.0 1280 1368 1496 1712 1024 1027 1034 1063 -hsync +vsync</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    ModeLine "1280x800" 71.0 1280 1328 1360 1440 800 803 809 823 +hsync -vsync</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    ModeLine "1024x768" 65.0 1024 1048 1184 1344 768 771 777 806 -hsync -vsync</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">EndSection</span>
+
+<span style="color: #0000ff; background-color: #EEF5FE;">Section "Screen"</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    Identifier "DummyScreen"</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    Device "DummyDevice"</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    Monitor "DummyMonitor"</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    DefaultDepth 24</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    SubSection "Display"</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">        Viewport 0 0</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">        Depth 24</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">        Modes "1920x1080" "1680x1050" "1600x900" "1440x900" "1366x768" "1280x1024" "1280x800" "1024x768" "800x600"</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">        Virtual 1920 1080</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    EndSubSection</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">EndSection</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">EOF</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Exit SSH session</span>
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Xorg configuration is created with comprehensive resolution support including 1920x1080.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Restarting display services for resolution changes</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Applying the new display configuration</span>
+
+ssh EC2-RagFlow
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Restart LightDM to apply Xorg changes</span>
+sudo systemctl restart lightdm
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Wait for services to start</span>
+sleep 10
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Restart NoMachine server</span>
+sudo /etc/NX/nxserver --restart
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Exit SSH session</span>
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Display services are restarted with the new high-resolution configuration applied.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Verifying high resolution configuration</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Checking that the display supports higher resolutions</span>
+
+ssh EC2-RagFlow
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Check Xorg log for dummy driver confirmation</span>
+sudo grep -i <span style="color: #008000;">"dummy\|1920x1080\|modes"</span> /var/log/Xorg.0.log | tail -10
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Exit SSH session</span>
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Test connection with higher resolution</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"Reconnect with NoMachine - you should now see resolutions up to 1920x1080 available"</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"In NoMachine client: Connection Settings &#8594; Display &#8594; Select desired resolution"</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> High resolution configuration is verified and ready for NoMachine connections with full resolution support.
+</p>
+</div>
+</div>
+<div id="outline-container-orgf7482ee" class="outline-4">
+<h4 id="orgf7482ee"><span class="section-number-4">11.1.8.</span> German Keyboard Configuration Fix</h4>
+<div class="outline-text-4" id="text-11-1-8">
+<p>
+For users with German keyboards, the NoMachine GUI may default to English keyboard layout even when SSH connections work correctly. This occurs because XFCE desktop settings use an incorrect keyboard model that prevents proper key mapping.
+</p>
+</div>
+<div id="outline-container-org657b2d8" class="outline-5">
+<h5 id="org657b2d8"><span class="section-number-5">11.1.8.1.</span> Problem Diagnosis</h5>
+<div class="outline-text-5" id="text-11-1-8-1">
+<p>
+The issue manifests as:
+</p>
+<ul class="org-ul">
+<li>SSH terminal connections recognize German keyboard correctly</li>
+<li>NoMachine GUI session only offers English keyboard layouts</li>
+<li>Keys produce wrong characters (e.g., 'z' and 'y' swapped, special characters missing)</li>
+</ul>
+
+<p>
+Root cause: XFCE keyboard model set to "genius" instead of "pc105" (standard PC keyboard).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Diagnosing keyboard configuration issue</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Checking current keyboard settings in NoMachine session</span>
+
+ssh EC2-RagFlow
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Check system-level keyboard configuration</span>
+localectl status
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Check XFCE keyboard configuration</span>
+cat ~/.config/xfce4/xfconf/xfce-perchannel-xml/keyboard-layout.xml
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Display current keyboard configuration in X11</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Note: This command only works from within an active X session</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Run this in a terminal inside NoMachine: setxkbmap -query</span>
+
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Diagnosis reveals incorrect keyboard model ("genius" instead of "pc105") in XFCE configuration.
+</p>
+</div>
+</div>
+<div id="outline-container-org6bf358f" class="outline-5">
+<h5 id="org6bf358f"><span class="section-number-5">11.1.8.2.</span> Solution: Update XFCE Keyboard Configuration</h5>
+<div class="outline-text-5" id="text-11-1-8-2">
+<p>
+This corrects the keyboard model to enable proper German keyboard mapping.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Fixing XFCE keyboard model configuration</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Updating keyboard model from "genius" to "pc105"</span>
+
+ssh EC2-RagFlow
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Backup existing configuration</span>
+cp ~/.config/xfce4/xfconf/xfce-perchannel-xml/keyboard-layout.xml <span style="color: #008000;">\</span>
+   ~/.config/xfce4/xfconf/xfce-perchannel-xml/keyboard-layout.xml.backup
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Update XFCE keyboard configuration with correct model</span>
+cat &gt; ~/.config/xfce4/xfconf/xfce-perchannel-xml/keyboard-layout.xml &lt;&lt; <span style="color: #008000;">'EOF'</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+
+<span style="color: #0000ff; background-color: #EEF5FE;">&lt;channel name="keyboard-layout" version="1.0"&gt;</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">  &lt;property name="Default" type="empty"&gt;</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    &lt;property name="XkbDisable" type="bool" value="false"/&gt;</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    &lt;property name="XkbLayout" type="string" value="de,us"/&gt;</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    &lt;property name="XkbVariant" type="string" value=","/&gt;</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">    &lt;property name="XkbModel" type="string" value="pc105"/&gt;</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">  &lt;/property&gt;</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">&lt;/channel&gt;</span>
+<span style="color: #0000ff; background-color: #EEF5FE;">EOF</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify the configuration was updated</span>
+cat ~/.config/xfce4/xfconf/xfce-perchannel-xml/keyboard-layout.xml
+
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> XFCE keyboard configuration is updated with the correct pc105 model supporting both German and US layouts.
+</p>
+</div>
+</div>
+<div id="outline-container-orgee48124" class="outline-5">
+<h5 id="orgee48124"><span class="section-number-5">11.1.8.3.</span> Solution: Add Session Startup Script</h5>
+<div class="outline-text-5" id="text-11-1-8-3">
+<p>
+This ensures keyboard settings are applied automatically on each login.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Creating session startup script for keyboard</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Ensuring keyboard layout persists across sessions</span>
+
+ssh EC2-RagFlow
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Create .xprofile for automatic keyboard configuration</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"#!/bin/bash"</span> &gt; ~/.xprofile
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"# Set keyboard layout for X session"</span> &gt;&gt; ~/.xprofile
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"setxkbmap -model pc105 -layout de,us -variant , -option grp:alt_shift_toggle"</span> &gt;&gt; ~/.xprofile
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Make the script executable</span>
+chmod +x ~/.xprofile
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Verify the script was created</span>
+cat ~/.xprofile
+
+<span style="color: #0000FF; font-weight: bold;">exit</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Session startup script is created to automatically apply German keyboard layout with Alt+Shift toggle between German and US layouts.
+</p>
+</div>
+</div>
+<div id="outline-container-org1550bd6" class="outline-5">
+<h5 id="org1550bd6"><span class="section-number-5">11.1.8.4.</span> Applying the Fix</h5>
+<div class="outline-text-5" id="text-11-1-8-4">
+<p>
+Log out of the NoMachine session and reconnect to apply the changes.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Listing: Verifying keyboard fix</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Testing the corrected configuration</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">After reconnecting to NoMachine, open a terminal and verify:</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">setxkbmap -query</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Expected output should show:</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">model: pc105 (not "genius")</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">layout: de,us</span>
+
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">Test German keyboard:</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">- Try typing German special characters: &#228; &#246; &#252; &#223;</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">- Use Alt+Shift to toggle between de and us layouts</span>
+<span style="color: #8D8D84;"># </span><span style="color: #8D8D84; font-style: italic;">- Verify 'z' and 'y' keys produce correct characters</span>
+
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"German keyboard should now work correctly in NoMachine GUI"</span>
+<span style="color: #006FE0;">echo</span> <span style="color: #008000;">"Use Alt+Shift to toggle between German (de) and US (us) keyboard layouts"</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> German keyboard functions correctly in NoMachine GUI with Alt+Shift toggle for layout switching.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org7c727ca" class="outline-3">
+<h3 id="org7c727ca"><span class="section-number-3">11.2.</span> Summary</h3>
+<div class="outline-text-3" id="text-11-2">
+<p>
+NoMachine installation provides high-performance remote desktop access to the EC2 instance. The configuration includes security group updates, desktop environment setup, and firewall configuration. This complements SSH and RustDesk access with optimized graphical remote management capabilities.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org06373a5" class="outline-2">
+<h2 id="org06373a5"><span class="section-number-2">12.</span> End</h2>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2025-11-04</p>
+<p class="author">Author: Andreas Wittmann</p>
+<p class="date">Created: 2025-11-11 Tue 13:57</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
