@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-11-11 Tue 13:57 -->
+<!-- 2025-11-11 Tue 14:04 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Private RAG Deployment - Live-Scripting Workflow</title>
@@ -207,177 +207,177 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orge6e0d35">1. Summary</a></li>
-<li><a href="#orgceb14a2">2. Building Privacy-Focused RAG Platform</a>
+<li><a href="#orge383539">1. Summary</a></li>
+<li><a href="#orgc851174">2. Building Privacy-Focused RAG Platform</a>
 <ul>
-<li><a href="#org0f3d9f1">2.1. Project Overview</a></li>
-<li><a href="#org44bfdfb">2.2. Live-Scripting Methodology</a>
+<li><a href="#org9ee0db3">2.1. Project Overview</a></li>
+<li><a href="#orgbfb0101">2.2. Live-Scripting Methodology</a>
 <ul>
-<li><a href="#org1c521a7">2.2.1. Implementation Options</a>
+<li><a href="#org188b408">2.2.1. Implementation Options</a>
 <ul>
-<li><a href="#orgbd7de75">2.2.1.1. Emacs Users</a></li>
-<li><a href="#org02ac0a9">2.2.1.2. Non-Emacs Users</a></li>
+<li><a href="#orgca96909">2.2.1.1. Emacs Users</a></li>
+<li><a href="#org20c6d53">2.2.1.2. Non-Emacs Users</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org91d0c1e">2.3. Project Components</a></li>
-<li><a href="#org89f33a5">2.4. Expected Deployment Outcome</a></li>
+<li><a href="#orga4708e2">2.3. Project Components</a></li>
+<li><a href="#orgdb526cf">2.4. Expected Deployment Outcome</a></li>
 </ul>
 </li>
-<li><a href="#orgf9b919a">3. Foundation &amp; Prerequisites</a>
+<li><a href="#org62ef360">3. Foundation &amp; Prerequisites</a>
 <ul>
-<li><a href="#orgc27e44f">3.1. Environment Setup</a>
+<li><a href="#orgee730b9">3.1. Environment Setup</a>
 <ul>
-<li><a href="#orgaffaccf">3.1.1. Setting the Project Foundation</a></li>
-<li><a href="#org8050a94">3.1.2. Validating AWS Prerequisites</a></li>
+<li><a href="#org22524dd">3.1.1. Setting the Project Foundation</a></li>
+<li><a href="#orge3cb3df">3.1.2. Validating AWS Prerequisites</a></li>
 </ul>
 </li>
-<li><a href="#org1852791">3.2. Summary</a></li>
+<li><a href="#orgea84fc5">3.2. Summary</a></li>
 </ul>
 </li>
-<li><a href="#orga05995f">4. Infrastructure as Code</a>
+<li><a href="#orgdffb752">4. Infrastructure as Code</a>
 <ul>
-<li><a href="#orgaefc1a2">4.1. SSH Key Generation for Secure Access</a></li>
-<li><a href="#org1114042">4.2. Terraform Configuration and Planning</a></li>
-<li><a href="#org0da648a">4.3. Infrastructure Deployment Planning</a></li>
-<li><a href="#org52cceaa">4.4. Infrastructure Deployment Execution</a></li>
-<li><a href="#org7fecef9">4.5. SSH Configuration for Easy Access</a></li>
-<li><a href="#orgdbe5c55">4.6. EC2 Instance Selection and Upgrading</a>
+<li><a href="#org18e269b">4.1. SSH Key Generation for Secure Access</a></li>
+<li><a href="#org908b416">4.2. Terraform Configuration and Planning</a></li>
+<li><a href="#orgf41163e">4.3. Infrastructure Deployment Planning</a></li>
+<li><a href="#org4e02851">4.4. Infrastructure Deployment Execution</a></li>
+<li><a href="#org30c87c4">4.5. SSH Configuration for Easy Access</a></li>
+<li><a href="#org27cb8c6">4.6. EC2 Instance Selection and Upgrading</a>
 <ul>
-<li><a href="#orge1005e3">4.6.1. Recommended EC2 Instance Types for RAG Workloads</a>
+<li><a href="#orgb41814f">4.6.1. Recommended EC2 Instance Types for RAG Workloads</a>
 <ul>
-<li><a href="#orgb21d133">4.6.1.1. Recommendations</a></li>
+<li><a href="#org57998c8">4.6.1.1. Recommendations</a></li>
 </ul>
 </li>
-<li><a href="#orgebfea32">4.6.2. Upgrading to a Larger Instance Type with Terraform</a>
+<li><a href="#orgb68e950">4.6.2. Upgrading to a Larger Instance Type with Terraform</a>
 <ul>
-<li><a href="#orgc03a751">4.6.2.1. Steps to Upgrade</a></li>
-<li><a href="#org21aeb7c">4.6.2.2. Why This Method Is Best/Fastest</a></li>
+<li><a href="#org1cbabb8">4.6.2.1. Steps to Upgrade</a></li>
+<li><a href="#orgcc85aaa">4.6.2.2. Why This Method Is Best/Fastest</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org8ba76ce">4.7. Infrastructure Live-Cycle Operations</a></li>
-<li><a href="#orgd859ce2">4.8. Summary</a></li>
+<li><a href="#org756ae21">4.7. Infrastructure Live-Cycle Operations</a></li>
+<li><a href="#org2c43af9">4.8. Summary</a></li>
 </ul>
 </li>
-<li><a href="#orgdc02fc1">5. Development Environment Setup</a>
+<li><a href="#org4c1dbac">5. Development Environment Setup</a>
 <ul>
-<li><a href="#orgd19346d">5.1. Complete Docker Engine and Tools Installation</a>
+<li><a href="#org05e5b33">5.1. Complete Docker Engine and Tools Installation</a>
 <ul>
-<li><a href="#org078b233">5.1.1. Docker Engine Installation</a></li>
-<li><a href="#org69df9cd">5.1.2. Docker Service Configuration</a></li>
-<li><a href="#orga3649fe">5.1.3. Lazydocker Installation</a></li>
-<li><a href="#org19c55df">5.1.4. GitHub CLI Installation</a></li>
-<li><a href="#org5de96c3">5.1.5. Docker and Docker Compose Verification</a></li>
-<li><a href="#org6761e0e">5.1.6. Python Development Tools Installation</a></li>
-<li><a href="#orgd58ca3b">5.1.7. Development Environment Summary</a></li>
+<li><a href="#orgd960c30">5.1.1. Docker Engine Installation</a></li>
+<li><a href="#org09b3d60">5.1.2. Docker Service Configuration</a></li>
+<li><a href="#orga4939b6">5.1.3. Lazydocker Installation</a></li>
+<li><a href="#org935b1b4">5.1.4. GitHub CLI Installation</a></li>
+<li><a href="#orgf5605ad">5.1.5. Docker and Docker Compose Verification</a></li>
+<li><a href="#org2b7cfd2">5.1.6. Python Development Tools Installation</a></li>
+<li><a href="#orgaa59a09">5.1.7. Development Environment Summary</a></li>
 </ul>
 </li>
-<li><a href="#orgc3d4c14">5.2. Summary</a></li>
+<li><a href="#org07dd68c">5.2. Summary</a></li>
 </ul>
 </li>
-<li><a href="#org8535345">6. Core RagFlow Deployment</a>
+<li><a href="#org49ea314">6. Core RagFlow Deployment</a>
 <ul>
-<li><a href="#org9d393f7">6.1. Basic Ragflow Setup</a></li>
-<li><a href="#org4d996ae">6.2. HTTPS Setup with Self-Signed Certificate</a>
+<li><a href="#orgcda4269">6.1. Basic Ragflow Setup</a></li>
+<li><a href="#org5b3acbc">6.2. HTTPS Setup with Self-Signed Certificate</a>
 <ul>
-<li><a href="#orgcb904c9">6.2.1. Step 1: Generate Self-Signed SSL Certificate**</a></li>
-<li><a href="#org957538a">6.2.2. Step 2: Modify Nginx Configuration**</a></li>
-<li><a href="#org6e7e8d1">6.2.3. Step 3: Update Docker Compose Configuration**</a></li>
-<li><a href="#orgc351e10">6.2.4. Step 4: Restart RAGFlow Services**</a></li>
-<li><a href="#orgd3050d1">6.2.5. Step 5: Test HTTPS Access**</a></li>
+<li><a href="#orgd6548be">6.2.1. Step 1: Generate Self-Signed SSL Certificate**</a></li>
+<li><a href="#orgce51373">6.2.2. Step 2: Modify Nginx Configuration**</a></li>
+<li><a href="#orgc9eac43">6.2.3. Step 3: Update Docker Compose Configuration**</a></li>
+<li><a href="#org8d23bbc">6.2.4. Step 4: Restart RAGFlow Services**</a></li>
+<li><a href="#orgbbf6ea1">6.2.5. Step 5: Test HTTPS Access**</a></li>
 </ul>
 </li>
-<li><a href="#orgcbb7fbc">6.3. Use Case: Access RagFlow via SSH-Tunnel</a></li>
-<li><a href="#orga26fc06">6.4. Summary</a></li>
+<li><a href="#orgcef3740">6.3. Use Case: Access RagFlow via SSH-Tunnel</a></li>
+<li><a href="#org2e26020">6.4. Summary</a></li>
 </ul>
 </li>
-<li><a href="#org3df7412">7. Advanced Features - Document Processing</a>
+<li><a href="#orgbc32003">7. Advanced Features - Document Processing</a>
 <ul>
-<li><a href="#orga282bbf">7.1. Document Ingestion and Processing</a>
+<li><a href="#org4d99ef0">7.1. Document Ingestion and Processing</a>
 <ul>
-<li><a href="#org1c985a7">7.1.1. Upload Documents</a></li>
-<li><a href="#orgf104eca">7.1.2. Configure Knowledge Base</a></li>
-<li><a href="#orgf24707d">7.1.3. Test RAG Queries</a></li>
+<li><a href="#org06c1286">7.1.1. Upload Documents</a></li>
+<li><a href="#orgd5c94d2">7.1.2. Configure Knowledge Base</a></li>
+<li><a href="#org3b3c994">7.1.3. Test RAG Queries</a></li>
 </ul>
 </li>
-<li><a href="#org4c6d1b9">7.2. Summary</a></li>
+<li><a href="#org7808701">7.2. Summary</a></li>
 </ul>
 </li>
-<li><a href="#org9a3ea6b">8. Infrastructure Cleanup</a>
+<li><a href="#org5f9d052">8. Infrastructure Cleanup</a>
 <ul>
-<li><a href="#org3f36e56">8.1. Cleanup Philosophy</a></li>
-<li><a href="#org54be5da">8.2. Stop RagFlow Services</a></li>
-<li><a href="#org05e5ce9">8.3. Terminate EC2 Instance with Terraform</a></li>
-<li><a href="#org548362d">8.4. Clean Up Local SSH Configuration</a></li>
-<li><a href="#org00a450f">8.5. Clean Up Terraform State Files</a></li>
-<li><a href="#orgeef980b">8.6. Verify Complete Cleanup</a></li>
-<li><a href="#org7921f5e">8.7. Cost Optimization Notes</a></li>
-<li><a href="#orge8b1cb8">8.8. Summary</a></li>
+<li><a href="#org5877c0a">8.1. Cleanup Philosophy</a></li>
+<li><a href="#org8a52ddb">8.2. Stop RagFlow Services</a></li>
+<li><a href="#orgbb6eed9">8.3. Terminate EC2 Instance with Terraform</a></li>
+<li><a href="#orgf56b1cb">8.4. Clean Up Local SSH Configuration</a></li>
+<li><a href="#org64b1429">8.5. Clean Up Terraform State Files</a></li>
+<li><a href="#org39e7495">8.6. Verify Complete Cleanup</a></li>
+<li><a href="#orgec46671">8.7. Cost Optimization Notes</a></li>
+<li><a href="#orgf1e757f">8.8. Summary</a></li>
 </ul>
 </li>
-<li><a href="#org3c984b4">9. Appendix: GitHub Self-Hosted Runner Setup</a>
+<li><a href="#orgf579939">9. Appendix: GitHub Self-Hosted Runner Setup</a>
 <ul>
-<li><a href="#org75c8e7d">9.1. GitHub Runner for CI/CD Testing on AWS</a>
+<li><a href="#orgd20c5f6">9.1. GitHub Runner for CI/CD Testing on AWS</a>
 <ul>
-<li><a href="#orgf590d3d">9.1.1. Prerequisites and Security Group Configuration</a></li>
-<li><a href="#org5588762">9.1.2. GitHub Runner Installation and Configuration</a></li>
-<li><a href="#org02ad098">9.1.3. Runner Registration with GitHub</a></li>
-<li><a href="#org94387af">9.1.4. Running the Runner as a Service</a></li>
-<li><a href="#orgd158e4d">9.1.5. Verifying Runner Status</a></li>
-<li><a href="#org0acadf8">9.1.6. Testing the Runner with a Sample Workflow</a></li>
-<li><a href="#orge9dd634">9.1.7. Monitoring and Troubleshooting</a></li>
-<li><a href="#org69488bc">9.1.8. Removing the Runner (if needed)</a></li>
+<li><a href="#orgd850d03">9.1.1. Prerequisites and Security Group Configuration</a></li>
+<li><a href="#org2d378c0">9.1.2. GitHub Runner Installation and Configuration</a></li>
+<li><a href="#orgabc7213">9.1.3. Runner Registration with GitHub</a></li>
+<li><a href="#orgef8d2a7">9.1.4. Running the Runner as a Service</a></li>
+<li><a href="#orgef5347d">9.1.5. Verifying Runner Status</a></li>
+<li><a href="#orgee4d825">9.1.6. Testing the Runner with a Sample Workflow</a></li>
+<li><a href="#org5f07ed2">9.1.7. Monitoring and Troubleshooting</a></li>
+<li><a href="#orgf96d082">9.1.8. Removing the Runner (if needed)</a></li>
 </ul>
 </li>
-<li><a href="#orgebab0c4">9.2. Summary</a></li>
+<li><a href="#org0e05c45">9.2. Summary</a></li>
 </ul>
 </li>
-<li><a href="#orgbc2b48b">10. Appendix: Remote Desktop Access with RustDesk</a>
+<li><a href="#org56b48e2">10. Appendix: Remote Desktop Access with RustDesk</a>
 <ul>
-<li><a href="#org1e86144">10.1. RustDesk Installation and Configuration</a>
+<li><a href="#orgeb9f4e7">10.1. RustDesk Installation and Configuration</a>
 <ul>
-<li><a href="#orge75624c">10.1.1. Prerequisites and Security Group Updates</a></li>
-<li><a href="#org50f89cf">10.1.2. RustDesk Installation on EC2 Instance</a></li>
-<li><a href="#org94b6082">10.1.3. RustDesk Client Setup on Local Machine</a></li>
-<li><a href="#orgd49f14c">10.1.4. Establishing Remote Desktop Connection</a></li>
+<li><a href="#org7f7a988">10.1.1. Prerequisites and Security Group Updates</a></li>
+<li><a href="#org1655a52">10.1.2. RustDesk Installation on EC2 Instance</a></li>
+<li><a href="#orge338b16">10.1.3. RustDesk Client Setup on Local Machine</a></li>
+<li><a href="#orgceb07b4">10.1.4. Establishing Remote Desktop Connection</a></li>
 </ul>
 </li>
-<li><a href="#orga1a95d2">10.2. Summary</a></li>
+<li><a href="#org97559a6">10.2. Summary</a></li>
 </ul>
 </li>
-<li><a href="#orgab9301a">11. Appendix: Remote Desktop Access with NoMachine</a>
+<li><a href="#org92d6844">11. Appendix: Remote Desktop Access with NoMachine</a>
 <ul>
-<li><a href="#orgabe14f8">11.1. NoMachine Installation and Configuration</a>
+<li><a href="#org701c4ca">11.1. NoMachine Installation and Configuration</a>
 <ul>
-<li><a href="#orgda5db4a">11.1.1. Prerequisites and Security Group Updates</a></li>
-<li><a href="#org71ec885">11.1.2. Desktop Environment Installation</a></li>
-<li><a href="#orge066391">11.1.3. NoMachine Server Installation</a></li>
-<li><a href="#org50f2fff">11.1.4. Firewall Configuration on Server</a></li>
-<li><a href="#orgaba5de3">11.1.5. Testing NoMachine Connection</a></li>
-<li><a href="#org1ea5a0c">11.1.6. Troubleshooting Common Issues</a></li>
-<li><a href="#org6cecebd">11.1.7. High Resolution Configuration with XDummy Driver</a></li>
-<li><a href="#orgf7482ee">11.1.8. German Keyboard Configuration Fix</a>
+<li><a href="#org181d3d5">11.1.1. Prerequisites and Security Group Updates</a></li>
+<li><a href="#org9392c6a">11.1.2. Desktop Environment Installation</a></li>
+<li><a href="#org21dd3e6">11.1.3. NoMachine Server Installation</a></li>
+<li><a href="#org68350ba">11.1.4. Firewall Configuration on Server</a></li>
+<li><a href="#orga9e5526">11.1.5. Testing NoMachine Connection</a></li>
+<li><a href="#orgac68aa5">11.1.6. Troubleshooting Common Issues</a></li>
+<li><a href="#org0e502f5">11.1.7. High Resolution Configuration with XDummy Driver</a></li>
+<li><a href="#orgb0c76d3">11.1.8. German Keyboard Configuration Fix</a>
 <ul>
-<li><a href="#org657b2d8">11.1.8.1. Problem Diagnosis</a></li>
-<li><a href="#org6bf358f">11.1.8.2. Solution: Update XFCE Keyboard Configuration</a></li>
-<li><a href="#orgee48124">11.1.8.3. Solution: Add Session Startup Script</a></li>
-<li><a href="#org1550bd6">11.1.8.4. Applying the Fix</a></li>
+<li><a href="#orga3391f4">11.1.8.1. Problem Diagnosis</a></li>
+<li><a href="#org1520e36">11.1.8.2. Solution: Update XFCE Keyboard Configuration</a></li>
+<li><a href="#org40c7dbe">11.1.8.3. Solution: Add Session Startup Script</a></li>
+<li><a href="#org297437c">11.1.8.4. Applying the Fix</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org7c727ca">11.2. Summary</a></li>
+<li><a href="#org80b6a64">11.2. Summary</a></li>
 </ul>
 </li>
-<li><a href="#org06373a5">12. End</a></li>
+<li><a href="#orgca67355">12. End</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orge6e0d35" class="outline-2">
-<h2 id="orge6e0d35"><span class="section-number-2">1.</span> Summary</h2>
+<div id="outline-container-orge383539" class="outline-2">
+<h2 id="orge383539"><span class="section-number-2">1.</span> Summary</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 <i>This document outlines a live-scripting methodology for deploying RagFlow, an open-source RAG platform, on AWS using Terraform, through executable code blocks that ensure reproducible infrastructure setup. It covers HTTPS configuration, Docker containerization, SSH access, and appendices for GitHub Actions runners and remote desktop tools, bridging manual workflows with automated deployments.</i>
@@ -385,15 +385,16 @@
 <ul class="org-ul">
 <li><b>HTML Version:</b> <a href="private-rag.html">private-rag.html</a></li>
 <li><b>PDF Version:</b> <a href="private-rag.pdf">private-rag.pdf</a></li>
+<li><b>GitHub:</b> <a href="https://github.com/andreaswittmann/private-rag/tree/main">https://github.com/andreaswittmann/private-rag/tree/main</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgceb14a2" class="outline-2">
-<h2 id="orgceb14a2"><span class="section-number-2">2.</span> Building Privacy-Focused RAG Platform</h2>
+<div id="outline-container-orgc851174" class="outline-2">
+<h2 id="orgc851174"><span class="section-number-2">2.</span> Building Privacy-Focused RAG Platform</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org0f3d9f1" class="outline-3">
-<h3 id="org0f3d9f1"><span class="section-number-3">2.1.</span> Project Overview</h3>
+<div id="outline-container-org9ee0db3" class="outline-3">
+<h3 id="org9ee0db3"><span class="section-number-3">2.1.</span> Project Overview</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 This project uses the live-scripting methodology to create an example configuration of the open-source project RagFlow. Live-scripting represents an intermediate approach between manual command-line work and fully automated CI/CD pipelines, enabling the development of documented, shareable, and reproducible solutions.
@@ -404,8 +405,8 @@ Using Infrastructure as Code methods with Terraform, an AWS environment is estab
 </p>
 </div>
 </div>
-<div id="outline-container-org44bfdfb" class="outline-3">
-<h3 id="org44bfdfb"><span class="section-number-3">2.2.</span> Live-Scripting Methodology</h3>
+<div id="outline-container-orgbfb0101" class="outline-3">
+<h3 id="orgbfb0101"><span class="section-number-3">2.2.</span> Live-Scripting Methodology</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 The deployment uses live-scripting methodology to transform static documentation into executable workflows. Code blocks execute directly in Emacs (F4 key) or copy to any terminal, creating a bridge between documentation and execution.
@@ -422,12 +423,12 @@ Based on the [live-scripting methodology](<a href="https://github.com/andreaswit
 <li>Version control integration through plain-text format</li>
 </ul>
 </div>
-<div id="outline-container-org1c521a7" class="outline-4">
-<h4 id="org1c521a7"><span class="section-number-4">2.2.1.</span> Implementation Options</h4>
+<div id="outline-container-org188b408" class="outline-4">
+<h4 id="org188b408"><span class="section-number-4">2.2.1.</span> Implementation Options</h4>
 <div class="outline-text-4" id="text-2-2-1">
 </div>
-<div id="outline-container-orgbd7de75" class="outline-5">
-<h5 id="orgbd7de75"><span class="section-number-5">2.2.1.1.</span> Emacs Users</h5>
+<div id="outline-container-orgca96909" class="outline-5">
+<h5 id="orgca96909"><span class="section-number-5">2.2.1.1.</span> Emacs Users</h5>
 <div class="outline-text-5" id="text-2-2-1-1">
 <p>
 Configure live-scripting with this Emacs Lisp function:
@@ -448,8 +449,8 @@ Configure live-scripting with this Emacs Lisp function:
 </div>
 </div>
 </div>
-<div id="outline-container-org02ac0a9" class="outline-5">
-<h5 id="org02ac0a9"><span class="section-number-5">2.2.1.2.</span> Non-Emacs Users</h5>
+<div id="outline-container-org20c6d53" class="outline-5">
+<h5 id="org20c6d53"><span class="section-number-5">2.2.1.2.</span> Non-Emacs Users</h5>
 <div class="outline-text-5" id="text-2-2-1-2">
 <p>
 Copy code blocks to any terminal - the methodology maintains precision across tools.
@@ -462,8 +463,8 @@ The deployment follows phases from environment setup through advanced features, 
 </div>
 </div>
 </div>
-<div id="outline-container-org91d0c1e" class="outline-3">
-<h3 id="org91d0c1e"><span class="section-number-3">2.3.</span> Project Components</h3>
+<div id="outline-container-orga4708e2" class="outline-3">
+<h3 id="orga4708e2"><span class="section-number-3">2.3.</span> Project Components</h3>
 <div class="outline-text-3" id="text-2-3">
 <ul class="org-ul">
 <li>Self-hosted RagFlow with local document processing for privacy control</li>
@@ -473,8 +474,8 @@ The deployment follows phases from environment setup through advanced features, 
 </ul>
 </div>
 </div>
-<div id="outline-container-org89f33a5" class="outline-3">
-<h3 id="org89f33a5"><span class="section-number-3">2.4.</span> Expected Deployment Outcome</h3>
+<div id="outline-container-orgdb526cf" class="outline-3">
+<h3 id="orgdb526cf"><span class="section-number-3">2.4.</span> Expected Deployment Outcome</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 The workflow produces a functioning HTTPS-enabled RagFlow instance on AWS, capable of document processing and RAG-based AI responses with full user control.
@@ -482,19 +483,19 @@ The workflow produces a functioning HTTPS-enabled RagFlow instance on AWS, capab
 </div>
 </div>
 </div>
-<div id="outline-container-orgf9b919a" class="outline-2">
-<h2 id="orgf9b919a"><span class="section-number-2">3.</span> Foundation &amp; Prerequisites</h2>
+<div id="outline-container-org62ef360" class="outline-2">
+<h2 id="org62ef360"><span class="section-number-2">3.</span> Foundation &amp; Prerequisites</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orgc27e44f" class="outline-3">
-<h3 id="orgc27e44f"><span class="section-number-3">3.1.</span> Environment Setup</h3>
+<div id="outline-container-orgee730b9" class="outline-3">
+<h3 id="orgee730b9"><span class="section-number-3">3.1.</span> Environment Setup</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 These steps establish the development environment and validate prerequisites.
 </p>
 </div>
-<div id="outline-container-orgaffaccf" class="outline-4">
-<h4 id="orgaffaccf"><span class="section-number-4">3.1.1.</span> Setting the Project Foundation</h4>
+<div id="outline-container-org22524dd" class="outline-4">
+<h4 id="org22524dd"><span class="section-number-4">3.1.1.</span> Setting the Project Foundation</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <p>
 This establishes the base project directory and validates AWS network prerequisites.
@@ -529,8 +530,8 @@ aws ec2 describe-vpcs --filters <span style="color: #008000;">"Name=isDefault,Va
 </p>
 </div>
 </div>
-<div id="outline-container-org8050a94" class="outline-4">
-<h4 id="org8050a94"><span class="section-number-4">3.1.2.</span> Validating AWS Prerequisites</h4>
+<div id="outline-container-orge3cb3df" class="outline-4">
+<h4 id="orge3cb3df"><span class="section-number-4">3.1.2.</span> Validating AWS Prerequisites</h4>
 <div class="outline-text-4" id="text-3-1-2">
 <p>
 This confirms AWS environment configuration for deployment requirements.
@@ -562,8 +563,8 @@ docker --version
 </div>
 </div>
 </div>
-<div id="outline-container-org1852791" class="outline-3">
-<h3 id="org1852791"><span class="section-number-3">3.2.</span> Summary</h3>
+<div id="outline-container-orgea84fc5" class="outline-3">
+<h3 id="orgea84fc5"><span class="section-number-3">3.2.</span> Summary</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 The foundation phase establishes the development environment and validates prerequisites. Project directory structure is configured, AWS credentials verified, and required tools confirmed operational. This groundwork enables reproducible infrastructure deployment through live-scripting methodology.
@@ -571,12 +572,12 @@ The foundation phase establishes the development environment and validates prere
 </div>
 </div>
 </div>
-<div id="outline-container-orga05995f" class="outline-2">
-<h2 id="orga05995f"><span class="section-number-2">4.</span> Infrastructure as Code</h2>
+<div id="outline-container-orgdffb752" class="outline-2">
+<h2 id="orgdffb752"><span class="section-number-2">4.</span> Infrastructure as Code</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orgaefc1a2" class="outline-3">
-<h3 id="orgaefc1a2"><span class="section-number-3">4.1.</span> SSH Key Generation for Secure Access</h3>
+<div id="outline-container-org18e269b" class="outline-3">
+<h3 id="org18e269b"><span class="section-number-3">4.1.</span> SSH Key Generation for Secure Access</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 This creates dedicated SSH keypairs for EC2 instance access and stores the public key for Terraform.
@@ -605,8 +606,8 @@ cat ~/.ssh/ragflow_key.pub
 </p>
 </div>
 </div>
-<div id="outline-container-org1114042" class="outline-3">
-<h3 id="org1114042"><span class="section-number-3">4.2.</span> Terraform Configuration and Planning</h3>
+<div id="outline-container-org908b416" class="outline-3">
+<h3 id="org908b416"><span class="section-number-3">4.2.</span> Terraform Configuration and Planning</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 This prepares the Terraform configuration files and validates the infrastructure setup.
@@ -650,8 +651,8 @@ terraform validate
 </p>
 </div>
 </div>
-<div id="outline-container-org0da648a" class="outline-3">
-<h3 id="org0da648a"><span class="section-number-3">4.3.</span> Infrastructure Deployment Planning</h3>
+<div id="outline-container-orgf41163e" class="outline-3">
+<h3 id="orgf41163e"><span class="section-number-3">4.3.</span> Infrastructure Deployment Planning</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 This creates the deployment plan and reviews resource changes before applying them.
@@ -682,8 +683,8 @@ cat tfplan.json | jq <span style="color: #008000;">'.resource_changes | group_by
 </p>
 </div>
 </div>
-<div id="outline-container-org52cceaa" class="outline-3">
-<h3 id="org52cceaa"><span class="section-number-3">4.4.</span> Infrastructure Deployment Execution</h3>
+<div id="outline-container-org4e02851" class="outline-3">
+<h3 id="org4e02851"><span class="section-number-3">4.4.</span> Infrastructure Deployment Execution</h3>
 <div class="outline-text-3" id="text-4-4">
 <p>
 This executes the Terraform plan to create the AWS infrastructure resources.
@@ -728,8 +729,8 @@ aws ec2 describe-instances <span style="color: #008000;">\</span>
 </p>
 </div>
 </div>
-<div id="outline-container-org7fecef9" class="outline-3">
-<h3 id="org7fecef9"><span class="section-number-3">4.5.</span> SSH Configuration for Easy Access</h3>
+<div id="outline-container-org30c87c4" class="outline-3">
+<h3 id="org30c87c4"><span class="section-number-3">4.5.</span> SSH Configuration for Easy Access</h3>
 <div class="outline-text-3" id="text-4-5">
 <p>
 This establishes convenient SSH access configuration and tests connectivity to the deployed instance.
@@ -766,12 +767,12 @@ ssh EC2-RagFlow <span style="color: #008000;">'whoami &amp;&amp; date'</span>
 </p>
 </div>
 </div>
-<div id="outline-container-orgdbe5c55" class="outline-3">
-<h3 id="orgdbe5c55"><span class="section-number-3">4.6.</span> EC2 Instance Selection and Upgrading</h3>
+<div id="outline-container-org27cb8c6" class="outline-3">
+<h3 id="org27cb8c6"><span class="section-number-3">4.6.</span> EC2 Instance Selection and Upgrading</h3>
 <div class="outline-text-3" id="text-4-6">
 </div>
-<div id="outline-container-orge1005e3" class="outline-4">
-<h4 id="orge1005e3"><span class="section-number-4">4.6.1.</span> Recommended EC2 Instance Types for RAG Workloads</h4>
+<div id="outline-container-orgb41814f" class="outline-4">
+<h4 id="orgb41814f"><span class="section-number-4">4.6.1.</span> Recommended EC2 Instance Types for RAG Workloads</h4>
 <div class="outline-text-4" id="text-4-6-1">
 <p>
 Here is a list of recommended EC2 instance types suitable for RAG (Retrieval-Augmented Generation) workloads like RagFlow, which typically require significant memory for model inference, vector embeddings, and data processing. I've focused on instances with at least 20 GB RAM, prioritizing memory-optimized types (R series) for better performance. All recommendations are for the <code>eu-central-1</code> region, with approximate on-demand pricing (as of late 2024; prices may vary—check AWS Pricing Calculator for current rates). Network speed refers to the maximum bandwidth.
@@ -851,8 +852,8 @@ Here is a list of recommended EC2 instance types suitable for RAG (Retrieval-Aug
 </tbody>
 </table>
 </div>
-<div id="outline-container-orgb21d133" class="outline-5">
-<h5 id="orgb21d133"><span class="section-number-5">4.6.1.1.</span> Recommendations</h5>
+<div id="outline-container-org57998c8" class="outline-5">
+<h5 id="org57998c8"><span class="section-number-5">4.6.1.1.</span> Recommendations</h5>
 <div class="outline-text-5" id="text-4-6-1-1">
 <ul class="org-ul">
 <li><b>For most RAG setups</b>: Start with <code>r5.xlarge</code> or <code>r6g.xlarge</code> for a balance of memory, performance, and cost.</li>
@@ -863,15 +864,15 @@ Here is a list of recommended EC2 instance types suitable for RAG (Retrieval-Aug
 </div>
 </div>
 </div>
-<div id="outline-container-orgebfea32" class="outline-4">
-<h4 id="orgebfea32"><span class="section-number-4">4.6.2.</span> Upgrading to a Larger Instance Type with Terraform</h4>
+<div id="outline-container-orgb68e950" class="outline-4">
+<h4 id="orgb68e950"><span class="section-number-4">4.6.2.</span> Upgrading to a Larger Instance Type with Terraform</h4>
 <div class="outline-text-4" id="text-4-6-2">
 <p>
 The best and fastest way to upgrade your EC2 instance to one with more memory is to update your Terraform configuration and apply the changes. This approach is automated, ensures consistency, and avoids manual errors.
 </p>
 </div>
-<div id="outline-container-orgc03a751" class="outline-5">
-<h5 id="orgc03a751"><span class="section-number-5">4.6.2.1.</span> Steps to Upgrade</h5>
+<div id="outline-container-org1cbabb8" class="outline-5">
+<h5 id="org1cbabb8"><span class="section-number-5">4.6.2.1.</span> Steps to Upgrade</h5>
 <div class="outline-text-5" id="text-4-6-2-1">
 <ol class="org-ol">
 <li><b>Update the Terraform Variables</b>:
@@ -895,8 +896,8 @@ The best and fastest way to upgrade your EC2 instance to one with more memory is
 </ol>
 </div>
 </div>
-<div id="outline-container-org21aeb7c" class="outline-5">
-<h5 id="org21aeb7c"><span class="section-number-5">4.6.2.2.</span> Why This Method Is Best/Fastest</h5>
+<div id="outline-container-orgcc85aaa" class="outline-5">
+<h5 id="orgcc85aaa"><span class="section-number-5">4.6.2.2.</span> Why This Method Is Best/Fastest</h5>
 <div class="outline-text-5" id="text-4-6-2-2">
 <ul class="org-ul">
 <li><b>Automation</b>: Terraform handles the entire process, ensuring consistency and avoiding manual errors.</li>
@@ -948,8 +949,8 @@ aws ec2 describe-instances <span style="color: #008000;">\</span>
 </div>
 </div>
 </div>
-<div id="outline-container-org8ba76ce" class="outline-3">
-<h3 id="org8ba76ce"><span class="section-number-3">4.7.</span> Infrastructure Live-Cycle Operations</h3>
+<div id="outline-container-org756ae21" class="outline-3">
+<h3 id="org756ae21"><span class="section-number-3">4.7.</span> Infrastructure Live-Cycle Operations</h3>
 <div class="outline-text-3" id="text-4-7">
 <p>
 This section provides procedures for managing the EC2 instance lifecycle - starting and stopping the instance when returning to work sessions after periods of inactivity.
@@ -998,8 +999,8 @@ aws ec2 stop-instances --instance-ids <span style="color: #008000;">"$instance_i
 </p>
 </div>
 </div>
-<div id="outline-container-orgd859ce2" class="outline-3">
-<h3 id="orgd859ce2"><span class="section-number-3">4.8.</span> Summary</h3>
+<div id="outline-container-org2c43af9" class="outline-3">
+<h3 id="org2c43af9"><span class="section-number-3">4.8.</span> Summary</h3>
 <div class="outline-text-3" id="text-4-8">
 <p>
 Infrastructure automation through Terraform provisions the AWS environment. The EC2 instance operates with proper network security configuration. SSH access is established through dedicated keypairs. The infrastructure exists as version-controlled code, enabling consistent reproduction across deployments.
@@ -1007,19 +1008,19 @@ Infrastructure automation through Terraform provisions the AWS environment. The 
 </div>
 </div>
 </div>
-<div id="outline-container-orgdc02fc1" class="outline-2">
-<h2 id="orgdc02fc1"><span class="section-number-2">5.</span> Development Environment Setup</h2>
+<div id="outline-container-org4c1dbac" class="outline-2">
+<h2 id="org4c1dbac"><span class="section-number-2">5.</span> Development Environment Setup</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-orgd19346d" class="outline-3">
-<h3 id="orgd19346d"><span class="section-number-3">5.1.</span> Complete Docker Engine and Tools Installation</h3>
+<div id="outline-container-org05e5b33" class="outline-3">
+<h3 id="org05e5b33"><span class="section-number-3">5.1.</span> Complete Docker Engine and Tools Installation</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 This section establishes the complete development environment on the AWS EC2 instance, including Docker Engine, container management tools, GitHub CLI, and Python development utilities. These tools form the foundation for both RagFlow deployment and CI/CD testing.
 </p>
 </div>
-<div id="outline-container-org078b233" class="outline-4">
-<h4 id="org078b233"><span class="section-number-4">5.1.1.</span> Docker Engine Installation</h4>
+<div id="outline-container-orgd960c30" class="outline-4">
+<h4 id="orgd960c30"><span class="section-number-4">5.1.1.</span> Docker Engine Installation</h4>
 <div class="outline-text-4" id="text-5-1-1">
 <p>
 Install Docker Engine with proper repository configuration and user permissions.
@@ -1077,8 +1078,8 @@ docker compose version
 </p>
 </div>
 </div>
-<div id="outline-container-org69df9cd" class="outline-4">
-<h4 id="org69df9cd"><span class="section-number-4">5.1.2.</span> Docker Service Configuration</h4>
+<div id="outline-container-org09b3d60" class="outline-4">
+<h4 id="org09b3d60"><span class="section-number-4">5.1.2.</span> Docker Service Configuration</h4>
 <div class="outline-text-4" id="text-5-1-2">
 <p>
 Enable Docker as a system service for automatic startup and management.
@@ -1109,8 +1110,8 @@ sudo systemctl status docker  --no-pager
 </p>
 </div>
 </div>
-<div id="outline-container-orga3649fe" class="outline-4">
-<h4 id="orga3649fe"><span class="section-number-4">5.1.3.</span> Lazydocker Installation</h4>
+<div id="outline-container-orga4939b6" class="outline-4">
+<h4 id="orga4939b6"><span class="section-number-4">5.1.3.</span> Lazydocker Installation</h4>
 <div class="outline-text-4" id="text-5-1-3">
 <p>
 Install Lazydocker for convenient terminal-based Docker container management.
@@ -1144,8 +1145,8 @@ lazydocker --version
 </p>
 </div>
 </div>
-<div id="outline-container-org19c55df" class="outline-4">
-<h4 id="org19c55df"><span class="section-number-4">5.1.4.</span> GitHub CLI Installation</h4>
+<div id="outline-container-org935b1b4" class="outline-4">
+<h4 id="org935b1b4"><span class="section-number-4">5.1.4.</span> GitHub CLI Installation</h4>
 <div class="outline-text-4" id="text-5-1-4">
 <p>
 Install the GitHub CLI tool for repository and runner management.
@@ -1187,8 +1188,8 @@ gh --version
 </p>
 </div>
 </div>
-<div id="outline-container-org5de96c3" class="outline-4">
-<h4 id="org5de96c3"><span class="section-number-4">5.1.5.</span> Docker and Docker Compose Verification</h4>
+<div id="outline-container-orgf5605ad" class="outline-4">
+<h4 id="orgf5605ad"><span class="section-number-4">5.1.5.</span> Docker and Docker Compose Verification</h4>
 <div class="outline-text-4" id="text-5-1-5">
 <p>
 Verify all Docker components are properly installed and functional.
@@ -1222,8 +1223,8 @@ docker images
 </p>
 </div>
 </div>
-<div id="outline-container-org6761e0e" class="outline-4">
-<h4 id="org6761e0e"><span class="section-number-4">5.1.6.</span> Python Development Tools Installation</h4>
+<div id="outline-container-org2b7cfd2" class="outline-4">
+<h4 id="org2b7cfd2"><span class="section-number-4">5.1.6.</span> Python Development Tools Installation</h4>
 <div class="outline-text-4" id="text-5-1-6">
 <p>
 Install uv (fast Python package installer) and development libraries required for Python projects.
@@ -1263,8 +1264,8 @@ pkg-config --version
 </p>
 </div>
 </div>
-<div id="outline-container-orgd58ca3b" class="outline-4">
-<h4 id="orgd58ca3b"><span class="section-number-4">5.1.7.</span> Development Environment Summary</h4>
+<div id="outline-container-orgaa59a09" class="outline-4">
+<h4 id="orgaa59a09"><span class="section-number-4">5.1.7.</span> Development Environment Summary</h4>
 <div class="outline-text-4" id="text-5-1-7">
 <p>
 Verify the complete development environment is ready for deployment.
@@ -1310,8 +1311,8 @@ df -h /
 </div>
 </div>
 </div>
-<div id="outline-container-orgc3d4c14" class="outline-3">
-<h3 id="orgc3d4c14"><span class="section-number-3">5.2.</span> Summary</h3>
+<div id="outline-container-org07dd68c" class="outline-3">
+<h3 id="org07dd68c"><span class="section-number-3">5.2.</span> Summary</h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
 The development environment setup establishes necessary tools for containerized application deployment and CI/CD workflows. Docker Engine provides the containerization platform, Lazydocker offers terminal management, GitHub CLI enables repository integration, and Python development tools support application requirements. This foundation enables RagFlow deployment and GitHub Actions runner functionality on the EC2 instance.
@@ -1319,12 +1320,12 @@ The development environment setup establishes necessary tools for containerized 
 </div>
 </div>
 </div>
-<div id="outline-container-org8535345" class="outline-2">
-<h2 id="org8535345"><span class="section-number-2">6.</span> Core RagFlow Deployment</h2>
+<div id="outline-container-org49ea314" class="outline-2">
+<h2 id="org49ea314"><span class="section-number-2">6.</span> Core RagFlow Deployment</h2>
 <div class="outline-text-2" id="text-6">
 </div>
-<div id="outline-container-org9d393f7" class="outline-3">
-<h3 id="org9d393f7"><span class="section-number-3">6.1.</span> Basic Ragflow Setup</h3>
+<div id="outline-container-orgcda4269" class="outline-3">
+<h3 id="orgcda4269"><span class="section-number-3">6.1.</span> Basic Ragflow Setup</h3>
 <div class="outline-text-3" id="text-6-1">
 <p>
 This section deploys RagFlow on the EC2 instance using Docker Compose following the QuickStart guide.
@@ -1378,8 +1379,8 @@ URL <a href="https://18.184.181.110">https://18.184.181.110</a>
 </p>
 </div>
 </div>
-<div id="outline-container-org4d996ae" class="outline-3">
-<h3 id="org4d996ae"><span class="section-number-3">6.2.</span> HTTPS Setup with Self-Signed Certificate</h3>
+<div id="outline-container-org5b3acbc" class="outline-3">
+<h3 id="org5b3acbc"><span class="section-number-3">6.2.</span> HTTPS Setup with Self-Signed Certificate</h3>
 <div class="outline-text-3" id="text-6-2">
 <p>
 This section provides step-by-step instructions for setting up HTTPS access to RAGFlow using a self-signed SSL certificate. The setup allows the domain to be reachable via IP address over HTTPS, reusing the existing Nginx configuration files with minimal modifications.
@@ -1396,8 +1397,8 @@ This section provides step-by-step instructions for setting up HTTPS access to R
 <li>Basic knowledge of command-line operations</li>
 </ul>
 </div>
-<div id="outline-container-orgcb904c9" class="outline-4">
-<h4 id="orgcb904c9"><span class="section-number-4">6.2.1.</span> Step 1: Generate Self-Signed SSL Certificate**</h4>
+<div id="outline-container-orgd6548be" class="outline-4">
+<h4 id="orgd6548be"><span class="section-number-4">6.2.1.</span> Step 1: Generate Self-Signed SSL Certificate**</h4>
 <div class="outline-text-4" id="text-6-2-1">
 <p>
 Generate a self-signed certificate for your server's IP address. This certificate will be used by Nginx for HTTPS connections.
@@ -1448,8 +1449,8 @@ After running these commands, you should see the certificate files in the ssl di
 </p>
 </div>
 </div>
-<div id="outline-container-org957538a" class="outline-4">
-<h4 id="org957538a"><span class="section-number-4">6.2.2.</span> Step 2: Modify Nginx Configuration**</h4>
+<div id="outline-container-orgce51373" class="outline-4">
+<h4 id="orgce51373"><span class="section-number-4">6.2.2.</span> Step 2: Modify Nginx Configuration**</h4>
 <div class="outline-text-4" id="text-6-2-2">
 <p>
 Update the existing ragflow.https.conf file to use your IP address instead of a domain name.
@@ -1482,8 +1483,8 @@ The modified configuration now listens on your IP address for both HTTP (redirec
 </p>
 </div>
 </div>
-<div id="outline-container-org6e7e8d1" class="outline-4">
-<h4 id="org6e7e8d1"><span class="section-number-4">6.2.3.</span> Step 3: Update Docker Compose Configuration**</h4>
+<div id="outline-container-orgc9eac43" class="outline-4">
+<h4 id="orgc9eac43"><span class="section-number-4">6.2.3.</span> Step 3: Update Docker Compose Configuration**</h4>
 <div class="outline-text-4" id="text-6-2-3">
 <p>
 Modify the docker-compose.yml file to mount the self-signed certificates and use the updated Nginx configuration.
@@ -1519,8 +1520,8 @@ The docker-compose.yml now mounts your self-signed certificates and the modified
 </p>
 </div>
 </div>
-<div id="outline-container-orgc351e10" class="outline-4">
-<h4 id="orgc351e10"><span class="section-number-4">6.2.4.</span> Step 4: Restart RAGFlow Services**</h4>
+<div id="outline-container-org8d23bbc" class="outline-4">
+<h4 id="org8d23bbc"><span class="section-number-4">6.2.4.</span> Step 4: Restart RAGFlow Services**</h4>
 <div class="outline-text-4" id="text-6-2-4">
 <p>
 Stop the existing services and restart them with the new HTTPS configuration.
@@ -1552,8 +1553,8 @@ After restarting, RAGFlow should be accessible via HTTPS at <a href="https://&lt
 </p>
 </div>
 </div>
-<div id="outline-container-orgd3050d1" class="outline-4">
-<h4 id="orgd3050d1"><span class="section-number-4">6.2.5.</span> Step 5: Test HTTPS Access**</h4>
+<div id="outline-container-orgbbf6ea1" class="outline-4">
+<h4 id="orgbbf6ea1"><span class="section-number-4">6.2.5.</span> Step 5: Test HTTPS Access**</h4>
 <div class="outline-text-4" id="text-6-2-5">
 <p>
 Verify that the HTTPS setup is working correctly.
@@ -1584,8 +1585,8 @@ The HTTP request should redirect to HTTPS, and the HTTPS connection should succe
 </div>
 </div>
 </div>
-<div id="outline-container-orgcbb7fbc" class="outline-3">
-<h3 id="orgcbb7fbc"><span class="section-number-3">6.3.</span> Use Case: Access RagFlow via SSH-Tunnel</h3>
+<div id="outline-container-orgcef3740" class="outline-3">
+<h3 id="orgcef3740"><span class="section-number-3">6.3.</span> Use Case: Access RagFlow via SSH-Tunnel</h3>
 <div class="outline-text-3" id="text-6-3">
 <p>
 This creates an SSH tunnel to access RagFlow securely from a local browser.
@@ -1611,8 +1612,8 @@ When the SSH tunnel is established, RagFlow can be accessed via local browser at
 </p>
 </div>
 </div>
-<div id="outline-container-orga26fc06" class="outline-3">
-<h3 id="orga26fc06"><span class="section-number-3">6.4.</span> Summary</h3>
+<div id="outline-container-org2e26020" class="outline-3">
+<h3 id="org2e26020"><span class="section-number-3">6.4.</span> Summary</h3>
 <div class="outline-text-3" id="text-6-4">
 <p>
 RagFlow deployment establishes the core RAG platform. The application configures with Docker containerization, HTTPS setup with self-signed certificates, and SSH tunnel access for secure local browser connectivity. The system integrates document processing and knowledge base management.
@@ -1620,35 +1621,35 @@ RagFlow deployment establishes the core RAG platform. The application configures
 </div>
 </div>
 </div>
-<div id="outline-container-org3df7412" class="outline-2">
-<h2 id="org3df7412"><span class="section-number-2">7.</span> Advanced Features - Document Processing</h2>
+<div id="outline-container-orgbc32003" class="outline-2">
+<h2 id="orgbc32003"><span class="section-number-2">7.</span> Advanced Features - Document Processing</h2>
 <div class="outline-text-2" id="text-7">
 </div>
-<div id="outline-container-orga282bbf" class="outline-3">
-<h3 id="orga282bbf"><span class="section-number-3">7.1.</span> Document Ingestion and Processing</h3>
+<div id="outline-container-org4d99ef0" class="outline-3">
+<h3 id="org4d99ef0"><span class="section-number-3">7.1.</span> Document Ingestion and Processing</h3>
 <div class="outline-text-3" id="text-7-1">
 <p>
 This demonstrates uploading and processing documents for RAG functionality.
 </p>
 </div>
-<div id="outline-container-org1c985a7" class="outline-4">
-<h4 id="org1c985a7"><span class="section-number-4">7.1.1.</span> Upload Documents</h4>
+<div id="outline-container-org06c1286" class="outline-4">
+<h4 id="org06c1286"><span class="section-number-4">7.1.1.</span> Upload Documents</h4>
 <div class="outline-text-4" id="text-7-1-1">
 <p>
 Access RagFlow via browser and upload sample documents for processing.
 </p>
 </div>
 </div>
-<div id="outline-container-orgf104eca" class="outline-4">
-<h4 id="orgf104eca"><span class="section-number-4">7.1.2.</span> Configure Knowledge Base</h4>
+<div id="outline-container-orgd5c94d2" class="outline-4">
+<h4 id="orgd5c94d2"><span class="section-number-4">7.1.2.</span> Configure Knowledge Base</h4>
 <div class="outline-text-4" id="text-7-1-2">
 <p>
 Create a knowledge base and configure document parsing settings.
 </p>
 </div>
 </div>
-<div id="outline-container-orgf24707d" class="outline-4">
-<h4 id="orgf24707d"><span class="section-number-4">7.1.3.</span> Test RAG Queries</h4>
+<div id="outline-container-org3b3c994" class="outline-4">
+<h4 id="org3b3c994"><span class="section-number-4">7.1.3.</span> Test RAG Queries</h4>
 <div class="outline-text-4" id="text-7-1-3">
 <p>
 Test retrieval-augmented generation with uploaded documents.
@@ -1656,8 +1657,8 @@ Test retrieval-augmented generation with uploaded documents.
 </div>
 </div>
 </div>
-<div id="outline-container-org4c6d1b9" class="outline-3">
-<h3 id="org4c6d1b9"><span class="section-number-3">7.2.</span> Summary</h3>
+<div id="outline-container-org7808701" class="outline-3">
+<h3 id="org7808701"><span class="section-number-3">7.2.</span> Summary</h3>
 <div class="outline-text-3" id="text-7-2">
 <p>
 Document processing enables advanced knowledge management while preserving privacy. Local processing handles sensitive documents without transmitting data to external services.
@@ -1665,20 +1666,20 @@ Document processing enables advanced knowledge management while preserving priva
 </div>
 </div>
 </div>
-<div id="outline-container-org9a3ea6b" class="outline-2">
-<h2 id="org9a3ea6b"><span class="section-number-2">8.</span> Infrastructure Cleanup</h2>
+<div id="outline-container-org5f9d052" class="outline-2">
+<h2 id="org5f9d052"><span class="section-number-2">8.</span> Infrastructure Cleanup</h2>
 <div class="outline-text-2" id="text-8">
 </div>
-<div id="outline-container-org3f36e56" class="outline-3">
-<h3 id="org3f36e56"><span class="section-number-3">8.1.</span> Cleanup Philosophy</h3>
+<div id="outline-container-org5877c0a" class="outline-3">
+<h3 id="org5877c0a"><span class="section-number-3">8.1.</span> Cleanup Philosophy</h3>
 <div class="outline-text-3" id="text-8-1">
 <p>
 Infrastructure as Code enables rapid deployment, but equally important is the ability to cleanly tear down resources to avoid unnecessary costs. This section provides procedures for complete cleanup of all deployed resources.
 </p>
 </div>
 </div>
-<div id="outline-container-org54be5da" class="outline-3">
-<h3 id="org54be5da"><span class="section-number-3">8.2.</span> Stop RagFlow Services</h3>
+<div id="outline-container-org8a52ddb" class="outline-3">
+<h3 id="org8a52ddb"><span class="section-number-3">8.2.</span> Stop RagFlow Services</h3>
 <div class="outline-text-3" id="text-8-2">
 <p>
 Before destroying infrastructure, gracefully stop all running services.
@@ -1710,8 +1711,8 @@ docker system prune -a -f
 </p>
 </div>
 </div>
-<div id="outline-container-org05e5ce9" class="outline-3">
-<h3 id="org05e5ce9"><span class="section-number-3">8.3.</span> Terminate EC2 Instance with Terraform</h3>
+<div id="outline-container-orgbb6eed9" class="outline-3">
+<h3 id="orgbb6eed9"><span class="section-number-3">8.3.</span> Terminate EC2 Instance with Terraform</h3>
 <div class="outline-text-3" id="text-8-3">
 <p>
 Use Terraform to cleanly destroy all AWS infrastructure resources.
@@ -1746,8 +1747,8 @@ aws ec2 describe-instances <span style="color: #008000;">\</span>
 </p>
 </div>
 </div>
-<div id="outline-container-org548362d" class="outline-3">
-<h3 id="org548362d"><span class="section-number-3">8.4.</span> Clean Up Local SSH Configuration</h3>
+<div id="outline-container-orgf56b1cb" class="outline-3">
+<h3 id="orgf56b1cb"><span class="section-number-3">8.4.</span> Clean Up Local SSH Configuration</h3>
 <div class="outline-text-3" id="text-8-4">
 <p>
 Remove SSH configurations and keys associated with the destroyed instance.
@@ -1780,8 +1781,8 @@ ls -la ~/.ssh/ragflow_key* 2&gt;/dev/null || <span style="color: #006FE0;">echo<
 </p>
 </div>
 </div>
-<div id="outline-container-org00a450f" class="outline-3">
-<h3 id="org00a450f"><span class="section-number-3">8.5.</span> Clean Up Terraform State Files</h3>
+<div id="outline-container-org64b1429" class="outline-3">
+<h3 id="org64b1429"><span class="section-number-3">8.5.</span> Clean Up Terraform State Files</h3>
 <div class="outline-text-3" id="text-8-5">
 <p>
 Clean up Terraform state and temporary files.
@@ -1819,8 +1820,8 @@ ls -la
 </p>
 </div>
 </div>
-<div id="outline-container-orgeef980b" class="outline-3">
-<h3 id="orgeef980b"><span class="section-number-3">8.6.</span> Verify Complete Cleanup</h3>
+<div id="outline-container-org39e7495" class="outline-3">
+<h3 id="org39e7495"><span class="section-number-3">8.6.</span> Verify Complete Cleanup</h3>
 <div class="outline-text-3" id="text-8-6">
 <p>
 Perform final verification that all resources have been removed.
@@ -1863,8 +1864,8 @@ aws ec2 describe-key-pairs <span style="color: #008000;">\</span>
 </p>
 </div>
 </div>
-<div id="outline-container-org7921f5e" class="outline-3">
-<h3 id="org7921f5e"><span class="section-number-3">8.7.</span> Cost Optimization Notes</h3>
+<div id="outline-container-orgec46671" class="outline-3">
+<h3 id="orgec46671"><span class="section-number-3">8.7.</span> Cost Optimization Notes</h3>
 <div class="outline-text-3" id="text-8-7">
 <p>
 Some important considerations for cost management:
@@ -1891,8 +1892,8 @@ aws ec2 start-instances --instance-ids <span style="color: #008000;">"$instance_
 </div>
 </div>
 </div>
-<div id="outline-container-orge8b1cb8" class="outline-3">
-<h3 id="orge8b1cb8"><span class="section-number-3">8.8.</span> Summary</h3>
+<div id="outline-container-orgf1e757f" class="outline-3">
+<h3 id="orgf1e757f"><span class="section-number-3">8.8.</span> Summary</h3>
 <div class="outline-text-3" id="text-8-8">
 <p>
 Infrastructure cleanup procedures remove all deployed resources. Terraform destroy commands remove AWS infrastructure, SSH configurations clean from local systems, and verification steps confirm proper resource removal. This prevents unexpected costs after project completion.
@@ -1912,19 +1913,19 @@ This project demonstrates that privacy-focused RAG systems are both technically 
 </div>
 </div>
 </div>
-<div id="outline-container-org3c984b4" class="outline-2">
-<h2 id="org3c984b4"><span class="section-number-2">9.</span> Appendix: GitHub Self-Hosted Runner Setup</h2>
+<div id="outline-container-orgf579939" class="outline-2">
+<h2 id="orgf579939"><span class="section-number-2">9.</span> Appendix: GitHub Self-Hosted Runner Setup</h2>
 <div class="outline-text-2" id="text-9">
 </div>
-<div id="outline-container-org75c8e7d" class="outline-3">
-<h3 id="org75c8e7d"><span class="section-number-3">9.1.</span> GitHub Runner for CI/CD Testing on AWS</h3>
+<div id="outline-container-orgd20c5f6" class="outline-3">
+<h3 id="orgd20c5f6"><span class="section-number-3">9.1.</span> GitHub Runner for CI/CD Testing on AWS</h3>
 <div class="outline-text-3" id="text-9-1">
 <p>
 This section establishes a GitHub Self-Hosted Runner on the AWS EC2 instance to enable continuous integration and testing workflows. The runner executes GitHub Actions directly on your infrastructure, providing complete control over the CI/CD environment.
 </p>
 </div>
-<div id="outline-container-orgf590d3d" class="outline-4">
-<h4 id="orgf590d3d"><span class="section-number-4">9.1.1.</span> Prerequisites and Security Group Configuration</h4>
+<div id="outline-container-orgd850d03" class="outline-4">
+<h4 id="orgd850d03"><span class="section-number-4">9.1.1.</span> Prerequisites and Security Group Configuration</h4>
 <div class="outline-text-4" id="text-9-1-1">
 <p>
 Before installing the GitHub Runner, ensure the necessary ports and dependencies are available on the EC2 instance.
@@ -1962,8 +1963,8 @@ aws ec2 describe-security-groups <span style="color: #008000;">\</span>
 </p>
 </div>
 </div>
-<div id="outline-container-org5588762" class="outline-4">
-<h4 id="org5588762"><span class="section-number-4">9.1.2.</span> GitHub Runner Installation and Configuration</h4>
+<div id="outline-container-org2d378c0" class="outline-4">
+<h4 id="org2d378c0"><span class="section-number-4">9.1.2.</span> GitHub Runner Installation and Configuration</h4>
 <div class="outline-text-4" id="text-9-1-2">
 <p>
 Download and configure the GitHub Self-Hosted Runner on the EC2 instance.
@@ -2002,8 +2003,8 @@ ls -la
 </p>
 </div>
 </div>
-<div id="outline-container-org02ad098" class="outline-4">
-<h4 id="org02ad098"><span class="section-number-4">9.1.3.</span> Runner Registration with GitHub</h4>
+<div id="outline-container-orgabc7213" class="outline-4">
+<h4 id="orgabc7213"><span class="section-number-4">9.1.3.</span> Runner Registration with GitHub</h4>
 <div class="outline-text-4" id="text-9-1-3">
 <p>
 Register the runner with your GitHub repository to enable CI/CD workflows.
@@ -2045,8 +2046,8 @@ ssh EC2-RagFlow
 </p>
 </div>
 </div>
-<div id="outline-container-org94387af" class="outline-4">
-<h4 id="org94387af"><span class="section-number-4">9.1.4.</span> Running the Runner as a Service</h4>
+<div id="outline-container-orgef8d2a7" class="outline-4">
+<h4 id="orgef8d2a7"><span class="section-number-4">9.1.4.</span> Running the Runner as a Service</h4>
 <div class="outline-text-4" id="text-9-1-4">
 <p>
 Install and start the GitHub Runner as a systemd service for automatic startup and management.
@@ -2082,8 +2083,8 @@ sudo journalctl -u actions.runner* -f
 </p>
 </div>
 </div>
-<div id="outline-container-orgd158e4d" class="outline-4">
-<h4 id="orgd158e4d"><span class="section-number-4">9.1.5.</span> Verifying Runner Status</h4>
+<div id="outline-container-orgef5347d" class="outline-4">
+<h4 id="orgef5347d"><span class="section-number-4">9.1.5.</span> Verifying Runner Status</h4>
 <div class="outline-text-4" id="text-9-1-5">
 <p>
 Confirm the runner is connected and ready to execute workflows.
@@ -2120,8 +2121,8 @@ ps aux | grep -i <span style="color: #008000;">"actions-runner"</span> | grep -v
 </p>
 </div>
 </div>
-<div id="outline-container-org0acadf8" class="outline-4">
-<h4 id="org0acadf8"><span class="section-number-4">9.1.6.</span> Testing the Runner with a Sample Workflow</h4>
+<div id="outline-container-orgee4d825" class="outline-4">
+<h4 id="orgee4d825"><span class="section-number-4">9.1.6.</span> Testing the Runner with a Sample Workflow</h4>
 <div class="outline-text-4" id="text-9-1-6">
 <p>
 Create a simple GitHub Actions workflow to test the runner functionality.
@@ -2181,8 +2182,8 @@ git push origin main
 </p>
 </div>
 </div>
-<div id="outline-container-orge9dd634" class="outline-4">
-<h4 id="orge9dd634"><span class="section-number-4">9.1.7.</span> Monitoring and Troubleshooting</h4>
+<div id="outline-container-org5f07ed2" class="outline-4">
+<h4 id="org5f07ed2"><span class="section-number-4">9.1.7.</span> Monitoring and Troubleshooting</h4>
 <div class="outline-text-4" id="text-9-1-7">
 <p>
 Monitor runner activity and resolve common issues.
@@ -2226,8 +2227,8 @@ q
 </p>
 </div>
 </div>
-<div id="outline-container-org69488bc" class="outline-4">
-<h4 id="org69488bc"><span class="section-number-4">9.1.8.</span> Removing the Runner (if needed)</h4>
+<div id="outline-container-orgf96d082" class="outline-4">
+<h4 id="orgf96d082"><span class="section-number-4">9.1.8.</span> Removing the Runner (if needed)</h4>
 <div class="outline-text-4" id="text-9-1-8">
 <p>
 Deregister and remove the runner from your GitHub repository.
@@ -2268,8 +2269,8 @@ ls ~/actions-runner 2&gt;/dev/null || <span style="color: #006FE0;">echo</span> 
 </div>
 </div>
 </div>
-<div id="outline-container-orgebab0c4" class="outline-3">
-<h3 id="orgebab0c4"><span class="section-number-3">9.2.</span> Summary</h3>
+<div id="outline-container-org0e05c45" class="outline-3">
+<h3 id="org0e05c45"><span class="section-number-3">9.2.</span> Summary</h3>
 <div class="outline-text-3" id="text-9-2">
 <p>
 GitHub Self-Hosted Runner installation enables continuous integration and testing on AWS infrastructure. Docker Engine provides containerization for workflow jobs, and the runner executes GitHub Actions with full control over the environment. This integration supports automated testing, building, and deployment of RagFlow without GitHub-hosted runners.
@@ -2277,19 +2278,19 @@ GitHub Self-Hosted Runner installation enables continuous integration and testin
 </div>
 </div>
 </div>
-<div id="outline-container-orgbc2b48b" class="outline-2">
-<h2 id="orgbc2b48b"><span class="section-number-2">10.</span> Appendix: Remote Desktop Access with RustDesk</h2>
+<div id="outline-container-org56b48e2" class="outline-2">
+<h2 id="org56b48e2"><span class="section-number-2">10.</span> Appendix: Remote Desktop Access with RustDesk</h2>
 <div class="outline-text-2" id="text-10">
 </div>
-<div id="outline-container-org1e86144" class="outline-3">
-<h3 id="org1e86144"><span class="section-number-3">10.1.</span> RustDesk Installation and Configuration</h3>
+<div id="outline-container-orgeb9f4e7" class="outline-3">
+<h3 id="orgeb9f4e7"><span class="section-number-3">10.1.</span> RustDesk Installation and Configuration</h3>
 <div class="outline-text-3" id="text-10-1">
 <p>
 RustDesk provides secure remote desktop access to the EC2 instance without requiring complex port forwarding or VPN setup. This section installs and configures RustDesk for remote management and monitoring.
 </p>
 </div>
-<div id="outline-container-orge75624c" class="outline-4">
-<h4 id="orge75624c"><span class="section-number-4">10.1.1.</span> Prerequisites and Security Group Updates</h4>
+<div id="outline-container-org7f7a988" class="outline-4">
+<h4 id="org7f7a988"><span class="section-number-4">10.1.1.</span> Prerequisites and Security Group Updates</h4>
 <div class="outline-text-4" id="text-10-1-1">
 <p>
 Before installing RustDesk, ensure the necessary ports are open in the AWS security group. RustDesk requires TCP ports 21116 (control) and 21117 (data transfer).
@@ -2354,8 +2355,8 @@ aws ec2 authorize-security-group-ingress <span style="color: #008000;">\</span>
 </p>
 </div>
 </div>
-<div id="outline-container-org50f89cf" class="outline-4">
-<h4 id="org50f89cf"><span class="section-number-4">10.1.2.</span> RustDesk Installation on EC2 Instance</h4>
+<div id="outline-container-org1655a52" class="outline-4">
+<h4 id="org1655a52"><span class="section-number-4">10.1.2.</span> RustDesk Installation on EC2 Instance</h4>
 <div class="outline-text-4" id="text-10-1-2">
 <p>
 This installs RustDesk server components and configures the service for remote access.
@@ -2401,8 +2402,8 @@ cat ~/.config/rustdesk/RustDesk.toml
 </p>
 </div>
 </div>
-<div id="outline-container-org94b6082" class="outline-4">
-<h4 id="org94b6082"><span class="section-number-4">10.1.3.</span> RustDesk Client Setup on Local Machine</h4>
+<div id="outline-container-orge338b16" class="outline-4">
+<h4 id="orge338b16"><span class="section-number-4">10.1.3.</span> RustDesk Client Setup on Local Machine</h4>
 <div class="outline-text-4" id="text-10-1-3">
 <p>
 Configure RustDesk on your MacBook Pro for connecting to the remote instance.
@@ -2429,8 +2430,8 @@ open /Applications/RustDesk.app
 </p>
 </div>
 </div>
-<div id="outline-container-orgd49f14c" class="outline-4">
-<h4 id="orgd49f14c"><span class="section-number-4">10.1.4.</span> Establishing Remote Desktop Connection</h4>
+<div id="outline-container-orgceb07b4" class="outline-4">
+<h4 id="orgceb07b4"><span class="section-number-4">10.1.4.</span> Establishing Remote Desktop Connection</h4>
 <div class="outline-text-4" id="text-10-1-4">
 <p>
 Connect to the EC2 instance using RustDesk for graphical remote access.
@@ -2475,8 +2476,8 @@ ssh EC2-RagFlow <span style="color: #008000;">'echo "[options]\ndirect-server = 
 </div>
 </div>
 </div>
-<div id="outline-container-orga1a95d2" class="outline-3">
-<h3 id="orga1a95d2"><span class="section-number-3">10.2.</span> Summary</h3>
+<div id="outline-container-org97559a6" class="outline-3">
+<h3 id="org97559a6"><span class="section-number-3">10.2.</span> Summary</h3>
 <div class="outline-text-3" id="text-10-2">
 <p>
 RustDesk installation enables secure remote desktop access to the EC2 instance. The configuration provides graphical management capabilities with security through password protection and direct connection options. This complements SSH access with visual interface capabilities for system administration and monitoring.
@@ -2484,19 +2485,19 @@ RustDesk installation enables secure remote desktop access to the EC2 instance. 
 </div>
 </div>
 </div>
-<div id="outline-container-orgab9301a" class="outline-2">
-<h2 id="orgab9301a"><span class="section-number-2">11.</span> Appendix: Remote Desktop Access with NoMachine</h2>
+<div id="outline-container-org92d6844" class="outline-2">
+<h2 id="org92d6844"><span class="section-number-2">11.</span> Appendix: Remote Desktop Access with NoMachine</h2>
 <div class="outline-text-2" id="text-11">
 </div>
-<div id="outline-container-orgabe14f8" class="outline-3">
-<h3 id="orgabe14f8"><span class="section-number-3">11.1.</span> NoMachine Installation and Configuration</h3>
+<div id="outline-container-org701c4ca" class="outline-3">
+<h3 id="org701c4ca"><span class="section-number-3">11.1.</span> NoMachine Installation and Configuration</h3>
 <div class="outline-text-3" id="text-11-1">
 <p>
 NoMachine provides high-performance remote desktop access to the EC2 instance with low latency and excellent user experience. This section installs and configures NoMachine server for secure graphical remote management.
 </p>
 </div>
-<div id="outline-container-orgda5db4a" class="outline-4">
-<h4 id="orgda5db4a"><span class="section-number-4">11.1.1.</span> Prerequisites and Security Group Updates</h4>
+<div id="outline-container-org181d3d5" class="outline-4">
+<h4 id="org181d3d5"><span class="section-number-4">11.1.1.</span> Prerequisites and Security Group Updates</h4>
 <div class="outline-text-4" id="text-11-1-1">
 <p>
 Before installing NoMachine, ensure the necessary ports are open in the AWS security group. NoMachine requires TCP port 4000 for the main connection and UDP ports 4011-4999 for NX technology data transfer.
@@ -2547,8 +2548,8 @@ aws ec2 authorize-security-group-ingress <span style="color: #008000;">\</span>
 </p>
 </div>
 </div>
-<div id="outline-container-org71ec885" class="outline-4">
-<h4 id="org71ec885"><span class="section-number-4">11.1.2.</span> Desktop Environment Installation</h4>
+<div id="outline-container-org9392c6a" class="outline-4">
+<h4 id="org9392c6a"><span class="section-number-4">11.1.2.</span> Desktop Environment Installation</h4>
 <div class="outline-text-4" id="text-11-1-2">
 <p>
 Install a lightweight desktop environment if the instance is headless (no graphical interface).
@@ -2576,8 +2577,8 @@ sudo apt install -y xfce4 xfce4-goodies
 </p>
 </div>
 </div>
-<div id="outline-container-orge066391" class="outline-4">
-<h4 id="orge066391"><span class="section-number-4">11.1.3.</span> NoMachine Server Installation</h4>
+<div id="outline-container-org21dd3e6" class="outline-4">
+<h4 id="org21dd3e6"><span class="section-number-4">11.1.3.</span> NoMachine Server Installation</h4>
 <div class="outline-text-4" id="text-11-1-3">
 <p>
 Download and install the NoMachine server package on the EC2 instance.
@@ -2609,8 +2610,8 @@ sudo systemctl status nxserver
 </p>
 </div>
 </div>
-<div id="outline-container-org50f2fff" class="outline-4">
-<h4 id="org50f2fff"><span class="section-number-4">11.1.4.</span> Firewall Configuration on Server</h4>
+<div id="outline-container-org68350ba" class="outline-4">
+<h4 id="org68350ba"><span class="section-number-4">11.1.4.</span> Firewall Configuration on Server</h4>
 <div class="outline-text-4" id="text-11-1-4">
 <p>
 Configure UFW firewall to allow NoMachine connections if UFW is active.
@@ -2647,8 +2648,8 @@ ssh EC2-RagFlow <span style="color: #008000;">'sudo /etc/NX/nxserver --restart'<
 </p>
 </div>
 </div>
-<div id="outline-container-orgaba5de3" class="outline-4">
-<h4 id="orgaba5de3"><span class="section-number-4">11.1.5.</span> Testing NoMachine Connection</h4>
+<div id="outline-container-orga9e5526" class="outline-4">
+<h4 id="orga9e5526"><span class="section-number-4">11.1.5.</span> Testing NoMachine Connection</h4>
 <div class="outline-text-4" id="text-11-1-5">
 <p>
 Connect to the EC2 instance using NoMachine client from your local machine.
@@ -2678,8 +2679,8 @@ Connect to the EC2 instance using NoMachine client from your local machine.
 </p>
 </div>
 </div>
-<div id="outline-container-org1ea5a0c" class="outline-4">
-<h4 id="org1ea5a0c"><span class="section-number-4">11.1.6.</span> Troubleshooting Common Issues</h4>
+<div id="outline-container-orgac68aa5" class="outline-4">
+<h4 id="orgac68aa5"><span class="section-number-4">11.1.6.</span> Troubleshooting Common Issues</h4>
 <div class="outline-text-4" id="text-11-1-6">
 <p>
 Address common NoMachine connection problems.
@@ -2715,8 +2716,8 @@ sudo reboot
 </p>
 </div>
 </div>
-<div id="outline-container-org6cecebd" class="outline-4">
-<h4 id="org6cecebd"><span class="section-number-4">11.1.7.</span> High Resolution Configuration with XDummy Driver</h4>
+<div id="outline-container-org0e502f5" class="outline-4">
+<h4 id="org0e502f5"><span class="section-number-4">11.1.7.</span> High Resolution Configuration with XDummy Driver</h4>
 <div class="outline-text-4" id="text-11-1-7">
 <p>
 For optimal NoMachine performance with higher resolutions, configure the XDummy driver to support resolutions up to 1920x1080 and beyond. This creates a virtual display that NoMachine can connect to with full resolution control.
@@ -2843,15 +2844,15 @@ sudo grep -i <span style="color: #008000;">"dummy\|1920x1080\|modes"</span> /var
 </p>
 </div>
 </div>
-<div id="outline-container-orgf7482ee" class="outline-4">
-<h4 id="orgf7482ee"><span class="section-number-4">11.1.8.</span> German Keyboard Configuration Fix</h4>
+<div id="outline-container-orgb0c76d3" class="outline-4">
+<h4 id="orgb0c76d3"><span class="section-number-4">11.1.8.</span> German Keyboard Configuration Fix</h4>
 <div class="outline-text-4" id="text-11-1-8">
 <p>
 For users with German keyboards, the NoMachine GUI may default to English keyboard layout even when SSH connections work correctly. This occurs because XFCE desktop settings use an incorrect keyboard model that prevents proper key mapping.
 </p>
 </div>
-<div id="outline-container-org657b2d8" class="outline-5">
-<h5 id="org657b2d8"><span class="section-number-5">11.1.8.1.</span> Problem Diagnosis</h5>
+<div id="outline-container-orga3391f4" class="outline-5">
+<h5 id="orga3391f4"><span class="section-number-5">11.1.8.1.</span> Problem Diagnosis</h5>
 <div class="outline-text-5" id="text-11-1-8-1">
 <p>
 The issue manifests as:
@@ -2891,8 +2892,8 @@ cat ~/.config/xfce4/xfconf/xfce-perchannel-xml/keyboard-layout.xml
 </p>
 </div>
 </div>
-<div id="outline-container-org6bf358f" class="outline-5">
-<h5 id="org6bf358f"><span class="section-number-5">11.1.8.2.</span> Solution: Update XFCE Keyboard Configuration</h5>
+<div id="outline-container-org1520e36" class="outline-5">
+<h5 id="org1520e36"><span class="section-number-5">11.1.8.2.</span> Solution: Update XFCE Keyboard Configuration</h5>
 <div class="outline-text-5" id="text-11-1-8-2">
 <p>
 This corrects the keyboard model to enable proper German keyboard mapping.
@@ -2934,8 +2935,8 @@ cat ~/.config/xfce4/xfconf/xfce-perchannel-xml/keyboard-layout.xml
 </p>
 </div>
 </div>
-<div id="outline-container-orgee48124" class="outline-5">
-<h5 id="orgee48124"><span class="section-number-5">11.1.8.3.</span> Solution: Add Session Startup Script</h5>
+<div id="outline-container-org40c7dbe" class="outline-5">
+<h5 id="org40c7dbe"><span class="section-number-5">11.1.8.3.</span> Solution: Add Session Startup Script</h5>
 <div class="outline-text-5" id="text-11-1-8-3">
 <p>
 This ensures keyboard settings are applied automatically on each login.
@@ -2967,8 +2968,8 @@ cat ~/.xprofile
 </p>
 </div>
 </div>
-<div id="outline-container-org1550bd6" class="outline-5">
-<h5 id="org1550bd6"><span class="section-number-5">11.1.8.4.</span> Applying the Fix</h5>
+<div id="outline-container-org297437c" class="outline-5">
+<h5 id="org297437c"><span class="section-number-5">11.1.8.4.</span> Applying the Fix</h5>
 <div class="outline-text-5" id="text-11-1-8-4">
 <p>
 Log out of the NoMachine session and reconnect to apply the changes.
@@ -3001,8 +3002,8 @@ Log out of the NoMachine session and reconnect to apply the changes.
 </div>
 </div>
 </div>
-<div id="outline-container-org7c727ca" class="outline-3">
-<h3 id="org7c727ca"><span class="section-number-3">11.2.</span> Summary</h3>
+<div id="outline-container-org80b6a64" class="outline-3">
+<h3 id="org80b6a64"><span class="section-number-3">11.2.</span> Summary</h3>
 <div class="outline-text-3" id="text-11-2">
 <p>
 NoMachine installation provides high-performance remote desktop access to the EC2 instance. The configuration includes security group updates, desktop environment setup, and firewall configuration. This complements SSH and RustDesk access with optimized graphical remote management capabilities.
@@ -3010,14 +3011,14 @@ NoMachine installation provides high-performance remote desktop access to the EC
 </div>
 </div>
 </div>
-<div id="outline-container-org06373a5" class="outline-2">
-<h2 id="org06373a5"><span class="section-number-2">12.</span> End</h2>
+<div id="outline-container-orgca67355" class="outline-2">
+<h2 id="orgca67355"><span class="section-number-2">12.</span> End</h2>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: 2025-11-04</p>
 <p class="author">Author: Andreas Wittmann</p>
-<p class="date">Created: 2025-11-11 Tue 13:57</p>
+<p class="date">Created: 2025-11-11 Tue 14:04</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

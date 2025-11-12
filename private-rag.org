@@ -15,10 +15,9 @@
 /This document outlines a live-scripting methodology for deploying RagFlow, an open-source RAG platform, on AWS using Terraform, through executable code blocks that ensure reproducible infrastructure setup. It covers HTTPS configuration, Docker containerization, SSH access, and appendices for GitHub Actions runners and remote desktop tools, bridging manual workflows with automated deployments./
 #+LATEX: \newline
 
-
-
 - *HTML Version:* [[file:private-rag.html][private-rag.html]]
 - *PDF Version:* [[file:private-rag.pdf][private-rag.pdf]]
+- *GitHub:* https://github.com/andreaswittmann/private-rag/tree/main
 
 
 
