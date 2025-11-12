@@ -1,5 +1,7 @@
 # Private RAG Deployment
 
+![Private RAG Mascot](Private-Rag-Mascot.png)
+
 This repository provides a live-scripting workflow for deploying a private RAG (Retrieval-Augmented Generation) system on AWS EC2. While RagFlow's basic setup uses public AI models, this self-hosted deployment enables individual tailoring of AI model usage, allowing seamless transition from public APIs to privately hosted AI models for enhanced privacy and control.
 
 ## About RagFlow
