@@ -1,0 +1,1726 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.11.3",
+  "variables": {
+    "allowed_ip": {
+      "value": "0.0.0.0/0"
+    },
+    "aws_region": {
+      "value": "eu-north-1"
+    },
+    "ec2_name": {
+      "value": "EC2-RagFlow-GPU"
+    },
+    "environment": {
+      "value": "development"
+    },
+    "instance_type": {
+      "value": "g4dn.xlarge"
+    },
+    "project": {
+      "value": "ragflow-gpu"
+    },
+    "root_volume_size": {
+      "value": 100
+    },
+    "root_volume_type": {
+      "value": "gp3"
+    },
+    "ssh_cidr_blocks": {
+      "value": [
+        "0.0.0.0/0"
+      ]
+    },
+    "ssh_public_key": {
+      "value": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCq3WhgeLfQ/UDjQkdCPYmUa8cPzzbQukM4r9FNG1dQmaDcycHjIkzkZZcLR7+fBRh2hvwrNbpoeP4uhc6KeEOX9DtWY7Sto/gS4YjbyiMq+e5LkX7YnW8qLRDzkQMmd90WHumErQU0BhZSKBUxeT91fMuVabLf9SV/7J+xyc3Ru5jRgVYqOE/MwnmXCNxLOeBJGVAj6tuAgA4h2ZTIPRMR4FuFeqWh3paUWjmZakjPGg+O+O4Sl5nuSx4nF5p8Mo6aQTncfZm2ATCY19HV8ChlyWdox7b77ZNdPXsbL6NgdDst0adwSvLzIO+gMN00s5J3/WgE4AcVkvkkTWIHr/eaa7gIC0GElq/2DdFwwmIkFWuTFHUId7jit31H7cuWhPZNlTCGpYMGEIXJdRy95sSeF9YyjlaXFFdS58iC01/4bsfnRXLYyR+jMd8s+is0xJJL30L4/5xApdKRZCg9yq9rP67vSVuYp2H801+Frvu73PFwhvD4XzFEDfP08F8nTJwIwMTTe1l0cKxG39GlZYJh5obalvqAl66oSBxNWVMC4AXkH7LZUVqVrjacahY32uYfrD5cuyndaeZrBlruYNn2aam/DVdOR5c7tgbluSM8ygC2Ru/WXi6KVFCChBz/FcKICH6KiNoSE52Vm6syNG6xeqLXMyKm4s6y1kygTrgzcw== aupeksha@Upeksha.fritz.box"
+    }
+  },
+  "planned_values": {
+    "outputs": {
+      "availability_zone": {
+        "sensitive": false
+      },
+      "eip_allocation_id": {
+        "sensitive": false
+      },
+      "instance_arn": {
+        "sensitive": false
+      },
+      "instance_id": {
+        "sensitive": false
+      },
+      "instance_private_ip": {
+        "sensitive": false
+      },
+      "instance_public_ip": {
+        "sensitive": false
+      },
+      "key_pair_name": {
+        "sensitive": false,
+        "type": "string",
+        "value": "ragflow-gpu-keypair"
+      },
+      "security_group_id": {
+        "sensitive": false
+      }
+    },
+    "root_module": {
+      "resources": [
+        {
+          "address": "aws_eip.ragflow_gpu_eip",
+          "mode": "managed",
+          "type": "aws_eip",
+          "name": "ragflow_gpu_eip",
+          "provider_name": "registry.terraform.io/hashicorp/aws",
+          "schema_version": 0,
+          "values": {
+            "address": null,
+            "associate_with_private_ip": null,
+            "customer_owned_ipv4_pool": null,
+            "domain": "vpc",
+            "region": "eu-north-1",
+            "tags": {
+              "Environment": "development",
+              "Name": "RagFlowGPUEIP",
+              "project": "ragflow-gpu"
+            },
+            "tags_all": {
+              "Environment": "development",
+              "Name": "RagFlowGPUEIP",
+              "project": "ragflow-gpu"
+            },
+            "timeouts": null
+          },
+          "sensitive_values": {
+            "tags": {},
+            "tags_all": {}
+          }
+        },
+        {
+          "address": "aws_eip_association.eip_assoc",
+          "mode": "managed",
+          "type": "aws_eip_association",
+          "name": "eip_assoc",
+          "provider_name": "registry.terraform.io/hashicorp/aws",
+          "schema_version": 0,
+          "values": {
+            "allow_reassociation": null,
+            "region": "eu-north-1"
+          },
+          "sensitive_values": {}
+        },
+        {
+          "address": "aws_iam_instance_profile.ragflow_gpu_profile",
+          "mode": "managed",
+          "type": "aws_iam_instance_profile",
+          "name": "ragflow_gpu_profile",
+          "provider_name": "registry.terraform.io/hashicorp/aws",
+          "schema_version": 0,
+          "values": {
+            "name": "RagFlowGPUProfile",
+            "path": "/",
+            "role": "RagFlowGPURole",
+            "tags": {
+              "Environment": "development",
+              "Name": "RagFlowGPUProfile",
+              "project": "ragflow-gpu"
+            },
+            "tags_all": {
+              "Environment": "development",
+              "Name": "RagFlowGPUProfile",
+              "project": "ragflow-gpu"
+            }
+          },
+          "sensitive_values": {
+            "tags": {},
+            "tags_all": {}
+          }
+        },
+        {
+          "address": "aws_iam_role.ragflow_gpu_role",
+          "mode": "managed",
+          "type": "aws_iam_role",
+          "name": "ragflow_gpu_role",
+          "provider_name": "registry.terraform.io/hashicorp/aws",
+          "schema_version": 0,
+          "values": {
+            "assume_role_policy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ec2.amazonaws.com\"}}],\"Version\":\"2012-10-17\"}",
+            "description": null,
+            "force_detach_policies": false,
+            "max_session_duration": 3600,
+            "name": "RagFlowGPURole",
+            "path": "/",
+            "permissions_boundary": null,
+            "tags": {
+              "Environment": "development",
+              "Name": "RagFlowGPURole",
+              "project": "ragflow-gpu"
+            },
+            "tags_all": {
+              "Environment": "development",
+              "Name": "RagFlowGPURole",
+              "project": "ragflow-gpu"
+            }
+          },
+          "sensitive_values": {
+            "inline_policy": [],
+            "managed_policy_arns": [],
+            "tags": {},
+            "tags_all": {}
+          }
+        },
+        {
+          "address": "aws_instance.ragflow_gpu_instance",
+          "mode": "managed",
+          "type": "aws_instance",
+          "name": "ragflow_gpu_instance",
+          "provider_name": "registry.terraform.io/hashicorp/aws",
+          "schema_version": 2,
+          "values": {
+            "ami": "ami-0323015fcbee6f991",
+            "credit_specification": [],
+            "force_destroy": false,
+            "get_password_data": false,
+            "hibernation": null,
+            "iam_instance_profile": "RagFlowGPUProfile",
+            "instance_type": "g4dn.xlarge",
+            "key_name": "ragflow-gpu-keypair",
+            "launch_template": [],
+            "region": "eu-north-1",
+            "root_block_device": [
+              {
+                "delete_on_termination": true,
+                "encrypted": true,
+                "tags": null,
+                "volume_size": 100,
+                "volume_type": "gp3"
+              }
+            ],
+            "source_dest_check": true,
+            "tags": {
+              "Environment": "development",
+              "Name": "EC2-RagFlow-GPU",
+              "project": "ragflow-gpu"
+            },
+            "tags_all": {
+              "Environment": "development",
+              "Name": "EC2-RagFlow-GPU",
+              "project": "ragflow-gpu"
+            },
+            "timeouts": null,
+            "user_data": "#!/bin/bash\nset -e\n\n# Update system packages\napt update -y\napt upgrade -y\napt install -y docker.io git\n\n# make a nice prompt for ubuntu user, append these commands to the ubuntu's ~/.bashrc file\nUBUNTU_USER_HOME=\"/home/ubuntu\"\necho \"PROMPT_COMMAND=''\" >> $UBUNTU_USER_HOME/.bashrc\necho \"export PS1=\\\"\\n\\[\\033[1;32m\\]\\u@\\h\\[\\033[0m\\]:\\[\\033[1;34m\\]\\w\\[\\033[0m\\]\\$ \\\"\" >> $UBUNTU_USER_HOME/.bashrc\necho \"alias ls='ls --color=auto'\" >> $UBUNTU_USER_HOME/.bashrc\necho \"alias grep='grep --color=auto'\" >> $UBUNTU_USER_HOME/.bashrc\n# Make sure the ubuntu user owns these changes\nchown ubuntu:ubuntu $UBUNTU_USER_HOME/.bashrc\n\n# Install Docker\nsystemctl enable docker\nsystemctl start docker\n\n# Add ubuntu user to docker group\nusermod -aG docker ubuntu\n\n# Install Docker Compose v2\nDOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}\nmkdir -p $DOCKER_CONFIG/cli-plugins\ncurl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose\nchmod +x $DOCKER_CONFIG/cli-plugins/docker-compose\n\n# Configure Docker daemon with production settings\ncat > /etc/docker/daemon.json <<EOF\n{\n  \"log-driver\": \"json-file\",\n  \"log-opts\": {\n    \"max-size\": \"10m\",\n    \"max-file\": \"3\"\n  },\n  \"userns-remap\": \"default\"\n}\nEOF\n\nsystemctl restart docker",
+            "user_data_replace_on_change": false,
+            "volume_tags": null
+          },
+          "sensitive_values": {
+            "capacity_reservation_specification": [],
+            "cpu_options": [],
+            "credit_specification": [],
+            "ebs_block_device": [],
+            "enclave_options": [],
+            "ephemeral_block_device": [],
+            "instance_market_options": [],
+            "ipv6_addresses": [],
+            "launch_template": [],
+            "maintenance_options": [],
+            "metadata_options": [],
+            "network_interface": [],
+            "primary_network_interface": [],
+            "private_dns_name_options": [],
+            "root_block_device": [
+              {
+                "tags_all": {}
+              }
+            ],
+            "secondary_private_ips": [],
+            "security_groups": [],
+            "tags": {},
+            "tags_all": {},
+            "vpc_security_group_ids": []
+          }
+        },
+        {
+          "address": "aws_key_pair.ragflow_gpu_keypair",
+          "mode": "managed",
+          "type": "aws_key_pair",
+          "name": "ragflow_gpu_keypair",
+          "provider_name": "registry.terraform.io/hashicorp/aws",
+          "schema_version": 1,
+          "values": {
+            "key_name": "ragflow-gpu-keypair",
+            "public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCq3WhgeLfQ/UDjQkdCPYmUa8cPzzbQukM4r9FNG1dQmaDcycHjIkzkZZcLR7+fBRh2hvwrNbpoeP4uhc6KeEOX9DtWY7Sto/gS4YjbyiMq+e5LkX7YnW8qLRDzkQMmd90WHumErQU0BhZSKBUxeT91fMuVabLf9SV/7J+xyc3Ru5jRgVYqOE/MwnmXCNxLOeBJGVAj6tuAgA4h2ZTIPRMR4FuFeqWh3paUWjmZakjPGg+O+O4Sl5nuSx4nF5p8Mo6aQTncfZm2ATCY19HV8ChlyWdox7b77ZNdPXsbL6NgdDst0adwSvLzIO+gMN00s5J3/WgE4AcVkvkkTWIHr/eaa7gIC0GElq/2DdFwwmIkFWuTFHUId7jit31H7cuWhPZNlTCGpYMGEIXJdRy95sSeF9YyjlaXFFdS58iC01/4bsfnRXLYyR+jMd8s+is0xJJL30L4/5xApdKRZCg9yq9rP67vSVuYp2H801+Frvu73PFwhvD4XzFEDfP08F8nTJwIwMTTe1l0cKxG39GlZYJh5obalvqAl66oSBxNWVMC4AXkH7LZUVqVrjacahY32uYfrD5cuyndaeZrBlruYNn2aam/DVdOR5c7tgbluSM8ygC2Ru/WXi6KVFCChBz/FcKICH6KiNoSE52Vm6syNG6xeqLXMyKm4s6y1kygTrgzcw== aupeksha@Upeksha.fritz.box",
+            "region": "eu-north-1",
+            "tags": null
+          },
+          "sensitive_values": {
+            "tags_all": {}
+          }
+        },
+        {
+          "address": "aws_security_group.ragflow_gpu_sg",
+          "mode": "managed",
+          "type": "aws_security_group",
+          "name": "ragflow_gpu_sg",
+          "provider_name": "registry.terraform.io/hashicorp/aws",
+          "schema_version": 1,
+          "values": {
+            "description": "Security group for RagFlow GPU deployment",
+            "egress": [
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "Allow all outbound traffic",
+                "from_port": 0,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "-1",
+                "security_groups": [],
+                "self": false,
+                "to_port": 0
+              }
+            ],
+            "ingress": [
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "HTTP access",
+                "from_port": 80,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [],
+                "self": false,
+                "to_port": 80
+              },
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "HTTPS access",
+                "from_port": 443,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [],
+                "self": false,
+                "to_port": 443
+              },
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "Ollama API access",
+                "from_port": 11434,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [],
+                "self": false,
+                "to_port": 11434
+              },
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "SSH access",
+                "from_port": 22,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [],
+                "self": false,
+                "to_port": 22
+              }
+            ],
+            "name": "RagFlowGPUSecurityGroup",
+            "region": "eu-north-1",
+            "revoke_rules_on_delete": false,
+            "tags": {
+              "Environment": "development",
+              "Name": "RagFlowGPUSecurityGroup",
+              "project": "ragflow-gpu"
+            },
+            "tags_all": {
+              "Environment": "development",
+              "Name": "RagFlowGPUSecurityGroup",
+              "project": "ragflow-gpu"
+            },
+            "timeouts": null
+          },
+          "sensitive_values": {
+            "egress": [
+              {
+                "cidr_blocks": [
+                  false
+                ],
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "security_groups": []
+              }
+            ],
+            "ingress": [
+              {
+                "cidr_blocks": [
+                  false
+                ],
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "security_groups": []
+              },
+              {
+                "cidr_blocks": [
+                  false
+                ],
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "security_groups": []
+              },
+              {
+                "cidr_blocks": [
+                  false
+                ],
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "security_groups": []
+              },
+              {
+                "cidr_blocks": [
+                  false
+                ],
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "security_groups": []
+              }
+            ],
+            "tags": {},
+            "tags_all": {}
+          }
+        },
+        {
+          "address": "aws_security_group_rule.allow_ssh",
+          "mode": "managed",
+          "type": "aws_security_group_rule",
+          "name": "allow_ssh",
+          "provider_name": "registry.terraform.io/hashicorp/aws",
+          "schema_version": 2,
+          "values": {
+            "cidr_blocks": [
+              "0.0.0.0/0"
+            ],
+            "description": "Allow SSH access",
+            "from_port": 22,
+            "ipv6_cidr_blocks": null,
+            "prefix_list_ids": null,
+            "protocol": "tcp",
+            "region": "eu-north-1",
+            "self": false,
+            "timeouts": null,
+            "to_port": 22,
+            "type": "ingress"
+          },
+          "sensitive_values": {
+            "cidr_blocks": [
+              false
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "resource_changes": [
+    {
+      "address": "aws_eip.ragflow_gpu_eip",
+      "mode": "managed",
+      "type": "aws_eip",
+      "name": "ragflow_gpu_eip",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "address": null,
+          "associate_with_private_ip": null,
+          "customer_owned_ipv4_pool": null,
+          "domain": "vpc",
+          "region": "eu-north-1",
+          "tags": {
+            "Environment": "development",
+            "Name": "RagFlowGPUEIP",
+            "project": "ragflow-gpu"
+          },
+          "tags_all": {
+            "Environment": "development",
+            "Name": "RagFlowGPUEIP",
+            "project": "ragflow-gpu"
+          },
+          "timeouts": null
+        },
+        "after_unknown": {
+          "allocation_id": true,
+          "arn": true,
+          "association_id": true,
+          "carrier_ip": true,
+          "customer_owned_ip": true,
+          "id": true,
+          "instance": true,
+          "ipam_pool_id": true,
+          "network_border_group": true,
+          "network_interface": true,
+          "private_dns": true,
+          "private_ip": true,
+          "ptr_record": true,
+          "public_dns": true,
+          "public_ip": true,
+          "public_ipv4_pool": true,
+          "tags": {},
+          "tags_all": {}
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "tags": {},
+          "tags_all": {}
+        }
+      }
+    },
+    {
+      "address": "aws_eip_association.eip_assoc",
+      "mode": "managed",
+      "type": "aws_eip_association",
+      "name": "eip_assoc",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "allow_reassociation": null,
+          "region": "eu-north-1"
+        },
+        "after_unknown": {
+          "allocation_id": true,
+          "id": true,
+          "instance_id": true,
+          "network_interface_id": true,
+          "private_ip_address": true,
+          "public_ip": true
+        },
+        "before_sensitive": false,
+        "after_sensitive": {}
+      }
+    },
+    {
+      "address": "aws_iam_instance_profile.ragflow_gpu_profile",
+      "mode": "managed",
+      "type": "aws_iam_instance_profile",
+      "name": "ragflow_gpu_profile",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "name": "RagFlowGPUProfile",
+          "path": "/",
+          "role": "RagFlowGPURole",
+          "tags": {
+            "Environment": "development",
+            "Name": "RagFlowGPUProfile",
+            "project": "ragflow-gpu"
+          },
+          "tags_all": {
+            "Environment": "development",
+            "Name": "RagFlowGPUProfile",
+            "project": "ragflow-gpu"
+          }
+        },
+        "after_unknown": {
+          "arn": true,
+          "create_date": true,
+          "id": true,
+          "name_prefix": true,
+          "tags": {},
+          "tags_all": {},
+          "unique_id": true
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "tags": {},
+          "tags_all": {}
+        }
+      }
+    },
+    {
+      "address": "aws_iam_role.ragflow_gpu_role",
+      "mode": "managed",
+      "type": "aws_iam_role",
+      "name": "ragflow_gpu_role",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "assume_role_policy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ec2.amazonaws.com\"}}],\"Version\":\"2012-10-17\"}",
+          "description": null,
+          "force_detach_policies": false,
+          "max_session_duration": 3600,
+          "name": "RagFlowGPURole",
+          "path": "/",
+          "permissions_boundary": null,
+          "tags": {
+            "Environment": "development",
+            "Name": "RagFlowGPURole",
+            "project": "ragflow-gpu"
+          },
+          "tags_all": {
+            "Environment": "development",
+            "Name": "RagFlowGPURole",
+            "project": "ragflow-gpu"
+          }
+        },
+        "after_unknown": {
+          "arn": true,
+          "create_date": true,
+          "id": true,
+          "inline_policy": true,
+          "managed_policy_arns": true,
+          "name_prefix": true,
+          "tags": {},
+          "tags_all": {},
+          "unique_id": true
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "inline_policy": [],
+          "managed_policy_arns": [],
+          "tags": {},
+          "tags_all": {}
+        }
+      }
+    },
+    {
+      "address": "aws_instance.ragflow_gpu_instance",
+      "mode": "managed",
+      "type": "aws_instance",
+      "name": "ragflow_gpu_instance",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "ami": "ami-0323015fcbee6f991",
+          "credit_specification": [],
+          "force_destroy": false,
+          "get_password_data": false,
+          "hibernation": null,
+          "iam_instance_profile": "RagFlowGPUProfile",
+          "instance_type": "g4dn.xlarge",
+          "key_name": "ragflow-gpu-keypair",
+          "launch_template": [],
+          "region": "eu-north-1",
+          "root_block_device": [
+            {
+              "delete_on_termination": true,
+              "encrypted": true,
+              "tags": null,
+              "volume_size": 100,
+              "volume_type": "gp3"
+            }
+          ],
+          "source_dest_check": true,
+          "tags": {
+            "Environment": "development",
+            "Name": "EC2-RagFlow-GPU",
+            "project": "ragflow-gpu"
+          },
+          "tags_all": {
+            "Environment": "development",
+            "Name": "EC2-RagFlow-GPU",
+            "project": "ragflow-gpu"
+          },
+          "timeouts": null,
+          "user_data": "#!/bin/bash\nset -e\n\n# Update system packages\napt update -y\napt upgrade -y\napt install -y docker.io git\n\n# make a nice prompt for ubuntu user, append these commands to the ubuntu's ~/.bashrc file\nUBUNTU_USER_HOME=\"/home/ubuntu\"\necho \"PROMPT_COMMAND=''\" >> $UBUNTU_USER_HOME/.bashrc\necho \"export PS1=\\\"\\n\\[\\033[1;32m\\]\\u@\\h\\[\\033[0m\\]:\\[\\033[1;34m\\]\\w\\[\\033[0m\\]\\$ \\\"\" >> $UBUNTU_USER_HOME/.bashrc\necho \"alias ls='ls --color=auto'\" >> $UBUNTU_USER_HOME/.bashrc\necho \"alias grep='grep --color=auto'\" >> $UBUNTU_USER_HOME/.bashrc\n# Make sure the ubuntu user owns these changes\nchown ubuntu:ubuntu $UBUNTU_USER_HOME/.bashrc\n\n# Install Docker\nsystemctl enable docker\nsystemctl start docker\n\n# Add ubuntu user to docker group\nusermod -aG docker ubuntu\n\n# Install Docker Compose v2\nDOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}\nmkdir -p $DOCKER_CONFIG/cli-plugins\ncurl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose\nchmod +x $DOCKER_CONFIG/cli-plugins/docker-compose\n\n# Configure Docker daemon with production settings\ncat > /etc/docker/daemon.json <<EOF\n{\n  \"log-driver\": \"json-file\",\n  \"log-opts\": {\n    \"max-size\": \"10m\",\n    \"max-file\": \"3\"\n  },\n  \"userns-remap\": \"default\"\n}\nEOF\n\nsystemctl restart docker",
+          "user_data_replace_on_change": false,
+          "volume_tags": null
+        },
+        "after_unknown": {
+          "arn": true,
+          "associate_public_ip_address": true,
+          "availability_zone": true,
+          "capacity_reservation_specification": true,
+          "cpu_options": true,
+          "credit_specification": [],
+          "disable_api_stop": true,
+          "disable_api_termination": true,
+          "ebs_block_device": true,
+          "ebs_optimized": true,
+          "enable_primary_ipv6": true,
+          "enclave_options": true,
+          "ephemeral_block_device": true,
+          "host_id": true,
+          "host_resource_group_arn": true,
+          "id": true,
+          "instance_initiated_shutdown_behavior": true,
+          "instance_lifecycle": true,
+          "instance_market_options": true,
+          "instance_state": true,
+          "ipv6_address_count": true,
+          "ipv6_addresses": true,
+          "launch_template": [],
+          "maintenance_options": true,
+          "metadata_options": true,
+          "monitoring": true,
+          "network_interface": true,
+          "outpost_arn": true,
+          "password_data": true,
+          "placement_group": true,
+          "placement_group_id": true,
+          "placement_partition_number": true,
+          "primary_network_interface": true,
+          "primary_network_interface_id": true,
+          "private_dns": true,
+          "private_dns_name_options": true,
+          "private_ip": true,
+          "public_dns": true,
+          "public_ip": true,
+          "root_block_device": [
+            {
+              "device_name": true,
+              "iops": true,
+              "kms_key_id": true,
+              "tags_all": true,
+              "throughput": true,
+              "volume_id": true
+            }
+          ],
+          "secondary_private_ips": true,
+          "security_groups": true,
+          "spot_instance_request_id": true,
+          "subnet_id": true,
+          "tags": {},
+          "tags_all": {},
+          "tenancy": true,
+          "user_data_base64": true,
+          "vpc_security_group_ids": true
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "capacity_reservation_specification": [],
+          "cpu_options": [],
+          "credit_specification": [],
+          "ebs_block_device": [],
+          "enclave_options": [],
+          "ephemeral_block_device": [],
+          "instance_market_options": [],
+          "ipv6_addresses": [],
+          "launch_template": [],
+          "maintenance_options": [],
+          "metadata_options": [],
+          "network_interface": [],
+          "primary_network_interface": [],
+          "private_dns_name_options": [],
+          "root_block_device": [
+            {
+              "tags_all": {}
+            }
+          ],
+          "secondary_private_ips": [],
+          "security_groups": [],
+          "tags": {},
+          "tags_all": {},
+          "vpc_security_group_ids": []
+        }
+      }
+    },
+    {
+      "address": "aws_key_pair.ragflow_gpu_keypair",
+      "mode": "managed",
+      "type": "aws_key_pair",
+      "name": "ragflow_gpu_keypair",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "key_name": "ragflow-gpu-keypair",
+          "public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCq3WhgeLfQ/UDjQkdCPYmUa8cPzzbQukM4r9FNG1dQmaDcycHjIkzkZZcLR7+fBRh2hvwrNbpoeP4uhc6KeEOX9DtWY7Sto/gS4YjbyiMq+e5LkX7YnW8qLRDzkQMmd90WHumErQU0BhZSKBUxeT91fMuVabLf9SV/7J+xyc3Ru5jRgVYqOE/MwnmXCNxLOeBJGVAj6tuAgA4h2ZTIPRMR4FuFeqWh3paUWjmZakjPGg+O+O4Sl5nuSx4nF5p8Mo6aQTncfZm2ATCY19HV8ChlyWdox7b77ZNdPXsbL6NgdDst0adwSvLzIO+gMN00s5J3/WgE4AcVkvkkTWIHr/eaa7gIC0GElq/2DdFwwmIkFWuTFHUId7jit31H7cuWhPZNlTCGpYMGEIXJdRy95sSeF9YyjlaXFFdS58iC01/4bsfnRXLYyR+jMd8s+is0xJJL30L4/5xApdKRZCg9yq9rP67vSVuYp2H801+Frvu73PFwhvD4XzFEDfP08F8nTJwIwMTTe1l0cKxG39GlZYJh5obalvqAl66oSBxNWVMC4AXkH7LZUVqVrjacahY32uYfrD5cuyndaeZrBlruYNn2aam/DVdOR5c7tgbluSM8ygC2Ru/WXi6KVFCChBz/FcKICH6KiNoSE52Vm6syNG6xeqLXMyKm4s6y1kygTrgzcw== aupeksha@Upeksha.fritz.box",
+          "region": "eu-north-1",
+          "tags": null
+        },
+        "after_unknown": {
+          "arn": true,
+          "fingerprint": true,
+          "id": true,
+          "key_name_prefix": true,
+          "key_pair_id": true,
+          "key_type": true,
+          "tags_all": true
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "tags_all": {}
+        }
+      }
+    },
+    {
+      "address": "aws_security_group.ragflow_gpu_sg",
+      "mode": "managed",
+      "type": "aws_security_group",
+      "name": "ragflow_gpu_sg",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "description": "Security group for RagFlow GPU deployment",
+          "egress": [
+            {
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ],
+              "description": "Allow all outbound traffic",
+              "from_port": 0,
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "protocol": "-1",
+              "security_groups": [],
+              "self": false,
+              "to_port": 0
+            }
+          ],
+          "ingress": [
+            {
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ],
+              "description": "HTTP access",
+              "from_port": 80,
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "protocol": "tcp",
+              "security_groups": [],
+              "self": false,
+              "to_port": 80
+            },
+            {
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ],
+              "description": "HTTPS access",
+              "from_port": 443,
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "protocol": "tcp",
+              "security_groups": [],
+              "self": false,
+              "to_port": 443
+            },
+            {
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ],
+              "description": "Ollama API access",
+              "from_port": 11434,
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "protocol": "tcp",
+              "security_groups": [],
+              "self": false,
+              "to_port": 11434
+            },
+            {
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ],
+              "description": "SSH access",
+              "from_port": 22,
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "protocol": "tcp",
+              "security_groups": [],
+              "self": false,
+              "to_port": 22
+            }
+          ],
+          "name": "RagFlowGPUSecurityGroup",
+          "region": "eu-north-1",
+          "revoke_rules_on_delete": false,
+          "tags": {
+            "Environment": "development",
+            "Name": "RagFlowGPUSecurityGroup",
+            "project": "ragflow-gpu"
+          },
+          "tags_all": {
+            "Environment": "development",
+            "Name": "RagFlowGPUSecurityGroup",
+            "project": "ragflow-gpu"
+          },
+          "timeouts": null
+        },
+        "after_unknown": {
+          "arn": true,
+          "egress": [
+            {
+              "cidr_blocks": [
+                false
+              ],
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "security_groups": []
+            }
+          ],
+          "id": true,
+          "ingress": [
+            {
+              "cidr_blocks": [
+                false
+              ],
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "security_groups": []
+            },
+            {
+              "cidr_blocks": [
+                false
+              ],
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "security_groups": []
+            },
+            {
+              "cidr_blocks": [
+                false
+              ],
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "security_groups": []
+            },
+            {
+              "cidr_blocks": [
+                false
+              ],
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "security_groups": []
+            }
+          ],
+          "name_prefix": true,
+          "owner_id": true,
+          "tags": {},
+          "tags_all": {},
+          "vpc_id": true
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "egress": [
+            {
+              "cidr_blocks": [
+                false
+              ],
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "security_groups": []
+            }
+          ],
+          "ingress": [
+            {
+              "cidr_blocks": [
+                false
+              ],
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "security_groups": []
+            },
+            {
+              "cidr_blocks": [
+                false
+              ],
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "security_groups": []
+            },
+            {
+              "cidr_blocks": [
+                false
+              ],
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "security_groups": []
+            },
+            {
+              "cidr_blocks": [
+                false
+              ],
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "security_groups": []
+            }
+          ],
+          "tags": {},
+          "tags_all": {}
+        }
+      }
+    },
+    {
+      "address": "aws_security_group_rule.allow_ssh",
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "allow_ssh",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "cidr_blocks": [
+            "0.0.0.0/0"
+          ],
+          "description": "Allow SSH access",
+          "from_port": 22,
+          "ipv6_cidr_blocks": null,
+          "prefix_list_ids": null,
+          "protocol": "tcp",
+          "region": "eu-north-1",
+          "self": false,
+          "timeouts": null,
+          "to_port": 22,
+          "type": "ingress"
+        },
+        "after_unknown": {
+          "cidr_blocks": [
+            false
+          ],
+          "id": true,
+          "security_group_id": true,
+          "security_group_rule_id": true,
+          "source_security_group_id": true
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "cidr_blocks": [
+            false
+          ]
+        }
+      }
+    }
+  ],
+  "output_changes": {
+    "availability_zone": {
+      "actions": [
+        "create"
+      ],
+      "before": null,
+      "after_unknown": true,
+      "before_sensitive": false,
+      "after_sensitive": false
+    },
+    "eip_allocation_id": {
+      "actions": [
+        "create"
+      ],
+      "before": null,
+      "after_unknown": true,
+      "before_sensitive": false,
+      "after_sensitive": false
+    },
+    "instance_arn": {
+      "actions": [
+        "create"
+      ],
+      "before": null,
+      "after_unknown": true,
+      "before_sensitive": false,
+      "after_sensitive": false
+    },
+    "instance_id": {
+      "actions": [
+        "create"
+      ],
+      "before": null,
+      "after_unknown": true,
+      "before_sensitive": false,
+      "after_sensitive": false
+    },
+    "instance_private_ip": {
+      "actions": [
+        "create"
+      ],
+      "before": null,
+      "after_unknown": true,
+      "before_sensitive": false,
+      "after_sensitive": false
+    },
+    "instance_public_ip": {
+      "actions": [
+        "create"
+      ],
+      "before": null,
+      "after_unknown": true,
+      "before_sensitive": false,
+      "after_sensitive": false
+    },
+    "key_pair_name": {
+      "actions": [
+        "create"
+      ],
+      "before": null,
+      "after": "ragflow-gpu-keypair",
+      "after_unknown": false,
+      "before_sensitive": false,
+      "after_sensitive": false
+    },
+    "security_group_id": {
+      "actions": [
+        "create"
+      ],
+      "before": null,
+      "after_unknown": true,
+      "before_sensitive": false,
+      "after_sensitive": false
+    }
+  },
+  "prior_state": {
+    "format_version": "1.0",
+    "terraform_version": "1.11.3",
+    "values": {
+      "outputs": {
+        "key_pair_name": {
+          "sensitive": false,
+          "value": "ragflow-gpu-keypair",
+          "type": "string"
+        }
+      },
+      "root_module": {
+        "resources": [
+          {
+            "address": "data.aws_ami.ubuntu_gpu",
+            "mode": "data",
+            "type": "aws_ami",
+            "name": "ubuntu_gpu",
+            "provider_name": "registry.terraform.io/hashicorp/aws",
+            "schema_version": 0,
+            "values": {
+              "allow_unsafe_filter": null,
+              "architecture": "x86_64",
+              "arn": "arn:aws:ec2:eu-north-1::image/ami-0323015fcbee6f991",
+              "block_device_mappings": [
+                {
+                  "device_name": "/dev/sda1",
+                  "ebs": {
+                    "delete_on_termination": "true",
+                    "encrypted": "false",
+                    "iops": "3000",
+                    "snapshot_id": "snap-0364f28dc43781eb0",
+                    "throughput": "125",
+                    "volume_initialization_rate": "0",
+                    "volume_size": "45",
+                    "volume_type": "gp3"
+                  },
+                  "no_device": "",
+                  "virtual_name": ""
+                },
+                {
+                  "device_name": "/dev/sdb",
+                  "ebs": {},
+                  "no_device": "",
+                  "virtual_name": "ephemeral0"
+                },
+                {
+                  "device_name": "/dev/sdc",
+                  "ebs": {},
+                  "no_device": "",
+                  "virtual_name": "ephemeral1"
+                }
+              ],
+              "boot_mode": "uefi-preferred",
+              "creation_date": "2025-10-09T01:58:18.000Z",
+              "deprecation_time": "2027-10-09T01:58:18.000Z",
+              "description": "Supported EC2 instances: G4dn, G5, G6, Gr6, G6e, P4d, P4de, P5, P5e, P5en, P6-B200. Release notes: https://aws.amazon.com/releasenotes/aws-deep-learning-base-gpu-ami-ubuntu-24-04/",
+              "ena_support": true,
+              "executable_users": null,
+              "filter": [
+                {
+                  "name": "image-id",
+                  "values": [
+                    "ami-0323015fcbee6f991"
+                  ]
+                }
+              ],
+              "hypervisor": "xen",
+              "id": "ami-0323015fcbee6f991",
+              "image_id": "ami-0323015fcbee6f991",
+              "image_location": "amazon/Deep Learning Base OSS Nvidia Driver GPU AMI (Ubuntu 24.04) 20251007",
+              "image_owner_alias": "amazon",
+              "image_type": "machine",
+              "imds_support": "v2.0",
+              "include_deprecated": false,
+              "kernel_id": "",
+              "last_launched_time": "",
+              "most_recent": false,
+              "name": "Deep Learning Base OSS Nvidia Driver GPU AMI (Ubuntu 24.04) 20251007",
+              "name_regex": null,
+              "owner_id": "898082745236",
+              "owners": [
+                "amazon"
+              ],
+              "platform": "",
+              "platform_details": "Linux/UNIX",
+              "product_codes": [],
+              "public": true,
+              "ramdisk_id": "",
+              "region": "eu-north-1",
+              "root_device_name": "/dev/sda1",
+              "root_device_type": "ebs",
+              "root_snapshot_id": "snap-0364f28dc43781eb0",
+              "sriov_net_support": "simple",
+              "state": "available",
+              "state_reason": {
+                "code": "UNSET",
+                "message": "UNSET"
+              },
+              "tags": {},
+              "timeouts": null,
+              "tpm_support": "",
+              "uefi_data": null,
+              "usage_operation": "RunInstances",
+              "virtualization_type": "hvm"
+            },
+            "sensitive_values": {
+              "block_device_mappings": [
+                {
+                  "ebs": {}
+                },
+                {
+                  "ebs": {}
+                },
+                {
+                  "ebs": {}
+                }
+              ],
+              "filter": [
+                {
+                  "values": [
+                    false
+                  ]
+                }
+              ],
+              "owners": [
+                false
+              ],
+              "product_codes": [],
+              "state_reason": {},
+              "tags": {}
+            }
+          }
+        ]
+      }
+    }
+  },
+  "configuration": {
+    "provider_config": {
+      "aws": {
+        "name": "aws",
+        "full_name": "registry.terraform.io/hashicorp/aws",
+        "expressions": {
+          "region": {
+            "references": [
+              "var.aws_region"
+            ]
+          }
+        }
+      }
+    },
+    "root_module": {
+      "outputs": {
+        "availability_zone": {
+          "expression": {
+            "references": [
+              "aws_instance.ragflow_gpu_instance.availability_zone",
+              "aws_instance.ragflow_gpu_instance"
+            ]
+          },
+          "description": "Availability zone of the instance"
+        },
+        "eip_allocation_id": {
+          "expression": {
+            "references": [
+              "aws_eip.ragflow_gpu_eip.id",
+              "aws_eip.ragflow_gpu_eip"
+            ]
+          },
+          "description": "Elastic IP allocation ID"
+        },
+        "instance_arn": {
+          "expression": {
+            "references": [
+              "aws_instance.ragflow_gpu_instance.arn",
+              "aws_instance.ragflow_gpu_instance"
+            ]
+          },
+          "description": "EC2 instance ARN"
+        },
+        "instance_id": {
+          "expression": {
+            "references": [
+              "aws_instance.ragflow_gpu_instance.id",
+              "aws_instance.ragflow_gpu_instance"
+            ]
+          },
+          "description": "EC2 instance ID"
+        },
+        "instance_private_ip": {
+          "expression": {
+            "references": [
+              "aws_instance.ragflow_gpu_instance.private_ip",
+              "aws_instance.ragflow_gpu_instance"
+            ]
+          },
+          "description": "Private IP address of the EC2 instance"
+        },
+        "instance_public_ip": {
+          "expression": {
+            "references": [
+              "aws_eip.ragflow_gpu_eip.public_ip",
+              "aws_eip.ragflow_gpu_eip"
+            ]
+          },
+          "description": "Public IP address of the EC2 instance"
+        },
+        "key_pair_name": {
+          "expression": {
+            "references": [
+              "aws_key_pair.ragflow_gpu_keypair.key_name",
+              "aws_key_pair.ragflow_gpu_keypair"
+            ]
+          },
+          "description": "SSH key pair name"
+        },
+        "security_group_id": {
+          "expression": {
+            "references": [
+              "aws_security_group.ragflow_gpu_sg.id",
+              "aws_security_group.ragflow_gpu_sg"
+            ]
+          },
+          "description": "Security group ID"
+        }
+      },
+      "resources": [
+        {
+          "address": "aws_eip.ragflow_gpu_eip",
+          "mode": "managed",
+          "type": "aws_eip",
+          "name": "ragflow_gpu_eip",
+          "provider_config_key": "aws",
+          "expressions": {
+            "domain": {
+              "constant_value": "vpc"
+            },
+            "tags": {
+              "references": [
+                "var.environment",
+                "var.project"
+              ]
+            }
+          },
+          "schema_version": 0
+        },
+        {
+          "address": "aws_eip_association.eip_assoc",
+          "mode": "managed",
+          "type": "aws_eip_association",
+          "name": "eip_assoc",
+          "provider_config_key": "aws",
+          "expressions": {
+            "allocation_id": {
+              "references": [
+                "aws_eip.ragflow_gpu_eip.id",
+                "aws_eip.ragflow_gpu_eip"
+              ]
+            },
+            "instance_id": {
+              "references": [
+                "aws_instance.ragflow_gpu_instance.id",
+                "aws_instance.ragflow_gpu_instance"
+              ]
+            }
+          },
+          "schema_version": 0
+        },
+        {
+          "address": "aws_iam_instance_profile.ragflow_gpu_profile",
+          "mode": "managed",
+          "type": "aws_iam_instance_profile",
+          "name": "ragflow_gpu_profile",
+          "provider_config_key": "aws",
+          "expressions": {
+            "name": {
+              "constant_value": "RagFlowGPUProfile"
+            },
+            "role": {
+              "references": [
+                "aws_iam_role.ragflow_gpu_role.name",
+                "aws_iam_role.ragflow_gpu_role"
+              ]
+            },
+            "tags": {
+              "references": [
+                "var.environment",
+                "var.project"
+              ]
+            }
+          },
+          "schema_version": 0
+        },
+        {
+          "address": "aws_iam_role.ragflow_gpu_role",
+          "mode": "managed",
+          "type": "aws_iam_role",
+          "name": "ragflow_gpu_role",
+          "provider_config_key": "aws",
+          "expressions": {
+            "assume_role_policy": {},
+            "name": {
+              "constant_value": "RagFlowGPURole"
+            },
+            "tags": {
+              "references": [
+                "var.environment",
+                "var.project"
+              ]
+            }
+          },
+          "schema_version": 0
+        },
+        {
+          "address": "aws_instance.ragflow_gpu_instance",
+          "mode": "managed",
+          "type": "aws_instance",
+          "name": "ragflow_gpu_instance",
+          "provider_config_key": "aws",
+          "expressions": {
+            "ami": {
+              "references": [
+                "data.aws_ami.ubuntu_gpu.id",
+                "data.aws_ami.ubuntu_gpu"
+              ]
+            },
+            "iam_instance_profile": {
+              "references": [
+                "aws_iam_instance_profile.ragflow_gpu_profile.name",
+                "aws_iam_instance_profile.ragflow_gpu_profile"
+              ]
+            },
+            "instance_type": {
+              "references": [
+                "var.instance_type"
+              ]
+            },
+            "key_name": {
+              "references": [
+                "aws_key_pair.ragflow_gpu_keypair.key_name",
+                "aws_key_pair.ragflow_gpu_keypair"
+              ]
+            },
+            "root_block_device": [
+              {
+                "delete_on_termination": {
+                  "constant_value": true
+                },
+                "encrypted": {
+                  "constant_value": true
+                },
+                "volume_size": {
+                  "references": [
+                    "var.root_volume_size"
+                  ]
+                },
+                "volume_type": {
+                  "references": [
+                    "var.root_volume_type"
+                  ]
+                }
+              }
+            ],
+            "tags": {
+              "references": [
+                "var.ec2_name",
+                "var.environment",
+                "var.project"
+              ]
+            },
+            "user_data": {
+              "references": [
+                "path.module"
+              ]
+            },
+            "vpc_security_group_ids": {
+              "references": [
+                "aws_security_group.ragflow_gpu_sg.id",
+                "aws_security_group.ragflow_gpu_sg"
+              ]
+            }
+          },
+          "schema_version": 2
+        },
+        {
+          "address": "aws_key_pair.ragflow_gpu_keypair",
+          "mode": "managed",
+          "type": "aws_key_pair",
+          "name": "ragflow_gpu_keypair",
+          "provider_config_key": "aws",
+          "expressions": {
+            "key_name": {
+              "constant_value": "ragflow-gpu-keypair"
+            },
+            "public_key": {
+              "references": [
+                "var.ssh_public_key"
+              ]
+            }
+          },
+          "schema_version": 1
+        },
+        {
+          "address": "aws_security_group.ragflow_gpu_sg",
+          "mode": "managed",
+          "type": "aws_security_group",
+          "name": "ragflow_gpu_sg",
+          "provider_config_key": "aws",
+          "expressions": {
+            "description": {
+              "constant_value": "Security group for RagFlow GPU deployment"
+            },
+            "egress": {
+              "constant_value": [
+                {
+                  "cidr_blocks": [
+                    "0.0.0.0/0"
+                  ],
+                  "description": "Allow all outbound traffic",
+                  "from_port": 0,
+                  "ipv6_cidr_blocks": null,
+                  "prefix_list_ids": null,
+                  "protocol": "-1",
+                  "security_groups": null,
+                  "self": null,
+                  "to_port": 0
+                }
+              ]
+            },
+            "ingress": {
+              "references": [
+                "var.allowed_ip",
+                "var.allowed_ip",
+                "var.allowed_ip",
+                "var.allowed_ip"
+              ]
+            },
+            "name": {
+              "constant_value": "RagFlowGPUSecurityGroup"
+            },
+            "tags": {
+              "references": [
+                "var.environment",
+                "var.project"
+              ]
+            }
+          },
+          "schema_version": 1
+        },
+        {
+          "address": "aws_security_group_rule.allow_ssh",
+          "mode": "managed",
+          "type": "aws_security_group_rule",
+          "name": "allow_ssh",
+          "provider_config_key": "aws",
+          "expressions": {
+            "cidr_blocks": {
+              "references": [
+                "var.ssh_cidr_blocks"
+              ]
+            },
+            "description": {
+              "constant_value": "Allow SSH access"
+            },
+            "from_port": {
+              "constant_value": 22
+            },
+            "protocol": {
+              "constant_value": "tcp"
+            },
+            "security_group_id": {
+              "references": [
+                "aws_security_group.ragflow_gpu_sg.id",
+                "aws_security_group.ragflow_gpu_sg"
+              ]
+            },
+            "to_port": {
+              "constant_value": 22
+            },
+            "type": {
+              "constant_value": "ingress"
+            }
+          },
+          "schema_version": 2
+        },
+        {
+          "address": "data.aws_ami.ubuntu_gpu",
+          "mode": "data",
+          "type": "aws_ami",
+          "name": "ubuntu_gpu",
+          "provider_config_key": "aws",
+          "expressions": {
+            "filter": [
+              {
+                "name": {
+                  "constant_value": "image-id"
+                },
+                "values": {
+                  "constant_value": [
+                    "ami-0323015fcbee6f991"
+                  ]
+                }
+              }
+            ],
+            "owners": {
+              "constant_value": [
+                "amazon"
+              ]
+            }
+          },
+          "schema_version": 0
+        }
+      ],
+      "variables": {
+        "allowed_ip": {
+          "default": "0.0.0.0/0",
+          "description": "IP address allowed to access the instance"
+        },
+        "aws_region": {
+          "default": "eu-north-1",
+          "description": "The AWS region to deploy resources"
+        },
+        "ec2_name": {
+          "default": "EC2-RagFlow-GPU",
+          "description": "Name tag for the EC2 instance"
+        },
+        "environment": {
+          "default": "development",
+          "description": "Environment tag"
+        },
+        "instance_type": {
+          "default": "g4dn.xlarge",
+          "description": "EC2 instance type with GPU support"
+        },
+        "project": {
+          "default": "ragflow-gpu",
+          "description": "Project tag to be applied to all resources"
+        },
+        "root_volume_size": {
+          "default": 100,
+          "description": "Size of the root EBS volume in GB"
+        },
+        "root_volume_type": {
+          "default": "gp3",
+          "description": "Type of the root EBS volume"
+        },
+        "ssh_cidr_blocks": {
+          "default": [
+            "0.0.0.0/0"
+          ],
+          "description": "CIDR blocks allowed for SSH access"
+        },
+        "ssh_public_key": {
+          "description": "SSH public key for EC2 instance access"
+        }
+      }
+    }
+  },
+  "relevant_attributes": [
+    {
+      "resource": "aws_iam_role.ragflow_gpu_role",
+      "attribute": [
+        "name"
+      ]
+    },
+    {
+      "resource": "aws_instance.ragflow_gpu_instance",
+      "attribute": [
+        "arn"
+      ]
+    },
+    {
+      "resource": "aws_iam_instance_profile.ragflow_gpu_profile",
+      "attribute": [
+        "name"
+      ]
+    },
+    {
+      "resource": "aws_security_group.ragflow_gpu_sg",
+      "attribute": [
+        "id"
+      ]
+    },
+    {
+      "resource": "data.aws_ami.ubuntu_gpu",
+      "attribute": [
+        "id"
+      ]
+    },
+    {
+      "resource": "aws_instance.ragflow_gpu_instance",
+      "attribute": [
+        "availability_zone"
+      ]
+    },
+    {
+      "resource": "aws_instance.ragflow_gpu_instance",
+      "attribute": [
+        "id"
+      ]
+    },
+    {
+      "resource": "aws_eip.ragflow_gpu_eip",
+      "attribute": [
+        "id"
+      ]
+    },
+    {
+      "resource": "aws_key_pair.ragflow_gpu_keypair",
+      "attribute": [
+        "key_name"
+      ]
+    },
+    {
+      "resource": "aws_eip.ragflow_gpu_eip",
+      "attribute": [
+        "public_ip"
+      ]
+    },
+    {
+      "resource": "aws_instance.ragflow_gpu_instance",
+      "attribute": [
+        "private_ip"
+      ]
+    }
+  ],
+  "timestamp": "2025-11-18T18:59:39Z",
+  "applyable": true,
+  "complete": true,
+  "errored": false
+}

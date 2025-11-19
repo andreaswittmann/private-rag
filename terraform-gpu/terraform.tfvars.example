@@ -1,0 +1,28 @@
+# Example Terraform variables file for RagFlow GPU deployment
+# Copy this file to terraform.tfvars and customize the values
+
+# AWS region for deployment
+aws_region = "eu-north-1"
+
+# GPU-enabled EC2 instance type
+instance_type = "g4dn.xlarge"
+
+# Root volume configuration
+root_volume_size = 100
+root_volume_type = "gp3"
+
+# IP restrictions (replace with your IP for security)
+allowed_ip = "0.0.0.0/0"
+
+# SSH public key (will be set by script)
+ssh_public_key = ""
+
+# EC2 instance name
+ec2_name = "EC2-RagFlow-GPU"
+
+# Environment and project tags
+environment = "development"
+project = "ragflow-gpu"
+
+# SSH access restrictions
+ssh_cidr_blocks = ["0.0.0.0/0"]

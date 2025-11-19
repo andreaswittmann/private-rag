@@ -52,6 +52,10 @@ terraform/tfplan.json
 terraform/tfplan.pretty.json
 terraform-backups/
 
+# Terraform GPU files
+terraform-gpu/.terraform/
+terraform-gpu/.terraform.lock.hcl
+
 # Org-mode files
 *.org~
 *.org.~undo-tree~

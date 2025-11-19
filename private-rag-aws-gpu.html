@@ -1,0 +1,2023 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2025-11-18 Tue 19:57 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Private RAG AWS GPU Deployment - Live-Scripting Workflow</title>
+<meta name="author" content="Andreas Wittmann" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="aw-org-html-themes/styles/readtheorg/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="aw-org-html-themes/styles/readtheorg/css/readtheorg.css"/>
+<script type="text/javascript" src="aw-org-html-themes/styles/lib/js/jquery.min.js"></script>
+<script type="text/javascript" src="aw-org-html-themes/styles/lib/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="aw-org-html-themes/styles/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="aw-org-html-themes/styles/readtheorg/js/readtheorg.js"></script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Private RAG AWS GPU Deployment - Live-Scripting Workflow</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org174a032">1. Summary</a></li>
+<li><a href="#org17bb885">2. Building Privacy-Focused RAG Platform with GPU Acceleration</a>
+<ul>
+<li><a href="#org4a93da5">2.1. Project Overview</a></li>
+<li><a href="#org343268d">2.2. Live-Scripting Methodology</a>
+<ul>
+<li><a href="#org38ef4dc">2.2.1. Implementation Options</a>
+<ul>
+<li><a href="#orgaf40fad">2.2.1.1. Emacs Users</a></li>
+<li><a href="#org1bf68f4">2.2.1.2. Non-Emacs Users</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org8b4f3a8">2.3. Project Components</a></li>
+<li><a href="#org4084179">2.4. Expected Deployment Outcome</a></li>
+</ul>
+</li>
+<li><a href="#org18976c1">3. Foundation &amp; Prerequisites</a>
+<ul>
+<li><a href="#orgf3cddcf">3.1. Environment Setup</a>
+<ul>
+<li><a href="#orgfd62266">3.1.1. Setting the Project Foundation</a></li>
+<li><a href="#org7865cf8">3.1.2. Validating AWS Prerequisites</a></li>
+</ul>
+</li>
+<li><a href="#org8230439">3.2. Summary</a></li>
+</ul>
+</li>
+<li><a href="#orgd05f8fb">4. Infrastructure as Code</a>
+<ul>
+<li><a href="#org8925470">4.1. SSH Key Generation for Secure Access</a></li>
+<li><a href="#orgfa81c45">4.2. Terraform Configuration and Planning</a></li>
+<li><a href="#orgaf7584b">4.3. Infrastructure Deployment Planning</a></li>
+<li><a href="#orgbed036f">4.4. Infrastructure Deployment Execution</a></li>
+<li><a href="#orgcada58e">4.5. SSH Configuration for Easy Access</a></li>
+<li><a href="#orga050b0a">4.6. GPU Instance Selection and Upgrading</a>
+<ul>
+<li><a href="#org9339703">4.6.1. Recommended GPU EC2 Instance Types for RAG Workloads</a>
+<ul>
+<li><a href="#org260b035">4.6.1.1. Recommendations</a></li>
+</ul>
+</li>
+<li><a href="#org95416a3">4.6.2. Upgrading to a Different GPU Instance Type with Terraform</a>
+<ul>
+<li><a href="#org5c0de6d">4.6.2.1. Steps to Change Instance Type</a></li>
+<li><a href="#org259dcc2">4.6.2.2. Why This Method Is Best</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org7e685a7">4.7. Infrastructure Live-Cycle Operations</a>
+<ul>
+<li><a href="#org4950743">4.7.1. Recommended GPU EC2 Instance Types for RAG Workloads</a>
+<ul>
+<li><a href="#orgd7b650a">4.7.1.1. Recommendations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org4a44ab9">4.8. Summary</a></li>
+</ul>
+</li>
+<li><a href="#org3387ba2">5. GPU Verification</a></li>
+<li><a href="#org0eb2e0b">6. Development Environment Setup</a>
+<ul>
+<li><a href="#org10d58c3">6.1. Complete Docker Engine and Tools Installation</a>
+<ul>
+<li><a href="#orgd500f99">6.1.1. Docker Engine Installation</a></li>
+<li><a href="#orge0129d3">6.1.2. Docker Service Configuration</a></li>
+<li><a href="#org9868ce4">6.1.3. Lazydocker Installation</a></li>
+<li><a href="#orgf06070c">6.1.4. GitHub CLI Installation</a></li>
+<li><a href="#org04d337d">6.1.5. Htop Installation</a></li>
+<li><a href="#orgac240a8">6.1.6. Docker and Docker Compose Verification</a></li>
+<li><a href="#orgbb7873e">6.1.7. Python Development Tools Installation</a></li>
+<li><a href="#org2e5e63c">6.1.8. Development Environment Summary</a></li>
+</ul>
+</li>
+<li><a href="#org2ae9ce6">6.2. Summary</a></li>
+</ul>
+</li>
+<li><a href="#org48e9bd6">7. Core RagFlow Deployment</a>
+<ul>
+<li><a href="#org083e223">7.1. Basic Ragflow Setup</a></li>
+<li><a href="#org8681d14">7.2. HTTPS Setup with Self-Signed Certificate</a>
+<ul>
+<li><a href="#org2c92e3a">7.2.1. Step 1: Generate Self-Signed SSL Certificate**</a></li>
+<li><a href="#org12c568f">7.2.2. Step 2: Modify Nginx Configuration**</a></li>
+<li><a href="#org2c9dbfe">7.2.3. Step 3: Update Docker Compose Configuration**</a></li>
+<li><a href="#orgead2a75">7.2.4. Step 4: Restart RAGFlow Services**</a></li>
+<li><a href="#org6089022">7.2.5. Step 5: Test HTTPS Access**</a></li>
+</ul>
+</li>
+<li><a href="#org3f6f9aa">7.3. Use Case: Access RagFlow via SSH-Tunnel</a></li>
+<li><a href="#orgfed0e5c">7.4. Summary</a></li>
+</ul>
+</li>
+<li><a href="#org42f96e3">8. Advanced Features - Document Processing</a>
+<ul>
+<li><a href="#orgcfee9f0">8.1. Document Ingestion and Processing</a>
+<ul>
+<li><a href="#org6ff24f0">8.1.1. Upload Documents</a></li>
+<li><a href="#orgb72cfb2">8.1.2. Configure Knowledge Base</a></li>
+<li><a href="#orgcc1f6f5">8.1.3. Test RAG Queries</a></li>
+</ul>
+</li>
+<li><a href="#orgb95c16b">8.2. Summary</a></li>
+</ul>
+</li>
+<li><a href="#orgc4e70e4">9. Infrastructure Cleanup</a>
+<ul>
+<li><a href="#orgbc28720">9.1. Cleanup Philosophy</a></li>
+<li><a href="#orgdfc69cd">9.2. Stop RagFlow Services</a></li>
+<li><a href="#org23320c3">9.3. Terminate GPU EC2 Instance with Terraform</a></li>
+<li><a href="#org39f6aa6">9.4. Clean Up Local SSH Configuration</a></li>
+<li><a href="#org7b616dc">9.5. Clean Up Terraform State Files</a></li>
+<li><a href="#orge27ea8e">9.6. Verify Complete Cleanup</a></li>
+<li><a href="#org33fcad3">9.7. Cost Optimization Notes</a></li>
+<li><a href="#org9600281">9.8. Summary</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org174a032" class="outline-2">
+<h2 id="org174a032"><span class="section-number-2">1.</span> Summary</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<i>This document outlines a live-scripting methodology for deploying RagFlow, an open-source RAG platform, on Ubuntu 24.04 with GPU acceleration, through executable code blocks that ensure reproducible infrastructure setup. It covers Terraform infrastructure provisioning with pre-configured Deep Learning AMI, Docker containerization, and RagFlow deployment with GPU support.</i>
+</p>
+<ul class="org-ul">
+<li><b>HTML Version:</b> <a href="private-rag-aws-gpu.html">private-rag-aws-gpu.html</a></li>
+<li><b>PDF Version:</b> <a href="private-rag-aws-gpu.pdf">private-rag-aws-gpu.pdf</a></li>
+<li><b>GitHub:</b> <a href="https://github.com/andreaswittmann/private-rag/tree/main">https://github.com/andreaswittmann/private-rag/tree/main</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org17bb885" class="outline-2">
+<h2 id="org17bb885"><span class="section-number-2">2.</span> Building Privacy-Focused RAG Platform with GPU Acceleration</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org4a93da5" class="outline-3">
+<h3 id="org4a93da5"><span class="section-number-3">2.1.</span> Project Overview</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+This project uses the live-scripting methodology to create an example configuration of the open-source project RagFlow on Ubuntu 24.04 with GPU support. Live-scripting represents an intermediate approach between manual command-line work and fully automated CI/CD pipelines, enabling the development of documented, shareable, and reproducible solutions.
+</p>
+
+<p>
+Using Infrastructure as Code methods with Terraform, an AWS environment with GPU-enabled EC2 instance running Ubuntu 24.04 is established as a platform for RagFlow installation. The Deep Learning AMI comes pre-configured with NVIDIA drivers and CUDA toolkit, eliminating manual GPU setup. The example demonstrates all necessary configuration and software tool installations required for the project.
+</p>
+</div>
+</div>
+<div id="outline-container-org343268d" class="outline-3">
+<h3 id="org343268d"><span class="section-number-3">2.2.</span> Live-Scripting Methodology</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+The deployment uses live-scripting methodology to transform static documentation into executable workflows. Code blocks execute directly in Emacs (F4 key) or copy to any terminal, creating a bridge between documentation and execution.
+</p>
+
+<p>
+Based on the [live-scripting methodology](<a href="https://github.com/andreaswittmann/live-scripting">https://github.com/andreaswittmann/live-scripting</a>), this approach provides:
+</p>
+
+<ul class="org-ul">
+<li>Executable documentation with current and functional code blocks</li>
+<li>Multi-format publishing from single source to Org, HTML, and PDF</li>
+<li>Reproducible deployments with consistent infrastructure setup</li>
+<li>Version control integration through plain-text format</li>
+</ul>
+</div>
+<div id="outline-container-org38ef4dc" class="outline-4">
+<h4 id="org38ef4dc"><span class="section-number-4">2.2.1.</span> Implementation Options</h4>
+<div class="outline-text-4" id="text-2-2-1">
+</div>
+<div id="outline-container-orgaf40fad" class="outline-5">
+<h5 id="orgaf40fad"><span class="section-number-5">2.2.1.1.</span> Emacs Users</h5>
+<div class="outline-text-5" id="text-2-2-1-1">
+<p>
+Configure live-scripting with this Emacs Lisp function:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #b6a0ff;">defun</span> <span style="color: #feacd0;">send-line-to-vterm</span> ()
+  <span style="color: #9ac8e0;">"Send region if active, or current line to vterm buffer."</span>
+  (<span style="color: #b6a0ff;">interactive</span>)
+  (<span style="color: #b6a0ff;">if</span> (region-active-p)
+      (send-region <span style="color: #79a8ff;">"*vterm*"</span> (region-beginning) (region-end))
+    (my-select-current-line)
+    (send-region <span style="color: #79a8ff;">"*vterm*"</span> (region-beginning) (region-end)))
+  (deactivate-mark))
+
+(global-set-key [f4] 'send-line-to-vterm)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org1bf68f4" class="outline-5">
+<h5 id="org1bf68f4"><span class="section-number-5">2.2.1.2.</span> Non-Emacs Users</h5>
+<div class="outline-text-5" id="text-2-2-1-2">
+<p>
+Copy code blocks to any terminal - the methodology maintains precision across tools.
+</p>
+
+<p>
+The deployment follows phases from environment setup through GPU configuration and RagFlow deployment, with each step documented using executable code blocks for reproducibility.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org8b4f3a8" class="outline-3">
+<h3 id="org8b4f3a8"><span class="section-number-3">2.3.</span> Project Components</h3>
+<div class="outline-text-3" id="text-2-3">
+<ul class="org-ul">
+<li>Self-hosted RagFlow with local document processing for privacy control</li>
+<li>GPU-accelerated infrastructure with Ubuntu 24.04 and pre-installed NVIDIA drivers/CUDA</li>
+<li>Production-ready foundation with SSL/HTTPS, Docker containerization, and infrastructure automation</li>
+<li>Advanced RAG capabilities including document ingestion, vector search, and knowledge base management</li>
+<li>Reproducible methodology using live-scripting workflow for consistent deployment</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org4084179" class="outline-3">
+<h3 id="org4084179"><span class="section-number-3">2.4.</span> Expected Deployment Outcome</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+The workflow produces a functioning HTTPS-enabled RagFlow instance on AWS with GPU acceleration, capable of document processing and RAG-based AI responses with full user control and enhanced performance.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org18976c1" class="outline-2">
+<h2 id="org18976c1"><span class="section-number-2">3.</span> Foundation &amp; Prerequisites</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orgf3cddcf" class="outline-3">
+<h3 id="orgf3cddcf"><span class="section-number-3">3.1.</span> Environment Setup</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+These steps establish the development environment and validate prerequisites.
+</p>
+</div>
+<div id="outline-container-orgfd62266" class="outline-4">
+<h4 id="orgfd62266"><span class="section-number-4">3.1.1.</span> Setting the Project Foundation</h4>
+<div class="outline-text-4" id="text-3-1-1">
+<p>
+This establishes the base project directory and validates AWS network prerequisites.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Listing: Project environment setup</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Establishing the base directory for the RAG project</span>
+
+bash
+<span style="color: #00d3d0;">PROJECT_DIR</span>=<span style="color: #79a8ff;">"/Users/$(whoami)/LocalProjects/RagFlow/private-rag"</span>
+<span style="color: #f78fe7;">cd</span> <span style="color: #79a8ff;">"$PROJECT_DIR"</span>
+<span style="color: #f78fe7;">pwd</span>
+ls -la
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Verify we're in the right location</span>
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"Working in: $PROJECT_DIR"</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Set AWS profile for this session</span>
+<span style="color: #f78fe7;">export</span> <span style="color: #00d3d0;">AWS_PROFILE</span>=lab-a-north
+<span style="color: #f78fe7;">echo</span> $<span style="color: #00d3d0;">AWS_PROFILE</span>
+
+<span style="color: #d8af7a;">## </span><span style="color: #d8af7a;">create default VPC if it does not exist</span>
+aws ec2 create-default-vpc
+<span style="color: #d8af7a;">## </span><span style="color: #d8af7a;">check if the default vpc is created</span>
+aws ec2 describe-vpcs --filters <span style="color: #79a8ff;">"Name=isDefault,Values=true"</span> --query <span style="color: #79a8ff;">"Vpcs[0].VpcId"</span> --output text
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Project environment is configured and AWS default VPC is available for deployment.
+</p>
+</div>
+</div>
+<div id="outline-container-org7865cf8" class="outline-4">
+<h4 id="org7865cf8"><span class="section-number-4">3.1.2.</span> Validating AWS Prerequisites</h4>
+<div class="outline-text-4" id="text-3-1-2">
+<p>
+This confirms AWS environment configuration for deployment requirements.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Listing: AWS environment validation</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Ensuring AWS access and basic services availability</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Test basic AWS connectivity</span>
+aws s3 ls
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Verify AWS identity and permissions</span>
+aws sts get-caller-identity
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Verify SSH key is available for EC2 access</span>
+ls -la ~/.ssh/
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Validate required tools are installed</span>
+terraform --version
+git --version
+docker --version
+</pre>
+</div>
+
+<p>
+<b>Result:</b> AWS credentials and required tools are validated for infrastructure deployment.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org8230439" class="outline-3">
+<h3 id="org8230439"><span class="section-number-3">3.2.</span> Summary</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+The foundation phase establishes the development environment and validates prerequisites. Project directory structure is configured, AWS credentials verified, and required tools confirmed operational. This groundwork enables reproducible infrastructure deployment through live-scripting methodology.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd05f8fb" class="outline-2">
+<h2 id="orgd05f8fb"><span class="section-number-2">4.</span> Infrastructure as Code</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org8925470" class="outline-3">
+<h3 id="org8925470"><span class="section-number-3">4.1.</span> SSH Key Generation for Secure Access</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+This creates dedicated SSH keypairs for EC2 instance access and stores the public key for Terraform.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Listing: SSH key generation for EC2 access</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Creating dedicated SSH keys for secure instance access</span>
+
+<span style="color: #f78fe7;">cd</span> <span style="color: #79a8ff;">"$PROJECT_DIR"</span>
+<span style="color: #f78fe7;">pwd</span>;
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Generate a new SSH key pair specifically for RagFlow GPU</span>
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/ragflow-gpu_key -N <span style="color: #79a8ff;">""</span>
+y
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Display the public key for use in Terraform variables</span>
+cat ~/.ssh/ragflow-gpu_key.pub
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Store public key in environment variable</span>
+<span style="color: #f78fe7;">export</span> <span style="color: #00d3d0;">TF_VAR_SSH_PUBLIC_KEY</span>=<span style="color: #79a8ff;">"$(cat ~/.ssh/ragflow-gpu_key.pub)"</span>
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"SSH public key configured: $TF_VAR_SSH_PUBLIC_KEY"</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> SSH keypair is generated and public key is exported for infrastructure provisioning.
+</p>
+</div>
+</div>
+<div id="outline-container-orgfa81c45" class="outline-3">
+<h3 id="orgfa81c45"><span class="section-number-3">4.2.</span> Terraform Configuration and Planning</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+This prepares the Terraform configuration files and validates the infrastructure setup for GPU-enabled instance.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Listing: Terraform environment preparation</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Setting up infrastructure configuration for GPU instance</span>
+
+<span style="color: #f78fe7;">cd</span> <span style="color: #79a8ff;">"$PROJECT_DIR/terraform-gpu"</span>
+<span style="color: #f78fe7;">pwd</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Create terraform variables file with GPU configuration</span>
+cat &gt; terraform.tfvars &lt;&lt; EOF
+<span style="color: #79a8ff;"># Generated tfvars file - $(date)</span>
+<span style="color: #79a8ff;">aws_region       = "eu-north-1"</span>
+<span style="color: #79a8ff;">instance_type    = "g4dn.xlarge"</span>
+<span style="color: #79a8ff;">root_volume_size = 100</span>
+<span style="color: #79a8ff;">root_volume_type = "gp3"</span>
+<span style="color: #79a8ff;">allowed_ip       = "0.0.0.0/0"</span>
+<span style="color: #79a8ff;">ssh_public_key   = "${TF_VAR_SSH_PUBLIC_KEY}"</span>
+<span style="color: #79a8ff;">ec2_name         = "EC2-RagFlow-GPU"</span>
+<span style="color: #79a8ff;">environment      = "development"</span>
+<span style="color: #79a8ff;">project          = "ragflow-gpu"</span>
+<span style="color: #79a8ff;">ssh_cidr_blocks  = ["0.0.0.0/0"]</span>
+<span style="color: #79a8ff;">EOF</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Review our configuration</span>
+cat terraform.tfvars
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Initialize Terraform</span>
+terraform init
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Format and validate our configuration</span>
+terraform fmt
+terraform validate
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Terraform configuration is initialized and validated for GPU-enabled infrastructure deployment.
+</p>
+</div>
+</div>
+<div id="outline-container-orgaf7584b" class="outline-3">
+<h3 id="orgaf7584b"><span class="section-number-3">4.3.</span> Infrastructure Deployment Planning</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+This creates the deployment plan and reviews resource changes before applying them.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Listing: Terraform deployment planning</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Creating and reviewing the GPU infrastructure deployment plan</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Generate deployment plan</span>
+terraform plan -out=tfplan -var-file=terraform.tfvars
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Create human-readable plan</span>
+terraform show -json tfplan &gt; tfplan.json
+cat tfplan.json | jq &gt; tfplan.pretty.json
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Review what resources will be created</span>
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"Resources to be created:"</span>
+cat tfplan.json | jq <span style="color: #79a8ff;">'.resource_changes[] | {address: .address, action: .change.actions[0]}'</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Summary of planned changes</span>
+cat tfplan.json | jq <span style="color: #79a8ff;">'.resource_changes | group_by(.change.actions[0]) | map({action: .[0].change.actions[0], count: length})'</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Deployment plan is generated and resource changes are reviewed for approval.
+</p>
+</div>
+</div>
+<div id="outline-container-orgbed036f" class="outline-3">
+<h3 id="orgbed036f"><span class="section-number-3">4.4.</span> Infrastructure Deployment Execution</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+This executes the Terraform plan to create the AWS infrastructure resources with GPU support.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Listing: AWS GPU infrastructure deployment</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Creating the GPU-enabled infrastructure resources</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Execute the deployment plan</span>
+terraform apply tfplan
+terraform apply
+yes
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Capture and display outputs</span>
+terraform output
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">List our EC2 instances</span>
+aws ec2 describe-instances <span style="color: #79a8ff;">\</span>
+  --query <span style="color: #79a8ff;">'Reservations[*].Instances[*].[InstanceId, InstanceType, Tags[?Key==`Name`]|[0].Value, State.Name]'</span> <span style="color: #79a8ff;">\</span>
+  --output text
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Get our instance details - get only the first/latest instance ID</span>
+<span style="color: #00d3d0;">instance_id</span>=$(aws ec2 describe-instances <span style="color: #79a8ff;">\</span>
+  --filters <span style="color: #79a8ff;">"Name=tag:Name,Values=EC2-RagFlow-GPU"</span> <span style="color: #79a8ff;">"Name=instance-state-name,Values=running,pending,stopping,stopped"</span> <span style="color: #79a8ff;">\</span>
+  --query <span style="color: #79a8ff;">'Reservations[*].Instances[*].[InstanceId]'</span> <span style="color: #79a8ff;">\</span>
+  --output text | head -n1)
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"Instance ID: $instance_id"</span>
+
+
+<span style="color: #00d3d0;">public_ip</span>=$(aws ec2 describe-instances <span style="color: #79a8ff;">\</span>
+  --instance-ids <span style="color: #79a8ff;">"$instance_id"</span> <span style="color: #79a8ff;">\</span>
+  --query <span style="color: #79a8ff;">'Reservations[*].Instances[*].[PublicIpAddress]'</span> <span style="color: #79a8ff;">\</span>
+  --output text)
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"Public IP: $public_ip"</span>
+<span style="color: #b6a0ff;">exit</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> AWS GPU-enabled infrastructure is deployed and EC2 instance details are captured for subsequent configuration.
+</p>
+</div>
+</div>
+<div id="outline-container-orgcada58e" class="outline-3">
+<h3 id="orgcada58e"><span class="section-number-3">4.5.</span> SSH Configuration for Easy Access</h3>
+<div class="outline-text-3" id="text-4-5">
+<p>
+This establishes convenient SSH access configuration and tests connectivity to the deployed GPU instance.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Listing: SSH configuration setup for GPU instance</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Establishing convenient SSH access</span>
+
+<span style="color: #f78fe7;">pwd</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Test initial SSH connection</span>
+ssh -i ~/.ssh/ragflow-gpu_key ubuntu@<span style="color: #79a8ff;">"$public_ip"</span> <span style="color: #79a8ff;">'whoami &amp;&amp; pwd'</span>
+yes
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Create SSH config entry for easy access</span>
+open ~/.ssh/config <span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">we may delete an old entry first, manually</span>
+cat &gt;&gt; ~/.ssh/config &lt;&lt; EOF
+<span style="color: #79a8ff;"># SSH over EC2 - RagFlow GPU Project</span>
+<span style="color: #79a8ff;">Host EC2-RagFlow-GPU</span>
+<span style="color: #79a8ff;">    HostName $public_ip</span>
+<span style="color: #79a8ff;">    User ubuntu</span>
+<span style="color: #79a8ff;">    IdentityFile ~/.ssh/ragflow-gpu_key</span>
+<span style="color: #79a8ff;">EOF</span>
+<span style="color: #d8af7a;">## </span><span style="color: #d8af7a;">use a perl one-liner to grep these lines from the ssh-config file.</span>
+perl -nE <span style="color: #79a8ff;">'print if /Host EC2-RagFlow-GPU/ .. /yesEOF/'</span> ~/.ssh/config
+<span style="color: #d8af7a;">#</span><span style="color: #d8af7a;">bbedit ~/.ssh/config</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Test SSH with hostname</span>
+ssh EC2-RagFlow-GPU <span style="color: #79a8ff;">'whoami &amp;&amp; date'</span>
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> SSH configuration is established and remote access to the GPU EC2 instance is verified.
+</p>
+</div>
+</div>
+<div id="outline-container-orga050b0a" class="outline-3">
+<h3 id="orga050b0a"><span class="section-number-3">4.6.</span> GPU Instance Selection and Upgrading</h3>
+<div class="outline-text-3" id="text-4-6">
+</div>
+<div id="outline-container-org9339703" class="outline-4">
+<h4 id="org9339703"><span class="section-number-4">4.6.1.</span> Recommended GPU EC2 Instance Types for RAG Workloads</h4>
+<div class="outline-text-4" id="text-4-6-1">
+<p>
+Here is a list of recommended GPU-enabled EC2 instance types suitable for RAG workloads with RagFlow, focusing on instances with NVIDIA GPUs optimized for AI/ML tasks. All recommendations are for the <code>eu-north-1</code> region, with approximate on-demand pricing (as of late 2024; prices may vary—check AWS Pricing Calculator for current rates).
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Instance Type</th>
+<th scope="col" class="org-left">GPU</th>
+<th scope="col" class="org-right">VRAM (GB)</th>
+<th scope="col" class="org-right">vCPUs</th>
+<th scope="col" class="org-right">RAM (GB)</th>
+<th scope="col" class="org-left">Network Speed</th>
+<th scope="col" class="org-left">Approx. Price/Hour (USD)</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">g4dn.xlarge</td>
+<td class="org-left">1x T4</td>
+<td class="org-right">16</td>
+<td class="org-right">4</td>
+<td class="org-right">16</td>
+<td class="org-left">Up to 25 Gbps</td>
+<td class="org-left">$0.71</td>
+<td class="org-left">Good balance for moderate RAG workloads with GPU acceleration</td>
+</tr>
+
+<tr>
+<td class="org-left">g4dn.2xlarge</td>
+<td class="org-left">1x T4</td>
+<td class="org-right">16</td>
+<td class="org-right">8</td>
+<td class="org-right">32</td>
+<td class="org-left">Up to 25 Gbps</td>
+<td class="org-left">$1.05</td>
+<td class="org-left">More CPU/RAM for larger models</td>
+</tr>
+
+<tr>
+<td class="org-left">g5.xlarge</td>
+<td class="org-left">1x A10G</td>
+<td class="org-right">24</td>
+<td class="org-right">4</td>
+<td class="org-right">16</td>
+<td class="org-left">Up to 10 Gbps</td>
+<td class="org-left">$1.21</td>
+<td class="org-left">Latest generation with more VRAM</td>
+</tr>
+
+<tr>
+<td class="org-left">g6e.xlarge</td>
+<td class="org-left">1x L40S</td>
+<td class="org-right">48</td>
+<td class="org-right">4</td>
+<td class="org-right">32</td>
+<td class="org-left">Up to 20 Gbps</td>
+<td class="org-left">$1.22</td>
+<td class="org-left">High VRAM for large models</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="outline-container-org260b035" class="outline-5">
+<h5 id="org260b035"><span class="section-number-5">4.6.1.1.</span> Recommendations</h5>
+<div class="outline-text-5" id="text-4-6-1-1">
+<ul class="org-ul">
+<li><b>For most RAG setups</b>: Start with <code>g4dn.xlarge</code> for a balance of GPU performance, memory, and cost.</li>
+<li><b>For high-performance needs</b>: Opt for <code>g5.xlarge</code> or <code>g6e.xlarge</code> if you need more VRAM for larger models.</li>
+<li><b>Considerations</b>: GPU instances are more expensive but provide significant performance improvements for embeddings and inference tasks.</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org95416a3" class="outline-4">
+<h4 id="org95416a3"><span class="section-number-4">4.6.2.</span> Upgrading to a Different GPU Instance Type with Terraform</h4>
+<div class="outline-text-4" id="text-4-6-2">
+<p>
+The best way to change your EC2 instance type is to update your Terraform configuration and apply the changes. This approach is automated, ensures consistency, and avoids manual errors.
+</p>
+</div>
+<div id="outline-container-org5c0de6d" class="outline-5">
+<h5 id="org5c0de6d"><span class="section-number-5">4.6.2.1.</span> Steps to Change Instance Type</h5>
+<div class="outline-text-5" id="text-4-6-2-1">
+<ol class="org-ol">
+<li><b>Update the Terraform Variables</b>:
+<ul class="org-ul">
+<li>Edit <code>terraform-gpu/terraform.tfvars</code> and change <code>instance_type = "g4dn.xlarge"</code> to your desired instance type (e.g., <code>instance_type = "g5.xlarge"</code>).</li>
+<li>Alternatively, update the default in <code>terraform-gpu/variables.tf</code> if you prefer not to modify <code>tfvars</code>.</li>
+</ul></li>
+
+<li><b>Apply the Changes</b>:
+<ul class="org-ul">
+<li>Navigate to the <code>terraform-gpu/</code> directory in your terminal.</li>
+<li>Run <code>terraform plan</code> to preview the changes (it will show the instance type update).</li>
+<li>Run <code>terraform apply</code> to execute the upgrade. Terraform will:
+<ul class="org-ul">
+<li>Stop the existing instance.</li>
+<li>Change the instance type.</li>
+<li>Restart the instance with the new configuration.</li>
+</ul></li>
+<li>This process typically takes 5-10 minutes, depending on AWS availability.</li>
+</ul></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org259dcc2" class="outline-5">
+<h5 id="org259dcc2"><span class="section-number-5">4.6.2.2.</span> Why This Method Is Best</h5>
+<div class="outline-text-5" id="text-4-6-2-2">
+<ul class="org-ul">
+<li><b>Automation</b>: Terraform handles the entire process, ensuring consistency and avoiding manual errors.</li>
+<li><b>Minimal Downtime</b>: The stop/change/start cycle is efficient for instance type changes.</li>
+<li><b>No Data Loss</b>: Your EBS root volume and Elastic IP remain attached.</li>
+<li><b>Cost</b>: Monitor via AWS Cost Explorer. GPU instances have different pricing.</li>
+<li><b>Alternatives Considered</b>:
+<ul class="org-ul">
+<li>Manual AWS Console change: Faster for one-off updates but not recommended for Terraform-managed infrastructure, as it can cause drift.</li>
+<li>Creating a new instance: Slower and requires data migration.</li>
+</ul></li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Listing: Changing GPU instance type with Terraform</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Updating instance configuration for different GPU requirements</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Navigate to the Terraform GPU directory</span>
+<span style="color: #f78fe7;">cd</span> <span style="color: #79a8ff;">"$PROJECT_DIR/terraform-gpu"</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Update the instance type in terraform.tfvars (replace 'g5.xlarge' with your desired type)</span>
+sed -i <span style="color: #79a8ff;">'s/instance_type    = "g4dn.xlarge"/instance_type    = "g5.xlarge"/g'</span> terraform.tfvars
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Review the updated configuration</span>
+cat terraform.tfvars
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Generate and review the deployment plan</span>
+terraform plan -out=tfplan -var-file=terraform.tfvars
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Apply the changes to upgrade the instance</span>
+terraform apply tfplan
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Verify the instance has been upgraded</span>
+aws ec2 describe-instances <span style="color: #79a8ff;">\</span>
+  --filters <span style="color: #79a8ff;">"Name=tag:Name,Values=EC2-RagFlow-GPU"</span> <span style="color: #79a8ff;">\</span>
+  --query <span style="color: #79a8ff;">'Reservations[*].Instances[*].[InstanceType, State.Name]'</span> <span style="color: #79a8ff;">\</span>
+  --output text
+</pre>
+</div>
+
+<p>
+<b>Result:</b> GPU instance type has been successfully changed to the new configuration with updated GPU capabilities.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org7e685a7" class="outline-3">
+<h3 id="org7e685a7"><span class="section-number-3">4.7.</span> Infrastructure Live-Cycle Operations</h3>
+<div class="outline-text-3" id="text-4-7">
+<p>
+This section provides procedures for managing the GPU EC2 instance lifecycle - starting and stopping the instance when returning to work sessions after periods of inactivity.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #b6a0ff;">exit</span>
+
+bash
+<span style="color: #f78fe7;">pwd</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Initialize project environment</span>
+<span style="color: #00d3d0;">PROJECT_DIR</span>=<span style="color: #79a8ff;">"/Users/$(whoami)/LocalProjects/RagFlow/private-rag"</span>
+<span style="color: #f78fe7;">cd</span> <span style="color: #79a8ff;">"$PROJECT_DIR"</span>
+<span style="color: #f78fe7;">export</span> <span style="color: #00d3d0;">AWS_PROFILE</span>=lab-a-north
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Get instance ID</span>
+<span style="color: #00d3d0;">instance_id</span>=$(aws ec2 describe-instances --filters <span style="color: #79a8ff;">"Name=tag:Name,Values=EC2-RagFlow-GPU"</span> --query <span style="color: #79a8ff;">'Reservations[*].Instances[*].[InstanceId]'</span> --output text | head -n1)
+<span style="color: #f78fe7;">echo</span> $<span style="color: #00d3d0;">instance_id</span>
+
+<span style="color: #d8af7a;">### </span><span style="color: #d8af7a;">STATUS: Get current instance state</span>
+aws ec2 describe-instances --instance-ids <span style="color: #79a8ff;">"$instance_id"</span> --query <span style="color: #79a8ff;">'Reservations[*].Instances[*].[State.Name]'</span> --output text
+
+<span style="color: #d8af7a;">### </span><span style="color: #d8af7a;">START:  Start and wait for running state</span>
+aws ec2 start-instances --instance-ids <span style="color: #79a8ff;">"$instance_id"</span>
+<span style="color: #b6a0ff;">while</span> [ <span style="color: #79a8ff;">"$(aws ec2 describe-instances --instance-ids "$instance_id" --query "Reservations[0].Instances[0].State.Name" --output text)"</span> != <span style="color: #79a8ff;">"running"</span> ]; <span style="color: #b6a0ff;">do </span><span style="color: #f78fe7;">echo</span> -n <span style="color: #79a8ff;">"."</span>; sleep 1; <span style="color: #b6a0ff;">done</span>; <span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">" &#9989; running"</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Get public IP</span>
+<span style="color: #00d3d0;">public_ip</span>=$(aws ec2 describe-instances --instance-ids <span style="color: #79a8ff;">"$instance_id"</span> --query <span style="color: #79a8ff;">'Reservations[*].Instances[*].[PublicIpAddress]'</span> --output text)
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"Instance running at: $public_ip"</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Test SSH connection</span>
+ssh EC2-RagFlow-GPU <span style="color: #79a8ff;">'whoami &amp;&amp; date &amp;&amp; uptime'</span>
+
+<span style="color: #d8af7a;">### </span><span style="color: #d8af7a;">STOP: stop  the instance and wait for stopped state</span>
+aws ec2 stop-instances --instance-ids <span style="color: #79a8ff;">"$instance_id"</span>
+<span style="color: #b6a0ff;">while</span> [ <span style="color: #79a8ff;">"$(aws ec2 describe-instances --instance-ids "$instance_id" --query "Reservations[0].Instances[0].State.Name" --output text)"</span> != <span style="color: #79a8ff;">"stopped"</span> ]; <span style="color: #b6a0ff;">do </span><span style="color: #f78fe7;">echo</span> -n <span style="color: #79a8ff;">"."</span>; sleep 1; <span style="color: #b6a0ff;">done</span>; <span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">" &#9989; stopped"</span>
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> GPU EC2 instance is started and ready for use. Stop commands are provided as well.
+</p>
+</div>
+<div id="outline-container-org4950743" class="outline-4">
+<h4 id="org4950743"><span class="section-number-4">4.7.1.</span> Recommended GPU EC2 Instance Types for RAG Workloads</h4>
+<div class="outline-text-4" id="text-4-7-1">
+<p>
+Here is a list of recommended GPU-enabled EC2 instance types suitable for RAG workloads with RagFlow, focusing on instances with NVIDIA GPUs optimized for AI/ML tasks. All recommendations are for the <code>eu-central-1</code> region, with approximate on-demand pricing (as of late 2024; prices may vary—check AWS Pricing Calculator for current rates).
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Instance Type</th>
+<th scope="col" class="org-left">GPU</th>
+<th scope="col" class="org-right">VRAM (GB)</th>
+<th scope="col" class="org-right">vCPUs</th>
+<th scope="col" class="org-right">RAM (GB)</th>
+<th scope="col" class="org-left">Network Speed</th>
+<th scope="col" class="org-left">Approx. Price/Hour (USD)</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">g4dn.xlarge</td>
+<td class="org-left">1x T4</td>
+<td class="org-right">16</td>
+<td class="org-right">4</td>
+<td class="org-right">16</td>
+<td class="org-left">Up to 25 Gbps</td>
+<td class="org-left">$0.71</td>
+<td class="org-left">Good balance for moderate RAG workloads with GPU acceleration</td>
+</tr>
+
+<tr>
+<td class="org-left">g4dn.2xlarge</td>
+<td class="org-left">1x T4</td>
+<td class="org-right">16</td>
+<td class="org-right">8</td>
+<td class="org-right">32</td>
+<td class="org-left">Up to 25 Gbps</td>
+<td class="org-left">$1.05</td>
+<td class="org-left">More CPU/RAM for larger models</td>
+</tr>
+
+<tr>
+<td class="org-left">g5.xlarge</td>
+<td class="org-left">1x A10G</td>
+<td class="org-right">24</td>
+<td class="org-right">4</td>
+<td class="org-right">16</td>
+<td class="org-left">Up to 10 Gbps</td>
+<td class="org-left">$1.21</td>
+<td class="org-left">Latest generation with more VRAM</td>
+</tr>
+
+<tr>
+<td class="org-left">g6e.xlarge</td>
+<td class="org-left">1x L40S</td>
+<td class="org-right">48</td>
+<td class="org-right">4</td>
+<td class="org-right">32</td>
+<td class="org-left">Up to 20 Gbps</td>
+<td class="org-left">$1.22</td>
+<td class="org-left">High VRAM for large models</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="outline-container-orgd7b650a" class="outline-5">
+<h5 id="orgd7b650a"><span class="section-number-5">4.7.1.1.</span> Recommendations</h5>
+<div class="outline-text-5" id="text-4-7-1-1">
+<ul class="org-ul">
+<li><b>For most RAG setups</b>: Start with <code>g4dn.xlarge</code> for a balance of GPU performance, memory, and cost.</li>
+<li><b>For high-performance needs</b>: Opt for <code>g5.xlarge</code> or <code>g6e.xlarge</code> if you need more VRAM for larger models.</li>
+<li><b>Considerations</b>: GPU instances are more expensive but provide significant performance improvements for embeddings and inference tasks.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org4a44ab9" class="outline-3">
+<h3 id="org4a44ab9"><span class="section-number-3">4.8.</span> Summary</h3>
+<div class="outline-text-3" id="text-4-8">
+<p>
+Infrastructure automation through Terraform provisions the AWS environment with GPU support. The EC2 instance operates with proper network security configuration and NVIDIA GPU capabilities. SSH access is established through dedicated keypairs. The infrastructure exists as version-controlled code, enabling consistent reproduction across deployments.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org3387ba2" class="outline-2">
+<h2 id="org3387ba2"><span class="section-number-2">5.</span> GPU Verification</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+This verifies that the pre-installed GPU drivers, CUDA, and Docker GPU support are working correctly.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Listing: GPU verification</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Confirming pre-installed GPU components are operational</span>
+
+ssh EC2-RagFlow-GPU
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Check NVIDIA driver and GPU status</span>
+nvidia-smi
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Check CUDA version</span>
+nvcc --version
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Test GPU in Docker</span>
+docker run --rm --gpus all nvidia/cuda:12.9.0-base-ubuntu24.04 nvidia-smi
+
+<span style="color: #b6a0ff;">exit</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Pre-installed GPU drivers, CUDA toolkit, and Docker GPU support are verified as fully operational.
+</p>
+</div>
+</div>
+<div id="outline-container-org0eb2e0b" class="outline-2">
+<h2 id="org0eb2e0b"><span class="section-number-2">6.</span> Development Environment Setup</h2>
+<div class="outline-text-2" id="text-6">
+</div>
+<div id="outline-container-org10d58c3" class="outline-3">
+<h3 id="org10d58c3"><span class="section-number-3">6.1.</span> Complete Docker Engine and Tools Installation</h3>
+<div class="outline-text-3" id="text-6-1">
+<p>
+This establishes the complete development environment on the Ubuntu 24.04 GPU instance, including Docker Engine, container management tools, GitHub CLI, and Python development utilities.
+</p>
+</div>
+<div id="outline-container-orgd500f99" class="outline-4">
+<h4 id="orgd500f99"><span class="section-number-4">6.1.1.</span> Docker Engine Installation</h4>
+<div class="outline-text-4" id="text-6-1-1">
+<p>
+Install Docker Engine with proper repository configuration and user permissions.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Listing: Docker Engine installation on GPU instance</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Setting up containerization platform for GPU-accelerated applications</span>
+
+ssh EC2-RagFlow-GPU
+bash
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Remove any old Docker versions that may exist</span>
+sudo apt remove docker docker-engine docker.io containerd runc 2&gt;/dev/null || <span style="color: #f78fe7;">true</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Update system packages</span>
+sudo apt update -y
+sudo apt install -y ca-certificates curl gnupg lsb-release
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Add Docker's official GPG key</span>
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Add Docker repository</span>
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">\</span>
+  <span style="color: #79a8ff;">"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \</span>
+<span style="color: #79a8ff;">  $(lsb_release -cs) stable"</span> | sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Install Docker packages</span>
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Configure Docker to run without sudo (important for CI/CD)</span>
+sudo usermod -aG docker $<span style="color: #00d3d0;">USER</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Apply group changes without logout</span>
+<span style="color: #f78fe7;">newgrp</span> docker
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Test Docker installation</span>
+docker run hello-world
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Verify Docker Compose</span>
+docker compose version
+
+<span style="color: #b6a0ff;">exit</span>
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Docker Engine is installed with proper GPG key verification and user permissions configured for passwordless operation.
+</p>
+</div>
+</div>
+<div id="outline-container-orge0129d3" class="outline-4">
+<h4 id="orge0129d3"><span class="section-number-4">6.1.2.</span> Docker Service Configuration</h4>
+<div class="outline-text-4" id="text-6-1-2">
+<p>
+Enable Docker as a system service for automatic startup and management.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Listing: Docker service setup</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Configuring Docker for automatic startup and monitoring</span>
+
+ssh EC2-RagFlow-GPU
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Enable Docker service to start on boot</span>
+sudo systemctl enable docker
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Start Docker service</span>
+sudo systemctl start docker
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Verify service status</span>
+sudo systemctl status docker  --no-pager
+
+<span style="color: #b6a0ff;">exit</span>
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Docker service is configured to start automatically on EC2 instance boot.
+</p>
+</div>
+</div>
+<div id="outline-container-org9868ce4" class="outline-4">
+<h4 id="org9868ce4"><span class="section-number-4">6.1.3.</span> Lazydocker Installation</h4>
+<div class="outline-text-4" id="text-6-1-3">
+<p>
+Install Lazydocker for convenient terminal-based Docker container management.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Listing: Lazydocker installation</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Installing terminal UI for Docker management</span>
+
+ssh EC2-RagFlow-GPU
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Download and install Lazydocker</span>
+curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Add Lazydocker to PATH</span>
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">'export PATH="$HOME/.local/bin:$PATH"'</span> &gt;&gt; ~/.bashrc
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Reload bashrc to apply PATH changes</span>
+<span style="color: #f78fe7;">source</span> ~/.bashrc
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Verify installation</span>
+lazydocker --version
+
+<span style="color: #b6a0ff;">exit</span>
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Lazydocker is installed and available in the PATH for terminal-based Docker management.
+</p>
+</div>
+</div>
+<div id="outline-container-orgf06070c" class="outline-4">
+<h4 id="orgf06070c"><span class="section-number-4">6.1.4.</span> GitHub CLI Installation</h4>
+<div class="outline-text-4" id="text-6-1-4">
+<p>
+Install the GitHub CLI tool for repository and runner management.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Listing: GitHub CLI installation</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Installing gh command-line tool for GitHub integration</span>
+
+ssh EC2-RagFlow-GPU
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Update package list</span>
+sudo apt update
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Install dependencies</span>
+sudo apt install -y curl unzip
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Add GitHub CLI GPG key</span>
+curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd <span style="color: #00d3d0;">of</span>=/usr/share/keyrings/githubcli-archive-keyring.gpg
+sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Add GitHub CLI repository</span>
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main"</span> | sudo tee /etc/apt/sources.list.d/github-cli.list &gt; /dev/null
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Install GitHub CLI</span>
+sudo apt update
+sudo apt install -y gh
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Verify installation</span>
+gh --version
+
+<span style="color: #b6a0ff;">exit</span>
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> GitHub CLI is installed and ready for repository and runner management operations.
+</p>
+</div>
+</div>
+<div id="outline-container-org04d337d" class="outline-4">
+<h4 id="org04d337d"><span class="section-number-4">6.1.5.</span> Htop Installation</h4>
+<div class="outline-text-4" id="text-6-1-5">
+<p>
+Install htop for interactive process monitoring and system resource visualization.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Listing: Htop installation</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Installing interactive system monitor</span>
+
+ssh EC2-RagFlow-GPU
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Install htop</span>
+sudo apt install -y htop
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Verify installation</span>
+htop --version
+
+<span style="color: #b6a0ff;">exit</span>
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Htop is installed and available for system monitoring and process management.
+</p>
+</div>
+</div>
+<div id="outline-container-orgac240a8" class="outline-4">
+<h4 id="orgac240a8"><span class="section-number-4">6.1.6.</span> Docker and Docker Compose Verification</h4>
+<div class="outline-text-4" id="text-6-1-6">
+<p>
+Verify all Docker components are properly installed and functional.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Listing: Docker installation verification</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Confirming all Docker components are operational</span>
+
+ssh EC2-RagFlow-GPU
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Check Docker version</span>
+docker --version
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Check Docker Compose version (new recommended format)</span>
+docker compose version
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Verify Docker daemon is running</span>
+docker ps
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">List available Docker images</span>
+docker images
+
+<span style="color: #b6a0ff;">exit</span>
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Docker Engine and Docker Compose are verified as fully operational.
+</p>
+</div>
+</div>
+<div id="outline-container-orgbb7873e" class="outline-4">
+<h4 id="orgbb7873e"><span class="section-number-4">6.1.7.</span> Python Development Tools Installation</h4>
+<div class="outline-text-4" id="text-6-1-7">
+<p>
+Install uv (fast Python package installer) and development libraries required for Python projects.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Listing: Python development tools installation</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Installing uv and development dependencies</span>
+
+ssh EC2-RagFlow-GPU
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Install uv (fast Python package installer and runner)</span>
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Verify uv installation</span>
+uv --version
+uvx --version
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Install ICU development libraries and build tools</span>
+sudo apt update
+sudo apt install -y <span style="color: #79a8ff;">\</span>
+    libicu-dev <span style="color: #79a8ff;">\</span>
+    pkg-config <span style="color: #79a8ff;">\</span>
+    build-essential
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Verify build tools</span>
+gcc --version
+pkg-config --version
+
+<span style="color: #b6a0ff;">exit</span>
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Python development tools including uv, ICU libraries, and build essentials are installed and verified.
+</p>
+</div>
+</div>
+<div id="outline-container-org2e5e63c" class="outline-4">
+<h4 id="org2e5e63c"><span class="section-number-4">6.1.8.</span> Development Environment Summary</h4>
+<div class="outline-text-4" id="text-6-1-8">
+<p>
+Verify the complete development environment is ready for deployment.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Listing: Development environment verification</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Confirming all tools are installed and operational</span>
+
+ssh EC2-RagFlow-GPU
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Display installed versions</span>
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"=== Development Environment Status ==="</span>
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"Docker:"</span>
+docker --version
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">""</span>
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"Docker Compose:"</span>
+docker compose version
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">""</span>
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"GitHub CLI:"</span>
+gh --version
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">""</span>
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"Python Tools:"</span>
+uv --version
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">""</span>
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"Build Tools:"</span>
+gcc --version | head -1
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">""</span>
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"CUDA:"</span>
+/usr/local/cuda/bin/nvcc --version | head -1
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">""</span>
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"GPU:"</span>
+nvidia-smi --query-gpu=name --format=csv,noheader
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">""</span>
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"System Information:"</span>
+uname -a
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">""</span>
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"Available Disk Space:"</span>
+df -h /
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">""</span>
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"GPU Memory:"</span>
+nvidia-smi --query-gpu=memory.total --format=csv,noheader
+
+<span style="color: #b6a0ff;">exit</span>
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Complete development environment with GPU support is verified and ready for RagFlow deployment and CI/CD operations.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org2ae9ce6" class="outline-3">
+<h3 id="org2ae9ce6"><span class="section-number-3">6.2.</span> Summary</h3>
+<div class="outline-text-3" id="text-6-2">
+<p>
+The development environment setup establishes necessary tools for containerized application deployment and CI/CD workflows on GPU-enabled infrastructure. Docker Engine provides the containerization platform, Lazydocker offers terminal management, GitHub CLI enables repository integration, and Python development tools support application requirements. CUDA and NVIDIA drivers enable GPU acceleration for enhanced performance.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org48e9bd6" class="outline-2">
+<h2 id="org48e9bd6"><span class="section-number-2">7.</span> Core RagFlow Deployment</h2>
+<div class="outline-text-2" id="text-7">
+</div>
+<div id="outline-container-org083e223" class="outline-3">
+<h3 id="org083e223"><span class="section-number-3">7.1.</span> Basic Ragflow Setup</h3>
+<div class="outline-text-3" id="text-7-1">
+<p>
+This section deploys RagFlow on the GPU-enabled EC2 instance using Docker Compose following the QuickStart guide.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Listing: RagFlow deployment on GPU instance</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Installing and starting RagFlow RAG platform with GPU support</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">SSH into the GPU EC2 instance</span>
+ssh EC2-RagFlow-GPU
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Clone the RagFlow repository</span>
+<span style="color: #f78fe7;">cd</span> ~; <span style="color: #f78fe7;">pwd</span>
+git clone https://github.com/infiniflow/ragflow.git
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Navigate to the RagFlow directory</span>
+<span style="color: #f78fe7;">cd</span> ~/ragflow/docker
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Start RagFlow using Docker Compose</span>
+docker compose up -d
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Verify the deployment</span>
+docker ps
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Getting SERVICE_IP</span>
+<span style="color: #00d3d0;">public_ip</span>=$(curl -s http://checkip.amazonaws.com)
+<span style="color: #f78fe7;">echo</span> $<span style="color: #00d3d0;">public_ip</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">RagFlow URL</span>
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"RagFlow is accessible at: http://$public_ip:80"</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Shutting down RagFlow (optional)</span>
+docker compose stop
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Clean up RagFlow (optional)</span>
+docker compose down -v <span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">removes volumes as well</span>
+<span style="color: #f78fe7;">cd</span> ~; rm -rf ragflow
+
+
+<span style="color: #b6a0ff;">exit</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> RagFlow is successfully deployed and running on the GPU-enabled EC2 instance.
+</p>
+</div>
+</div>
+<div id="outline-container-org8681d14" class="outline-3">
+<h3 id="org8681d14"><span class="section-number-3">7.2.</span> HTTPS Setup with Self-Signed Certificate</h3>
+<div class="outline-text-3" id="text-7-2">
+<p>
+This section provides step-by-step instructions for setting up HTTPS access to RAGFlow using a self-signed SSL certificate on the GPU instance.
+</p>
+
+<p>
+<b><b>Prerequisites</b></b>
+</p>
+
+<ul class="org-ul">
+<li>Docker and Docker Compose installed on your GPU server</li>
+<li>Ports 80 and 443 open on your server</li>
+<li>Server's public IP address (replace &lt;SERVER<sub>IP</sub>&gt; with your actual IP throughout these instructions)</li>
+<li>Basic knowledge of command-line operations</li>
+</ul>
+</div>
+<div id="outline-container-org2c92e3a" class="outline-4">
+<h4 id="org2c92e3a"><span class="section-number-4">7.2.1.</span> Step 1: Generate Self-Signed SSL Certificate**</h4>
+<div class="outline-text-4" id="text-7-2-1">
+<p>
+Generate a self-signed certificate for your server's IP address.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">bash
+<span style="color: #f78fe7;">pwd</span>
+ssh EC2-RagFlow-GPU
+<span style="color: #f78fe7;">cd</span>
+<span style="color: #f78fe7;">cd</span> ~/ragflow/docker/nginx
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Retrieve the SERVER_IP</span>
+curl -s http://checkip.amazonaws.com
+<span style="color: #f78fe7;">export</span> <span style="color: #00d3d0;">SERVER_IP</span>=$(curl -s http://checkip.amazonaws.com)
+<span style="color: #f78fe7;">echo</span> $<span style="color: #00d3d0;">SERVER_IP</span>
+
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Create a directory for SSL certificates</span>
+mkdir -p ssl
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Generate a private key</span>
+openssl genrsa -out ssl/privkey.pem 2048
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Generate a certificate signing request (CSR) for your IP</span>
+openssl req -new -key ssl/privkey.pem -out ssl/cert.csr -subj <span style="color: #79a8ff;">"/C=US/ST=State/L=City/O=Organization/CN=localhost"</span>
+openssl req -new -key ssl/privkey.pem -out ssl/cert.csr -subj <span style="color: #79a8ff;">"/C=US/ST=State/L=City/O=Organization/CN=$SERVER_IP"</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Generate the self-signed certificate valid for 365 days</span>
+openssl x509 -req -days 365 -in ssl/cert.csr -signkey ssl/privkey.pem -out ssl/fullchain.pem
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Set appropriate permissions</span>
+chmod 600 ssl/privkey.pem
+chmod 644 ssl/fullchain.pem
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Verify the certificate was created</span>
+ls -la ssl/
+cat ssl/fullchain.pem
+cat ssl/privkey.pem
+cat ssl/cert.csr
+
+
+
+</pre>
+</div>
+
+<p>
+After running these commands, you should see the certificate files in the ssl directory.
+</p>
+</div>
+</div>
+<div id="outline-container-org12c568f" class="outline-4">
+<h4 id="org12c568f"><span class="section-number-4">7.2.2.</span> Step 2: Modify Nginx Configuration**</h4>
+<div class="outline-text-4" id="text-7-2-2">
+<p>
+Update the existing ragflow.https.conf file to use your IP address.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Go to the ragflow project directory</span>
+<span style="color: #f78fe7;">cd</span> ~/ragflow
+<span style="color: #f78fe7;">pwd</span>
+
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Copy the existing HTTPS config as a backup</span>
+cp docker/nginx/ragflow.https.conf docker/nginx/ragflow.https.ip.conf
+
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Edit the configuration file to replace domain with IP and proxy path</span>
+sed -i <span style="color: #79a8ff;">"s/your-ragflow-domain.com/localhost/g"</span> docker/nginx/ragflow.https.ip.conf
+sed -i <span style="color: #79a8ff;">'s|http://ragflow:|http://ragflow-cpu:|'</span> docker/nginx/ragflow.https.ip.conf
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Only if using GPU version, uncomment the following line</span>
+<span style="color: #d8af7a;">#</span><span style="color: #d8af7a;">sed -i 's|http://ragflow:|http://ragflow-gpu:|' docker/nginx/ragflow.https.ip.conf</span>
+
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Verify the changes</span>
+cat docker/nginx/ragflow.https.ip.conf
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org2c9dbfe" class="outline-4">
+<h4 id="org2c9dbfe"><span class="section-number-4">7.2.3.</span> Step 3: Update Docker Compose Configuration**</h4>
+<div class="outline-text-4" id="text-7-2-3">
+<p>
+Modify the docker-compose.yml file to mount the self-signed certificates.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #f78fe7;">pwd</span>
+<span style="color: #f78fe7;">cd</span> ~/ragflow/docker
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Add certificate volumes to the ragflow service in docker-compose.yml</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Insert these lines under the existing volumes section for ragflow-cpu and ragflow-gpu services</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">For ragflow-cpu service (around line 37-44):</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Add after: - ./entrypoint.sh:/ragflow/entrypoint.sh</span>
+      - ./nginx/ssl/fullchain.pem:/etc/nginx/ssl/fullchain.pem:ro
+      - ./nginx/ssl/privkey.pem:/etc/nginx/ssl/privkey.pem:ro
+      - ./nginx/ragflow.https.ip.conf:/etc/nginx/conf.d/ragflow.conf
+
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">For ragflow-gpu service (around line 86-93):</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Add after: - ./entrypoint.sh:/ragflow/entrypoint.sh</span>
+      - ./nginx/ssl/fullchain.pem:/etc/nginx/ssl/fullchain.pem:ro
+      - ./nginx/ssl/privkey.pem:/etc/nginx/ssl/privkey.pem:ro
+      - ./nginx/ragflow.https.ip.conf:/etc/nginx/conf.d/ragflow.conf
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Verify the docker-compose.yml file syntax</span>
+docker compose config
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgead2a75" class="outline-4">
+<h4 id="orgead2a75"><span class="section-number-4">7.2.4.</span> Step 4: Restart RAGFlow Services**</h4>
+<div class="outline-text-4" id="text-7-2-4">
+<p>
+Stop the existing services and restart them with the new HTTPS configuration.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">
+
+<span style="color: #f78fe7;">cd</span> ~/ragflow/docker
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Stop all running services</span>
+docker compose down
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Start the services (use --profile cpu or gpu as needed)</span>
+docker compose --profile cpu up -d
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Wait for services to start</span>
+sleep 30
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Check that services are running</span>
+docker compose ps
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Verify Nginx is listening on ports 80 and 443</span>
+docker compose exec ragflow-cpu netstat -tlnp | grep :80
+docker compose exec ragflow-cpu netstat -tlnp | grep :443
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org6089022" class="outline-4">
+<h4 id="org6089022"><span class="section-number-4">7.2.5.</span> Step 5: Test HTTPS Access**</h4>
+<div class="outline-text-4" id="text-7-2-5">
+<p>
+Verify that the HTTPS setup is working correctly.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">
+
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Test HTTP to HTTPS redirect</span>
+curl -I http://$<span style="color: #00d3d0;">SERVER_IP</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Test HTTPS connection (ignore certificate warnings)</span>
+curl -k -I https://$<span style="color: #00d3d0;">SERVER_IP</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Check certificate details</span>
+openssl s_client -connect $<span style="color: #00d3d0;">SERVER_IP</span>:443 -servername $<span style="color: #00d3d0;">SERVER_IP</span> &lt; /dev/null 2&gt;/dev/null | openssl x509 -noout -dates -subject
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Verify RAGFlow API is accessible over HTTPS</span>
+curl -k https://$<span style="color: #00d3d0;">SERVER_IP</span>/v1/system/healthz
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org3f6f9aa" class="outline-3">
+<h3 id="org3f6f9aa"><span class="section-number-3">7.3.</span> Use Case: Access RagFlow via SSH-Tunnel</h3>
+<div class="outline-text-3" id="text-7-3">
+<p>
+This creates an SSH tunnel to access RagFlow securely from a local browser.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Listing: Testing RagFlow via SSH tunnel</span>
+
+ssh -L 9380:localhost:80 EC2-RagFlow-GPU
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Open RagFlow in your browser at http://localhost:9380</span>
+<span style="color: #b6a0ff;">exit</span>
+
+</pre>
+</div>
+
+<p>
+When the SSH tunnel is established, RagFlow can be accessed via local browser at:
+<a href="http://localhost:9380">http://localhost:9380</a>
+</p>
+
+<p>
+<b>Result:</b> RagFlow is accessible via SSH tunnel and ready for document processing and RAG operations.
+</p>
+</div>
+</div>
+<div id="outline-container-orgfed0e5c" class="outline-3">
+<h3 id="orgfed0e5c"><span class="section-number-3">7.4.</span> Summary</h3>
+<div class="outline-text-3" id="text-7-4">
+<p>
+RagFlow deployment establishes the core RAG platform with GPU acceleration. The application configures with Docker containerization, HTTPS setup with self-signed certificates, and SSH tunnel access for secure local browser connectivity. The GPU-enabled infrastructure provides enhanced performance for document processing and vector operations.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org42f96e3" class="outline-2">
+<h2 id="org42f96e3"><span class="section-number-2">8.</span> Advanced Features - Document Processing</h2>
+<div class="outline-text-2" id="text-8">
+</div>
+<div id="outline-container-orgcfee9f0" class="outline-3">
+<h3 id="orgcfee9f0"><span class="section-number-3">8.1.</span> Document Ingestion and Processing</h3>
+<div class="outline-text-3" id="text-8-1">
+<p>
+This demonstrates uploading and processing documents for RAG functionality with GPU acceleration.
+</p>
+</div>
+<div id="outline-container-org6ff24f0" class="outline-4">
+<h4 id="org6ff24f0"><span class="section-number-4">8.1.1.</span> Upload Documents</h4>
+<div class="outline-text-4" id="text-8-1-1">
+<p>
+Access RagFlow via browser and upload sample documents for processing.
+</p>
+</div>
+</div>
+<div id="outline-container-orgb72cfb2" class="outline-4">
+<h4 id="orgb72cfb2"><span class="section-number-4">8.1.2.</span> Configure Knowledge Base</h4>
+<div class="outline-text-4" id="text-8-1-2">
+<p>
+Create a knowledge base and configure document parsing settings.
+</p>
+</div>
+</div>
+<div id="outline-container-orgcc1f6f5" class="outline-4">
+<h4 id="orgcc1f6f5"><span class="section-number-4">8.1.3.</span> Test RAG Queries</h4>
+<div class="outline-text-4" id="text-8-1-3">
+<p>
+Test retrieval-augmented generation with uploaded documents, leveraging GPU acceleration for faster processing.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb95c16b" class="outline-3">
+<h3 id="orgb95c16b"><span class="section-number-3">8.2.</span> Summary</h3>
+<div class="outline-text-3" id="text-8-2">
+<p>
+Document processing enables advanced knowledge management while preserving privacy. GPU acceleration provides enhanced performance for embeddings generation and vector similarity searches. Local processing handles sensitive documents without transmitting data to external services.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc4e70e4" class="outline-2">
+<h2 id="orgc4e70e4"><span class="section-number-2">9.</span> Infrastructure Cleanup</h2>
+<div class="outline-text-2" id="text-9">
+</div>
+<div id="outline-container-orgbc28720" class="outline-3">
+<h3 id="orgbc28720"><span class="section-number-3">9.1.</span> Cleanup Philosophy</h3>
+<div class="outline-text-3" id="text-9-1">
+<p>
+Infrastructure as Code enables rapid deployment, but equally important is the ability to cleanly tear down resources to avoid unnecessary costs. This section provides procedures for complete cleanup of all deployed GPU resources.
+</p>
+</div>
+</div>
+<div id="outline-container-orgdfc69cd" class="outline-3">
+<h3 id="orgdfc69cd"><span class="section-number-3">9.2.</span> Stop RagFlow Services</h3>
+<div class="outline-text-3" id="text-9-2">
+<p>
+Before destroying infrastructure, gracefully stop all running services.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Listing: Stopping RagFlow services</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Gracefully shutting down all containers</span>
+
+ssh EC2-RagFlow-GPU
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Stop RagFlow Docker containers</span>
+<span style="color: #f78fe7;">cd</span> ~/ragflow
+docker-compose down
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Verify containers are stopped</span>
+docker ps -a
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Optional: Remove Docker images to free disk space</span>
+docker system prune -a -f
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Exit SSH session</span>
+<span style="color: #b6a0ff;">exit</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> RagFlow services are stopped and Docker containers are removed from the GPU EC2 instance.
+</p>
+</div>
+</div>
+<div id="outline-container-org23320c3" class="outline-3">
+<h3 id="org23320c3"><span class="section-number-3">9.3.</span> Terminate GPU EC2 Instance with Terraform</h3>
+<div class="outline-text-3" id="text-9-3">
+<p>
+Use Terraform to cleanly destroy all AWS infrastructure resources including the GPU instance.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Listing: Destroying AWS GPU infrastructure</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Removing all Terraform-managed resources</span>
+
+<span style="color: #f78fe7;">cd</span> <span style="color: #79a8ff;">"$PROJECT_DIR/terraform-gpu"</span>
+<span style="color: #f78fe7;">pwd</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Review what will be destroyed</span>
+terraform plan -destroy -var-file=terraform.tfvars
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Destroy all infrastructure</span>
+terraform destroy -var-file=terraform.tfvars
+yes
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Verify destruction</span>
+terraform show
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">List remaining EC2 instances (should show none with EC2-RagFlow-GPU tag)</span>
+aws ec2 describe-instances <span style="color: #79a8ff;">\</span>
+  --filters <span style="color: #79a8ff;">"Name=tag:Name,Values=EC2-RagFlow-GPU"</span> <span style="color: #79a8ff;">\</span>
+  --query <span style="color: #79a8ff;">'Reservations[*].Instances[*].[InstanceId, State.Name]'</span> <span style="color: #79a8ff;">\</span>
+  --output text
+</pre>
+</div>
+
+<p>
+<b>Result:</b> All AWS GPU infrastructure resources are destroyed, including EC2 instance, security groups, and key pairs.
+</p>
+</div>
+</div>
+<div id="outline-container-org39f6aa6" class="outline-3">
+<h3 id="org39f6aa6"><span class="section-number-3">9.4.</span> Clean Up Local SSH Configuration</h3>
+<div class="outline-text-3" id="text-9-4">
+<p>
+Remove SSH configurations and keys associated with the destroyed GPU instance.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Listing: Removing local SSH configuration</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Cleaning up SSH keys and config entries</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Remove SSH config entry for EC2-RagFlow-GPU</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Manual edit recommended to preserve other configurations</span>
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"Removing SSH config entry for EC2-RagFlow-GPU..."</span>
+perl -i.bak -ne <span style="color: #79a8ff;">'print unless /^Host EC2-RagFlow-GPU$/..(/^Host / &amp;&amp; !/^Host EC2-RagFlow-GPU$/)'</span> ~/.ssh/config
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Verify removal</span>
+grep -A 5 <span style="color: #79a8ff;">"EC2-RagFlow-GPU"</span> ~/.ssh/config || <span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"SSH config entry removed successfully"</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Optional: Remove SSH keys (only if no longer needed)</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Uncomment the following lines if you want to delete the keys:</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">rm -f ~/.ssh/ragflow-gpu_key</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">rm -f ~/.ssh/ragflow-gpu_key.pub</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">List remaining SSH keys</span>
+ls -la ~/.ssh/ragflow-gpu_key*
+
+</pre>
+</div>
+
+<p>
+<b>Result:</b> SSH configuration entries are removed. SSH keys remain available for potential future deployments (remove manually if no longer needed).
+</p>
+</div>
+</div>
+<div id="outline-container-org7b616dc" class="outline-3">
+<h3 id="org7b616dc"><span class="section-number-3">9.5.</span> Clean Up Terraform State Files</h3>
+<div class="outline-text-3" id="text-9-5">
+<p>
+Clean up Terraform state and temporary files.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Listing: Cleaning up Terraform files</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Removing state and temporary files</span>
+
+<span style="color: #f78fe7;">cd</span> <span style="color: #79a8ff;">"$PROJECT_DIR/terraform-gpu"</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">List Terraform state files</span>
+ls -la terraform.tfstate*
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Optional: Back up state files before removal</span>
+mkdir -p ../terraform-gpu-backups
+cp terraform.tfstate* ../terraform-gpu-backups/ 2&gt;/dev/null || <span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"No state files to backup"</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Remove Terraform state files (only after infrastructure is destroyed)</span>
+rm -f terraform.tfstate
+rm -f terraform.tfstate.backup
+rm -f tfplan*
+rm -f terraform.tfvars
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Clean up Terraform cache</span>
+rm -rf .terraform
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Verify cleanup</span>
+ls -la
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Terraform state files and temporary files are removed to complete the cleanup process.
+</p>
+</div>
+</div>
+<div id="outline-container-orge27ea8e" class="outline-3">
+<h3 id="orge27ea8e"><span class="section-number-3">9.6.</span> Verify Complete Cleanup</h3>
+<div class="outline-text-3" id="text-9-6">
+<p>
+Perform final verification that all resources have been removed.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Listing: Final cleanup verification</span>
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Confirming all resources are removed</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Check for any remaining EC2 instances</span>
+aws ec2 describe-instances <span style="color: #79a8ff;">\</span>
+  --filters <span style="color: #79a8ff;">"Name=tag:project,Values=ragflow-gpu"</span> <span style="color: #79a8ff;">\</span>
+  --query <span style="color: #79a8ff;">'Reservations[*].Instances[*].[InstanceId, State.Name, Tags[?Key==`Name`]|[0].Value]'</span> <span style="color: #79a8ff;">\</span>
+  --output table
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Check for remaining security groups</span>
+aws ec2 describe-security-groups <span style="color: #79a8ff;">\</span>
+  --filters <span style="color: #79a8ff;">"Name=group-name,Values=RagFlowGPUSecurityGroup"</span> <span style="color: #79a8ff;">\</span>
+  --query <span style="color: #79a8ff;">'SecurityGroups[*].[GroupId, GroupName]'</span> <span style="color: #79a8ff;">\</span>
+  --output table
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Check for remaining key pairs</span>
+aws ec2 describe-key-pairs <span style="color: #79a8ff;">\</span>
+  --filters <span style="color: #79a8ff;">"Name=key-name,Values=ragflow-gpu-key"</span> <span style="color: #79a8ff;">\</span>
+  --query <span style="color: #79a8ff;">'KeyPairs[*].[KeyName, KeyFingerprint]'</span> <span style="color: #79a8ff;">\</span>
+  --output table
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Summary</span>
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"============================================"</span>
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"Cleanup Verification Complete"</span>
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"============================================"</span>
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"If any resources are still listed above,"</span>
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"they may need manual cleanup via AWS Console"</span>
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"============================================"</span>
+</pre>
+</div>
+
+<p>
+<b>Result:</b> Final verification confirms all AWS GPU resources have been properly cleaned up and removed.
+</p>
+</div>
+</div>
+<div id="outline-container-org33fcad3" class="outline-3">
+<h3 id="org33fcad3"><span class="section-number-3">9.7.</span> Cost Optimization Notes</h3>
+<div class="outline-text-3" id="text-9-7">
+<p>
+Some important considerations for cost management with GPU instances:
+</p>
+
+<ul class="org-ul">
+<li><b><b>GPU EC2 Instance</b></b>: Charges accrue while the instance is running. GPU instances are significantly more expensive than CPU-only instances. Use `terraform destroy` when not actively using the system.</li>
+<li><b><b>EBS Volumes</b></b>: Storage costs continue even when instances are stopped. Destroy volumes when not needed.</li>
+<li><b><b>Elastic IPs</b></b>: Unused Elastic IPs incur charges. Ensure they're released during infrastructure destruction.</li>
+<li><b><b>Data Transfer</b></b>: Outbound data transfer from AWS to the internet incurs costs.</li>
+</ul>
+
+<p>
+For occasional use, consider stopping the instance rather than destroying it:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Stop GPU instance without destroying (preserves data but stops compute charges)</span>
+aws ec2 stop-instances --instance-ids <span style="color: #79a8ff;">"$instance_id"</span>
+
+<span style="color: #d8af7a;"># </span><span style="color: #d8af7a;">Start GPU instance when needed again</span>
+aws ec2 start-instances --instance-ids <span style="color: #79a8ff;">"$instance_id"</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org9600281" class="outline-3">
+<h3 id="org9600281"><span class="section-number-3">9.8.</span> Summary</h3>
+<div class="outline-text-3" id="text-9-8">
+<p>
+Infrastructure cleanup procedures remove all deployed GPU resources. Terraform destroy commands remove AWS infrastructure, SSH configurations clean from local systems, and verification steps confirm proper resource removal. This prevents unexpected costs after project completion.
+</p>
+
+<p>
+This project demonstrates that privacy-focused RAG systems are both technically feasible and practically deployable with GPU acceleration using Ubuntu 24.04 and pre-configured Deep Learning AMIs. Self-hosted solutions provide alternatives to cloud-only AI services while leveraging GPU performance for enhanced capabilities.
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+<b>This completes the RagFlow AWS GPU deployment using live-scripting methodology. Each code block is executable with F4 in Emacs using `send-line-to-vterm`, or can be copied and pasted into any terminal for the same results.</b></p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2025-11-18</p>
+<p class="author">Author: Andreas Wittmann</p>
+<p class="date">Created: 2025-11-18 Tue 19:57</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
