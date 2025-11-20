@@ -88,10 +88,11 @@ This creates a Lab directory and clones the private-rag repository for subsequen
 #+begin_src bash
 # Listing: Cloning private-rag repository
 cd ~; pwd
-export BASE_DIR="./$(whoami)/Labs"
+export BASE_DIR=~/Labs
+echo $BASE_DIR
 mkdir -p $BASE_DIR
 cd $BASE_DIR
-
+pwd
 git clone https://github.com/andreaswittmann/private-rag.git
 
 # open in Emacs: ~/$(whoami)/Labs/private-rag/private-rag-aws-gpu.org
