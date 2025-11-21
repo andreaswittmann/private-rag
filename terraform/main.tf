@@ -75,16 +75,6 @@ resource "aws_security_group" "ragflow_sg" {
   }
 }
 
-# Update security group to allow SSH
-resource "aws_security_group_rule" "allow_ssh" {
-  type              = "ingress"
-  from_port         = 22
-  to_port           = 22
-  protocol          = "tcp"
-  cidr_blocks       = var.ssh_cidr_blocks
-  security_group_id = aws_security_group.ragflow_sg.id
-  description       = "Allow SSH access"
-}
 
 # IAM Role for EC2 Instance
 resource "aws_iam_role" "ragflow_role" {
@@ -130,7 +120,7 @@ resource "aws_key_pair" "ragflow_keypair" {
 
 # EC2 Instance
 resource "aws_instance" "ragflow_instance" {
-  ami                    = data.aws_ami.ubuntu_24_04.id
+  ami                    = "ami-004e960cde33f9146"
   instance_type          = var.instance_type
   key_name               = aws_key_pair.ragflow_keypair.key_name
   iam_instance_profile   = aws_iam_instance_profile.ragflow_profile.name

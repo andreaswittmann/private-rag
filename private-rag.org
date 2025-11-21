@@ -19,7 +19,7 @@
 - *PDF Version:* [[file:private-rag.pdf][private-rag.pdf]]
 - *GitHub:* https://github.com/andreaswittmann/private-rag/tree/main
 
-
+  
 
 * Building Privacy-Focused RAG Platform
 
@@ -150,7 +150,7 @@ This creates dedicated SSH keypairs for EC2 instance access and stores the publi
 # Creating dedicated SSH keys for secure instance access
 
 cd "$PROJECT_DIR"
-
+pwd;
 # Generate a new SSH key pair specifically for RagFlow
 ssh-keygen -t rsa -b 4096 -f ~/.ssh/ragflow_key -N ""
 y
@@ -173,7 +173,7 @@ This prepares the Terraform configuration files and validates the infrastructure
 # Setting up infrastructure configuration
 
 cd "$PROJECT_DIR/terraform"
-
+pwd
 # Create terraform variables file with our configuration
 cat > terraform.tfvars << EOF
 # Generated tfvars file - $(date)
@@ -380,6 +380,8 @@ This section provides procedures for managing the EC2 instance lifecycle - start
 
 #+begin_src bash
 exit
+
+bash
 pwd
 
 
@@ -974,10 +976,9 @@ Use Terraform to cleanly destroy all AWS infrastructure resources.
 # Removing all Terraform-managed resources
 
 cd "$PROJECT_DIR/terraform"
-
+pwd
 # Review what will be destroyed
 terraform plan -destroy -var-file=terraform.tfvars
-
 # Destroy all infrastructure
 terraform destroy -var-file=terraform.tfvars
 yes
@@ -1008,15 +1009,16 @@ echo "Removing SSH config entry for EC2-RagFlow..."
 perl -i.bak -ne 'print unless /^Host EC2-RagFlow$/..(/^Host / && !/^Host EC2-RagFlow$/)' ~/.ssh/config
 
 # Verify removal
-grep -A 5 "EC2-RagFlow" ~/.ssh/config || echo "SSH config entry removed successfully"
+grep -A 5 "EC2-RagFlow" ~/.ssh/config 
 
 # Optional: Remove SSH keys (only if no longer needed)
 # Uncomment the following lines if you want to delete the keys:
-# rm -f ~/.ssh/ragflow_key
-# rm -f ~/.ssh/ragflow_key.pub
+ rm -f ~/.ssh/ragflow_key
+ rm -f ~/.ssh/ragflow_key.pub
 
 # List remaining SSH keys
-ls -la ~/.ssh/ragflow_key* 2>/dev/null || echo "SSH keys still present (not removed)"
+ls -la ~/.ssh/ragflow_key*
+
 #+end_src
 
 *Result:* SSH configuration entries are removed. SSH keys remain available for potential future deployments (remove manually if no longer needed).
