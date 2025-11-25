@@ -432,8 +432,8 @@ exit
 *Result:* Docker insallation is varified. Docker service is configured to start automatically on EC2 instance boot.
 Lazydocker is installed and available in the PATH for terminal-based Docker management. The tool htop is also installed.
 
-*** Python Development Tools Installation
-
+*** Python Development Tools Installation (Optional)
+For Ragflow development only.
 Install uv (fast Python package installer) and development libraries required for Python projects.
 
 #+begin_src bash
@@ -466,7 +466,7 @@ exit
 
 *Result:* Python development tools including uv, ICU libraries, and build essentials are installed and verified.
 
-*** Development Environment Summary
+*** Development Environment Summary (Optional)
 
 Verify the complete development environment is ready for deployment.
 [Editors Note: Remove the echo statements in the this code block.]
@@ -524,7 +524,11 @@ cat .env | grep DEVICE
 
 # Upate docker-compose.yml to uncomment the executor service.
 perl -i -pe 's/^  # /  / if /^  # /' docker/docker-compose.yml
+tail -n 25 docker/docker-compose.yml
    
+# Fix executor bug in docker-compose.yml, calling wrong entrypoint script
+perl -i -pe 's{entrypoint: "/ragflow/entrypoint_task_executor.sh 1 3"}{entrypoint: "/ragflow/entrypoint.sh --disable-webserver --workers=2"}g' docker/docker-compose.yml
+cat docker/docker-compose.yml | grep entrypoint
 
 # Start RagFlow using Docker Compose
 docker compose up -d
