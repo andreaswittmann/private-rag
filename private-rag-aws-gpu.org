@@ -680,7 +680,7 @@ ssh EC2-RagFlow-GPU
 cd ~/ragflow/docker
 pwd
 # Stop all running services
-docker compose down
+#docker compose down
 docker compose stop
 
 # Set the profile in .env and start (CPU or GPU)
@@ -796,8 +796,7 @@ exit
 
 *Result:* RagFlow services are stopped and Docker containers are removed from the GPU EC2 instance.
 
-** Terminate GPU EC2 Instance with Terraform
-
+** Decommissioning the environment with Terraform
 Use Terraform to cleanly destroy all AWS infrastructure resources including the GPU instance.
 
 #+begin_src bash
@@ -852,7 +851,7 @@ ls -la ~/.ssh/ragflow-gpu_key*
 
 *Result:* SSH configuration entries are removed. SSH keys remain available for potential future deployments (remove manually if no longer needed).
 
-** Clean Up Terraform State Files
+** Clean Up Terraform State Files (Optional)
 
 Clean up Terraform state and temporary files.
 
@@ -912,6 +911,16 @@ aws ec2 describe-key-pairs \
   --output table
 
 #  "Cleanup Verification Complete"
+
+
+# Removing the Project directory
+export PROJECT_DIR=~/Labs/private-rag/
+cd "$PROJECT_DIR"
+cd ..
+pwd
+rm -rf private-rag
+find .
+
 #+end_src
 
 *Result:* Final verification confirms all AWS GPU resources have been properly cleaned up and removed.
@@ -925,7 +934,6 @@ This project demonstrates that privacy-focused RAG systems are both technically 
 ---
 
 *This completes the RagFlow AWS GPU deployment using live-scripting methodology. Each code block is executable with F4 in Emacs using `send-line-to-vterm`, or can be copied and pasted into any terminal for the same results.*
-
 
 * Appendix: Live-Cycle Operations
 
