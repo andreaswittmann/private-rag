@@ -4,6 +4,12 @@
 
 This repository provides a live-scripting workflow for deploying a private RAG (Retrieval-Augmented Generation) system on AWS EC2. While RagFlow's basic setup uses public AI models, this self-hosted deployment enables individual tailoring of AI model usage, allowing seamless transition from public APIs to privately hosted AI models for enhanced privacy and control.
 
+[![RAGFlow Deployment Video](youtube-thumbnail.jpeg)](https://www.youtube.com/watch?v=fLg-f9MkRMo)
+
+This video demonstrates deploying RAGFlow—an open-source agentic AI platform—on AWS using the live-scripting approach. The deployment uses the "private-rag" project, which provides the complete setup: Terraform configurations, Docker compositions, and documentation in multiple formats.
+
+https://www.youtube.com/watch?v=fLg-f9MkRMo
+
 ## About RagFlow
 
 RagFlow is an open-source RAG (Retrieval-Augmented Generation) engine based on deep document understanding. It provides:
